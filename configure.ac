@@ -77,7 +77,7 @@ if test "x$DO_IRRKLANG" = "xyes"; then
 else
   AC_MSG_RESULT($DO_IRRKLANG)
   IRRKLANG_DIR=
-  IRRKLANG_LIB=$(prefix)/bin/libIrrKlang.so
+  IRRKLANG_LIB=${prefix}/bin/libIrrKlang.so
 fi
 AC_SUBST([IRRKLANG_DIR])
 AC_SUBST([IRRKLANG_LIB])
