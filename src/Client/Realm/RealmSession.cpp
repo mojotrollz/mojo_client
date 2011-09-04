@@ -43,11 +43,12 @@ enum eAuthResults
 
 struct SRealmHeader
 {
-    uint8	cmd;			// OP code = CMD_REALM_LIST
-    uint16	size;			// size of the rest of packet, without this part
-    uint32	unknown;		// 0x00 00 00 00
-    uint8	count;			// quantity of realms
+    uint8   cmd;            // OP code = CMD_REALM_LIST
+    uint16  size;           // size of the rest of packet, without this part
+    uint32  unknown;        // 0x00 00 00 00
+    uint16  count;          // quantity of realms
 };
+
 
 struct AuthHandler
 {
@@ -81,9 +82,18 @@ struct sAuthLogonProof_S
     uint8   cmd;
     uint8   error;
     uint8   M2[20];
-    uint32  unk1;
+    uint32  accountFlags;                                   // see enum AccountFlags
+    uint32  surveyId;                                       // SurveyId
+    uint16  unkFlags;                                       // some flags (AccountMsgAvailable = 0x01)
+};
+struct sAuthLogonProof_S_6005
+{
+    uint8   cmd;
+    uint8   error;
+    uint8   M2[20];
+//     uint32  unk1;
     uint32  unk2;
-    uint16  unk3;
+//     uint16  unk3;
 };
 
 // GCC have alternative #pragma pack() syntax and old gcc version not support pack(pop), also any gcc version not support it at some paltform
@@ -234,25 +244,46 @@ PseuInstance *RealmSession::GetInstance(void)
 
 void RealmSession::_HandleRealmList(ByteBuffer& pkt)
 {
+    logdebug("RealmSocket: Got REALM_LIST [%u bytes]",pkt.size());
     std::string realmAddr;
 
-    uint32 unk;
-    uint16 len,count;
-    uint8 cmd;
-    pkt >> cmd >> len >> unk >> count;
+    SRealmHeader rh;
+    uint16 cb = GetInstance()->GetConf()->clientbuild;
+    pkt >> rh.cmd >> rh.size >> rh.unknown;
+    if(cb<=6005)
+    {
+      uint8 count;
+      pkt >> count;
+      rh.count = count; //others are irrelevant
+    }
+    else
+    {
+      pkt >> rh.count;
+    }
+
 
     // no realm?
-    if(count==0)
+    if(rh.count==0)
         return;
 
     _realms.clear();
-    _realms.resize(count);
+    _realms.resize(rh.count);
 
     // readout realms
-    for(uint8 i=0;i<count;i++)
+    for(uint8 i=0;i<rh.count;i++)
     {
-        pkt >> _realms[i].icon;
-        pkt >> _realms[i].locked;
+        if(cb<=6005)
+        {
+          uint32 icon;
+          pkt >> icon;
+          _realms[i].icon=icon;          
+          _realms[i].locked=0x00; //locked is specified in the RealmFlags
+        }
+        else
+        {
+          pkt >> _realms[i].icon;
+          pkt >> _realms[i].locked;
+        }
         pkt >> _realms[i].color;
         pkt >> _realms[i].name;
         pkt >> _realms[i].addr_port;
@@ -264,7 +295,7 @@ void RealmSession::_HandleRealmList(ByteBuffer& pkt)
 
     // the rest of the packet is not interesting
 
-    for(uint8 i = 0; i < count; i++)
+    for(uint8 i = 0; i < rh.count; i++)
     {
         if(!stricmp(_realms[i].name.c_str(), GetInstance()->GetConf()->realmname.c_str()))
         {
@@ -327,7 +358,7 @@ void RealmSession::SendLogonChallenge(void)
     if( _accname.empty() || GetInstance()->GetConf()->clientversion_string.empty()
         || GetInstance()->GetConf()->clientbuild==0 || GetInstance()->GetConf()->clientlang.empty() )
     {
-        logcritical("Missing data, can't send Login challenge to Realm Server! (check your conf files)");
+        logerror("Missing data, can't send Login challenge to Realm Server! (check your conf files)");
         GetInstance()->SetError();
         return;
     }
@@ -530,7 +561,7 @@ void RealmSession::_HandleLogonChallenge(ByteBuffer& pkt)
 void RealmSession::_HandleLogonProof(ByteBuffer& pkt)
 {
     PseuGUI *gui = GetInstance()->GetGUI();
-    logdebug("RealmSocket: Got AUTH_LOGON_PROOF [%u of %u bytes]",pkt.size(),sizeof(sAuthLogonProof_S));
+    logdebug("RealmSocket: Got AUTH_LOGON_PROOF [%u of %u bytes]",pkt.size(),(GetInstance()->GetConf()->clientbuild>6005 ? sizeof(sAuthLogonProof_S) : sizeof(sAuthLogonProof_S_6005)));
     if(pkt.size() < 2)
     {
         logerror("AUTH_LOGON_PROOF: Recieved incorrect/unknown packet. Hexdump:");
@@ -581,7 +612,19 @@ void RealmSession::_HandleLogonProof(ByteBuffer& pkt)
 
 
     sAuthLogonProof_S lp;
-    pkt.read((uint8*)&lp, sizeof(sAuthLogonProof_S));
+    if(GetInstance()->GetConf()->clientbuild<=6005)
+    {
+      sAuthLogonProof_S_6005 lp6005;
+      pkt.read((uint8*)&lp6005, sizeof(sAuthLogonProof_S_6005));
+      lp.cmd = lp6005.cmd;
+      lp.error = lp6005.error;
+      memcpy(lp.M2,lp6005.M2,20);
+    }
+    else
+    {
+      pkt.read((uint8*)&lp, sizeof(sAuthLogonProof_S));
+    }
+      
     //printchex((char*)&lp, sizeof(sAuthLogonProof_S),true);
     if(!memcmp(lp.M2,this->_m2,20))
     {
