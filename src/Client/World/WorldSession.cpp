@@ -520,37 +520,51 @@ std::string WorldSession::GetOrRequestPlayerName(uint64 guid)
 
 void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
 {
+    //Read Packet    
+    uint32 sp, serverseed;
+    if(GetInstance()->GetConf()->clientbuild>6005)//TODO: Check TBC
+    {
+      recvPacket >> sp;
+    }
+    recvPacket >> serverseed;
+
+    // Do stuff with the data
     std::string acc = stringToUpper(GetInstance()->GetConf()->accname);
-        uint32 sp;
-        recvPacket >> sp;
-        uint32 serverseed;
-        recvPacket >> serverseed;
 
-        logdebug("Auth: serverseed=0x%X",serverseed);
-        Sha1Hash digest;
-        digest.UpdateData(acc);
-        uint32 unk=0;
-        uint64 unk64=0;
-        digest.UpdateData((uint8*)&unk,sizeof(uint32));
-        BigNumber clientseed;
-        clientseed.SetRand(8*4);
-        uint32 clientseed_uint32=clientseed.AsDword();
-        digest.UpdateData((uint8*)&clientseed_uint32,sizeof(uint32));
-        digest.UpdateData((uint8*)&serverseed,sizeof(uint32));
-        digest.UpdateBigNumbers(GetInstance()->GetSessionKey(),NULL);
-        digest.Finalize();
-        WorldPacket auth;
-        auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<unk<<clientseed_uint32<<unk<<unk<<unk<<unk64;
-        auth.append(digest.GetDigest(),20);
-        auth << (uint32)0; // TODO: this is not correct value, expected: 160 bytes of addon_data
+    logdebug("Auth: serverseed=0x%X",serverseed);
+    Sha1Hash digest;
+    digest.UpdateData(acc);
+    uint32 unk=0;
+    uint64 unk64=0;
+    digest.UpdateData((uint8*)&unk,sizeof(uint32));
+    BigNumber clientseed;
+    clientseed.SetRand(8*4);
+    uint32 clientseed_uint32=clientseed.AsDword();
+    digest.UpdateData((uint8*)&clientseed_uint32,sizeof(uint32));
+    digest.UpdateData((uint8*)&serverseed,sizeof(uint32));
+    digest.UpdateBigNumbers(GetInstance()->GetSessionKey(),NULL);
+    digest.Finalize();
+    
+    // Send Reply
+    WorldPacket auth;
+    if(GetInstance()->GetConf()->clientbuild<=6005)
+    {
+      auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<clientseed_uint32;
+      auth.append(digest.GetDigest(),20);
+    }
+    else
+    {
+      auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<unk<<clientseed_uint32<<unk<<unk<<unk<<unk64;
+      auth.append(digest.GetDigest(),20);
+    }
+    auth << (uint32)0; // TODO: this is not correct value, expected: 160 bytes of addon_data
+    auth.SetOpcode(CMSG_AUTH_SESSION);
 
-        auth.SetOpcode(CMSG_AUTH_SESSION);
+    SendWorldPacket(auth);
 
-        SendWorldPacket(auth);
-
-        // note that if the sessionkey/auth is wrong or failed, the server sends the following packet UNENCRYPTED!
-        // so its not 100% correct to init the crypt here, but it should do the job if authing was correct
-        _socket->InitCrypt(GetInstance()->GetSessionKey());
+    // note that if the sessionkey/auth is wrong or failed, the server sends the following packet UNENCRYPTED!
+    // so its not 100% correct to init the crypt here, but it should do the job if authing was correct
+    _socket->InitCrypt(GetInstance()->GetSessionKey());
 
 }
 
@@ -570,7 +584,7 @@ void WorldSession::_HandleAuthResponseOpcode(WorldPacket& recvPacket)
     }
     else
     {
-        logerror("World Authentication failed, errcode=0x%X",(unsigned char)errcode);
+        logerror("World Authentication failed, errcode=0x%X",(uint8)errcode);
         SetMustDie();
     }
 }
