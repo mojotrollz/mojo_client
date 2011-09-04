@@ -47,6 +47,7 @@ class PseuInstanceConf
     uint32 reconnect;
     uint16 realmport;
     uint16 worldport;
+    uint8 client;
     uint8 clientversion[3];
     std::string clientversion_string;
     uint16 clientbuild;

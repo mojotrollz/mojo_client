@@ -493,8 +493,12 @@ void PseuInstanceConf::ApplyFromVarSet(VarSet &v)
     exitonerror=(bool)atoi(v.Get("EXITONERROR").c_str());
     reconnect=atoi(v.Get("RECONNECT").c_str());
     realmport=atoi(v.Get("REALMPORT").c_str());
-    clientversion_string=v.Get("CLIENTVERSION");
-    clientbuild=atoi(v.Get("CLIENTBUILD").c_str());
+    client=atoi(v.Get("CLIENT").c_str());
+    if(client==9) //9 = Custom settings
+    {
+      clientversion_string=v.Get("CLIENTVERSION");
+      clientbuild=atoi(v.Get("CLIENTBUILD").c_str());
+    }
     clientlang=v.Get("CLIENTLANGUAGE");
     realmname=v.Get("REALMNAME");
     charname=v.Get("CHARNAME");
@@ -518,24 +522,49 @@ void PseuInstanceConf::ApplyFromVarSet(VarSet &v)
     dataLoaderThreads=atoi(v.Get("DATALOADERTHREADS").c_str());
     useMPQ=(bool)atoi(v.Get("USEMPQ").c_str());
 
-    // clientversion is a bit more complicated to add
+    switch(client)
     {
-        std::string opt=clientversion_string + ".";
-        std::string num;
-        uint8 p=0;
-        for(uint8 i=0;i<opt.length();i++)
+      case 0:
+      {
+        clientbuild = 6005;
+        clientversion_string="1.12.2";
+        break;
+      }
+      case 1:
+      {
+        clientbuild = 8606;
+        clientversion_string="2.4.3";
+        break;
+      }
+      case 2:
+      {
+        clientbuild = 12340;
+        clientversion_string="3.3.5";
+        break;
+      }
+      case 3:
+      default:
+      {
+        logerror("Unknown client - check conf");
+      }
+    }
+
+    // clientversion is a bit more complicated to add
+    std::string opt=clientversion_string + ".";
+    std::string num;
+    uint8 p=0;
+    for(uint8 i=0;i<opt.length();i++)
+    {
+        if(!isdigit(opt.at(i)))
         {
-            if(!isdigit(opt.at(i)))
-            {
-                clientversion[p]=(unsigned char)atoi(num.c_str());
-                num.clear();
-                p++;
-                if(p>2)
-                    break;
-                continue;
-            }
-            num+=opt.at(i);
+            clientversion[p]=(unsigned char)atoi(num.c_str());
+            num.clear();
+            p++;
+            if(p>2)
+                break;
+            continue;
         }
+        num+=opt.at(i);
     }
 
     // GUI related
