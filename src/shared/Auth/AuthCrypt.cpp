@@ -30,7 +30,8 @@ AuthCrypt::~AuthCrypt()
 
 }
 
-void AuthCrypt::Init(BigNumber *K)
+// 3.3.5
+void AuthCrypt::Init_12340(BigNumber *K)
 {
     uint8 ClientDecryptionKey[SEED_KEY_SIZE] = { 0xCC, 0x98, 0xAE, 0x04, 0xE8, 0x97, 0xEA, 0xCA, 0x12, 0xDD, 0xC0, 0x93, 0x42, 0x91, 0x53, 0x57 };
     HmacHash serverEncryptHmac(SEED_KEY_SIZE, (uint8*)ClientDecryptionKey);
@@ -60,7 +61,7 @@ void AuthCrypt::Init(BigNumber *K)
     _initialized = true;
 }
 
-void AuthCrypt::DecryptRecv(uint8 *data, size_t len)
+void AuthCrypt::DecryptRecv_12340(uint8 *data, size_t len)
 {
     if (!_initialized)
         return;
@@ -68,10 +69,65 @@ void AuthCrypt::DecryptRecv(uint8 *data, size_t len)
     _decrypt.UpdateData(len, data);
 }
 
-void AuthCrypt::EncryptSend(uint8 *data, size_t len)
+void AuthCrypt::EncryptSend_12340(uint8 *data, size_t len)
 {
     if (!_initialized)
         return;
 
     _encrypt.UpdateData(len, data);
+}
+
+
+//1.12.2
+void AuthCrypt::Init_6005(BigNumber *K)
+{
+    _send_i = _send_j = _recv_i = _recv_j = 0;
+    
+    SetKey_6005(K->AsByteArray(),40);
+    _initialized = true;
+  
+}
+
+void AuthCrypt::DecryptRecv_6005(uint8 *data, size_t len)
+{
+    if (!_initialized)
+        return;
+    
+    if (len < CRYPTED_RECV_LEN_6005)
+        return;
+
+    for (size_t t = 0; t < CRYPTED_RECV_LEN_6005; t++)
+    {
+        _recv_i %= _key.size();
+        uint8 x = (data[t] - _recv_j) ^ _key[_recv_i];
+        ++_recv_i;
+        _recv_j = data[t];
+        data[t] = x;
+
+        
+    }
+  
+}
+
+void AuthCrypt::EncryptSend_6005(uint8 *data, size_t len)
+{
+    if (!_initialized)
+        return;
+    if (len < CRYPTED_SEND_LEN_6005) 
+        return;
+
+    for (size_t t = 0; t < CRYPTED_SEND_LEN_6005; t++)
+    {
+        _send_i %= _key.size();
+        uint8 x = (data[t] ^ _key[_send_i]) + _send_j;
+        ++_send_i;
+        data[t] = _send_j = x;
+    }
+
+}
+
+void AuthCrypt::SetKey_6005(uint8 *key, size_t len)
+{
+    _key.resize(len);
+    std::copy(key, key + len, _key.begin());
 }

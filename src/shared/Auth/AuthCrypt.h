@@ -30,15 +30,35 @@ class AuthCrypt
         AuthCrypt();
         ~AuthCrypt();
 
-        void Init(BigNumber *K);
-        void DecryptRecv(uint8 *, size_t);
-        void EncryptSend(uint8 *, size_t);
+        //Dummy
+        void DecryptRecvDummy(uint8 *, size_t){return;};
+        void EncryptSendDummy(uint8 *, size_t){return;};
+
+        //3.3.5
+        void Init_12340(BigNumber *K);
+        void DecryptRecv_12340(uint8 *, size_t);
+        void EncryptSend_12340(uint8 *, size_t);
+
+        //1.12.X
+        void Init_6005(BigNumber *K);
+        void SetKey_6005(uint8 *, size_t);
+        void DecryptRecv_6005(uint8 *, size_t);
+        void EncryptSend_6005(uint8 *, size_t);
 
         bool IsInitialized() { return _initialized; }
 
+        const static size_t CRYPTED_SEND_LEN_6005 = 6;
+        const static size_t CRYPTED_RECV_LEN_6005 = 4;
+
+
     private:
+        bool _initialized;
+        //3.3.5
         SARC4 _decrypt;
         SARC4 _encrypt;
-        bool _initialized;
+        
+        //1.12.2
+        std::vector<uint8> _key;
+        uint8 _send_i, _send_j, _recv_i, _recv_j;
 };
 #endif
