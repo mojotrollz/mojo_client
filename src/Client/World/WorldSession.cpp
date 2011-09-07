@@ -1375,16 +1375,31 @@ void WorldSession::_HandleCastSuccessOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleInitialSpellsOpcode(WorldPacket& recvPacket)
 {
         uint8 unk;
-        uint16 spellslot,count;
+        uint16 not_spellslot,count,spellid16;
         uint32 spellid;
         recvPacket >> unk >> count;
         logdebug("Got initial spells list, %u spells.",count);
-        for(uint16 i = 0; i < count; i++)
+        if(GetInstance()->GetConf()->clientbuild > 6005)
         {
-            recvPacket >> spellid >> spellslot;
-            logdebug("Initial Spell: id=%u slot=%u",spellid,spellslot);
-            GetMyChar()->AddSpell(spellid, spellslot);
+          for(uint16 i = 0; i < count; i++)
+          {
+              recvPacket >> spellid >> not_spellslot;
+              logdebug("Initial Spell: id=%u slot=%u",spellid,not_spellslot);
+              GetMyChar()->AddSpell(spellid, not_spellslot);
+          }
         }
+        else
+        {
+          for(uint16 i = 0; i < count; i++)
+          {
+              recvPacket >> spellid16 >> not_spellslot;
+              spellid = spellid16;
+              logdebug("Initial Spell: id=%u slot=%u",spellid,not_spellslot);
+              GetMyChar()->AddSpell(spellid, not_spellslot);
+          }
+          
+        }
+        //TODO: Parse packet completely
 }
 
 void WorldSession::_HandleLearnedSpellOpcode(WorldPacket& recvPacket)
