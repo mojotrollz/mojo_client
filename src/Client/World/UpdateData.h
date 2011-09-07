@@ -26,6 +26,15 @@ enum OBJECT_UPDATE_FLAGS
     UPDATEFLAG_ROTATION     = 0x0200
 };
 
+enum OBJECT_UPDATE_FLAGS_6005 //UPDATEFLAGS with different meaning in 1.12.x
+{
+    UPDATEFLAG_FULLGUID_6005= 0x0004,//6005 Never used in MaNGOS
+    UPDATEFLAG_HIGHGUID_6005= 0x0008,//6005 Never used in MaNGOS
+    UPDATEFLAG_ALL_6005     = 0x0010 //6005
+};
+
+
+
 enum MovementFlags
 {
     MOVEMENTFLAG_NONE               = 0x00000000,

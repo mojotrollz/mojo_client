@@ -37,10 +37,12 @@ void WorldSession::_HandleCompressedUpdateObjectOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
 {
     uint8 utype;
-    //uint8 hasTransport;
+    uint8 hasTransport;
     uint32 usize, ublocks, readblocks=0;
     uint64 uguid;
     recvPacket >> ublocks; // >> hasTransport;
+    if(GetInstance()->GetConf()->clientbuild <= 6005)
+      recvPacket >> hasTransport;
     //logdev("UpdateObject: blocks = %u, hasTransport = %u", ublocks, hasTransport);
     logdev("UpdateObject: blocks = %u", ublocks);
     while((recvPacket.rpos() < recvPacket.size())&& (readblocks < ublocks))
@@ -238,10 +240,13 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
 {
     MovementInfo mi; // TODO: use a reference to a MovementInfo in Unit/Player class once implemented
     uint16 flags;
+    uint8 flags_6005;
     // uint64 fullguid; // see below
     float speedWalk, speedRun, speedSwimBack, speedSwim, speedWalkBack, speedTurn, speedFly, speedFlyBack, speedPitchRate;
     uint32 unk32;
 
+    uint16 cb = GetInstance()->GetConf()->clientbuild;
+    
     Object *obj = (Object*)objmgr.GetObj(uguid, true); // also depleted objects
     Unit *u = NULL;
     if(obj)
@@ -256,7 +261,13 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         logerror("MovementUpdate for unknown object "I64FMT" typeid=%u",uguid,objtypeid);
     }
 
-    recvPacket >> flags;
+    if(cb > 6005)
+      recvPacket >> flags;
+    else
+    {
+      recvPacket >> flags_6005;
+      flags = flags_6005;
+    }
 
     mi.flags = 0; // not sure if its correct to set it to 0 (needs some starting flag?)
     if(flags & UPDATEFLAG_LIVING)
@@ -358,19 +369,26 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         }
     }
 
-    if(flags & UPDATEFLAG_LOWGUID)
+    if(cb > 6005 && flags & UPDATEFLAG_LOWGUID)
     {
         recvPacket >> unk32;
         logdev("MovementUpdate: UPDATEFLAG_LOWGUID is set, got %X", unk32);
     }
 
-    if(flags & UPDATEFLAG_HIGHGUID)
+    if(cb > 6005 && flags & UPDATEFLAG_HIGHGUID)
     {
         recvPacket >> unk32;             // 2.0.6 - high guid was there, unk for 2.0.12
         // not sure if this is correct, MaNGOS sends 0 always.
         //obj->SetUInt32Value(OBJECT_FIELD_GUID+1,higuid); // note that this sets only the high part of the guid
         logdev("MovementUpdate: UPDATEFLAG_HIGHGUID is set, got %X", unk32);
     }
+    if(cb <= 6005 && flags & UPDATEFLAG_ALL_6005)
+    {
+        recvPacket >> unk32;            
+        // MaNGOS sends 1 always.
+        logdev("MovementUpdate: UPDATEFLAG_ALL is set, got %X", unk32);
+    }
+
 
     if(flags & UPDATEFLAG_HAS_TARGET)
     {
