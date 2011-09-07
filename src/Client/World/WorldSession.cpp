@@ -571,10 +571,11 @@ void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleAuthResponseOpcode(WorldPacket& recvPacket)
 {
     uint8 errcode;
-    uint8 dummy8, expansion; uint32 dummy32;
+    uint8 BillingPlanFlags, expansion; uint32 BillingTimeRemaining, BillingTimeRested;
     recvPacket >> errcode;
-    recvPacket >> dummy32 >> dummy8 >> dummy32;
-    recvPacket >> expansion;
+    recvPacket >> BillingTimeRemaining >> BillingPlanFlags >> BillingTimeRested;
+    if(GetInstance()->GetConf()->clientbuild >6005)
+      recvPacket >> expansion;
     // TODO: add data to generic_text.scp and use the strings here
     if(errcode == AUTH_OK)
     {
@@ -618,11 +619,11 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
             recvPacket >> plr[i]._race;
             recvPacket >> plr[i]._class;
             recvPacket >> plr[i]._gender;
-            recvPacket >> plr[i]._bytes1;
-            recvPacket >> plr[i]._bytes2;
-            recvPacket >> plr[i]._bytes3;
-            recvPacket >> plr[i]._bytes4;
-            recvPacket >> plr[i]._bytesx;
+            recvPacket >> plr[i]._bytes1;//skin
+            recvPacket >> plr[i]._bytes2;//face
+            recvPacket >> plr[i]._bytes3;//hair style
+            recvPacket >> plr[i]._bytes4;//hair color
+            recvPacket >> plr[i]._bytesx;//facial hair
             recvPacket >> plr[i]._level;
             recvPacket >> plr[i]._zoneId;
             recvPacket >> plr[i]._mapId;
@@ -631,14 +632,21 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
             recvPacket >> plr[i]._z;
             recvPacket >> plr[i]._guildId;
             recvPacket >> plr[i]._flags;
-            recvPacket >> dummy32; // at_login_customize
+            if(GetInstance()->GetConf()->clientbuild > 6005)
+            {
+              recvPacket >> dummy32; // at_login_customize
+            }
             recvPacket >> dummy8;
             recvPacket >> plr[i]._petInfoId;
             recvPacket >> plr[i]._petLevel;
             recvPacket >> plr[i]._petFamilyId;
             for(unsigned int inv=0;inv<20;inv++)
             {
-                recvPacket >> plr[i]._items[inv].displayId >> plr[i]._items[inv].inventorytype >> dummy32;
+                recvPacket >> plr[i]._items[inv].displayId >> plr[i]._items[inv].inventorytype ;
+                if(GetInstance()->GetConf()->clientbuild > 6005)
+                {
+                  recvPacket >> dummy32; // whatever
+                }
             }
             plrNameCache.Add(plr[i]._guid, plr[i]._name); // TODO: set after loadingscreen, after loading cache
 
