@@ -833,7 +833,7 @@ void WorldSession::_HandleAccountDataMD5Opcode(WorldPacket& recvPacket)
     // packet structure not yet known
 }
 
-void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
+void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket) //TODO: REWRITE ME!!!
 {
     uint8 type, chatTag;
     uint32 lang;
@@ -848,9 +848,11 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
 
     if(lang == LANG_ADDON && GetInstance()->GetConf()->skipaddonchat)
         return;
-
-    recvPacket >> source_guid;
-    recvPacket >> unk32;
+    if(GetInstance()->GetConf()->clientbuild > 6005)
+    {
+      recvPacket >> source_guid;
+      recvPacket >> unk32;
+    }
 
     switch(type)
     {
