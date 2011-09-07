@@ -81,9 +81,12 @@ void Channel::Join(std::string channel, std::string password)
 	// Send join channel request
 	WorldPacket worldPacket;
 	worldPacket.SetOpcode(CMSG_JOIN_CHANNEL);
-	worldPacket << (uint32)0; // new since 2.0.x, some channel ID? server answers us with that number later if channel joined
-    worldPacket << (uint8)0;  // unk
-    worldPacket << (uint8)0;  // unk, new since 2.2.x
+    if(_worldSession->GetInstance()->GetConf()->clientbuild > 6005)
+    {
+      worldPacket << (uint32)0; // new since 2.0.x, some channel ID? server answers us with that number later if channel joined
+      worldPacket << (uint8)0;  // unk
+      worldPacket << (uint8)0;  // unk, new since 2.2.x
+    }
 	worldPacket << channel << password;
 	_worldSession->SendWorldPacket(worldPacket);
 }
