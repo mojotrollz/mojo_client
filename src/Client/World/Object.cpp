@@ -110,7 +110,9 @@ void WorldSession::_HandleDestroyObjectOpcode(WorldPacket& recvPacket)
     uint64 guid;
     uint8 dummy;
 
-    recvPacket >> guid >> dummy;
+    recvPacket >> guid;
+    if(GetInstance()->GetConf()->clientbuild>6005)
+      recvPacket >> dummy;
     logdebug("Destroy Object "I64FMT,guid);
 
     // call script just before object removal
