@@ -1040,13 +1040,19 @@ void WorldSession::_HandleNotificationOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleNameQueryResponseOpcode(WorldPacket& recvPacket)
 {
     uint64 pguid;
-    uint8 unk;
+    uint8 realm;
     std::string pname;
-    
-    pguid = recvPacket.GetPackedGuid();
-    recvPacket >> unk >> pname;
+    uint32 prace, pgender, pclass;
+    if(GetInstance()->GetConf()->clientbuild>6005)
+      pguid = recvPacket.GetPackedGuid();
+    else
+      recvPacket >> pguid;
+    recvPacket >> pname >> realm >> prace >> pgender >> pclass;
     if(pname.length()>MAX_PLAYERNAME_LENGTH || pname.length()<MIN_PLAYERNAME_LENGTH)
+    {
+        logerror("Playername Length outside bounds: %u",pname.length());
         return; // playernames maxlen=12, minlen=2
+    }
     // rest of the packet is not interesting for now
     plrNameCache.Add(pguid,pname);
     logdetail("CACHE: Assigned new player name: '%s' = " I64FMTD ,pname.c_str(),pguid);
@@ -1093,13 +1099,19 @@ void WorldSession::_HandleMovementOpcode(WorldPacket& recvPacket)
     uint64 guid;
     uint16 flags2;
     guid = recvPacket.GetPackedGuid();
-    recvPacket >> flags >> flags2 >> time >> x >> y >> z >> o >> unk32;
+    recvPacket >> flags;
+    if(GetInstance()->GetConf()->clientbuild>6005)
+    {
+      recvPacket >> flags2; 
+    }
+    recvPacket >> time >> x >> y >> z >> o >> unk32;
     DEBUG(logdebug("MOVE: "I64FMT" -> time=%u flags=0x%X x=%.4f y=%.4f z=%.4f o=%.4f",guid,time,flags,x,y,z,o));
     Object *obj = objmgr.GetObj(guid);
     if(obj && obj->IsWorldObject())
     {
         ((WorldObject*)obj)->SetPosition(x,y,z,o);
     }
+    //TODO: Eval rest of Packet!!
 }
 
 void WorldSession::_HandleSetSpeedOpcode(WorldPacket& recvPacket)
