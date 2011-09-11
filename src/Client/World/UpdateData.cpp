@@ -43,7 +43,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
     recvPacket >> ublocks; // >> hasTransport;
     if(GetInstance()->GetConf()->clientbuild <= 6005)
       recvPacket >> hasTransport;
-    //logdev("UpdateObject: blocks = %u, hasTransport = %u", ublocks, hasTransport);
+
     logdev("UpdateObject: blocks = %u", ublocks);
     while((recvPacket.rpos() < recvPacket.size())&& (readblocks < ublocks))
     {
@@ -242,7 +242,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     uint16 flags;
     uint8 flags_6005;
     // uint64 fullguid; // see below
-    float speedWalk, speedRun, speedSwimBack, speedSwim, speedWalkBack, speedTurn, speedFly, speedFlyBack, speedPitchRate;
+    float speedWalk =0, speedRun =0, speedSwimBack =0, speedSwim =0, speedWalkBack =0, speedTurn =0, speedFly =0, speedFlyBack =0, speedPitchRate =0;
     uint32 unk32;
 
     uint16 cb = GetInstance()->GetConf()->clientbuild;
@@ -272,8 +272,11 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     mi.flags = 0; // not sure if its correct to set it to 0 (needs some starting flag?)
     if(flags & UPDATEFLAG_LIVING)
     {
-        recvPacket >> mi.flags >> mi.unkFlags >> mi.time;
-
+        recvPacket >> mi.flags;
+        if(cb > 6005)
+          recvPacket >> mi.unkFlags;
+        recvPacket>> mi.time;
+        
         logdev("MovementUpdate: TypeID=%u GUID="I64FMT" pObj=%X flags=%u mi.flags=%u",objtypeid,uguid,obj,flags,mi.flags);
 
         recvPacket >> mi.x >> mi.y >> mi.z >> mi.o;
@@ -295,7 +298,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
             recvPacket >>  mi.s_angle;
             logdev("MovementUpdate: MOVEMENTFLAG_SWIMMING or FLYING is set, angle = %f!", mi.s_angle);
         }
-
+        
         recvPacket >> mi.fallTime;
         logdev("MovementUpdate: FallTime = %u", mi.fallTime);
 
@@ -311,9 +314,12 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
             logdev("MovementUpdate: MOVEMENTFLAG_SPLINE is set, got %u", mi.u_unk1);
         }
 
-        recvPacket >> speedWalk >> speedRun >> speedSwimBack >> speedSwim; // speedRun can also be mounted speed if player is mounted
-        recvPacket >> speedWalkBack >> speedFly >> speedFlyBack >> speedTurn; // fly added in 2.0.x
-        recvPacket >> speedPitchRate;
+        recvPacket >> speedWalk >> speedRun >> speedSwimBack >> speedSwim >> speedWalkBack; // speedRun can also be mounted speed if player is mounted; WalkBack is called RunBack in Mangos
+        if(cb > 6005)
+          recvPacket >> speedFly >> speedFlyBack; // fly added in 2.0.x
+        recvPacket >> speedTurn;
+        if(cb > 6005)
+          recvPacket >> speedPitchRate;
         logdev("MovementUpdate: Got speeds, walk=%f run=%f turn=%f", speedWalk, speedRun, speedTurn);
         if(u)
         {
