@@ -88,8 +88,12 @@ namespace MemoryDataHolder
     }    
     void MakeModelFilename(char* fn, std::string fname)
     {
+        if(fname.find(".mdx")!=std::string::npos)
+          fname.replace(fname.length()-3,3,"m2");
         if(loadFromMPQ)
+        {
             sprintf(fn,"%s",fname.c_str());
+        }
         else
         {
             NormalizeFilename(_PathToFileName(fname));

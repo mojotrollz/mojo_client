@@ -628,14 +628,11 @@ void SceneWorld::UpdateTerrain(void)
                     if(_doodads.find(d->uniqueid) == _doodads.end()) // only add doodads that dont exist yet
                     {
                         std::string filename;
-                        if(instance->GetConf()->useMPQ)
-                        {
-                            filename= d->MPQpath.c_str();
-                        }
-                        else
-                        {
-                            filename= d->model.c_str();
-                        }
+
+                        filename= d->model.c_str();//This is a hack and needs fixing at some point.
+                        //Actually the point at which this will be fixed is when all art assets are loaded together
+                        //because there is no point in loading them separately
+
 //                         logdebug("loading Doodad %s",filename.c_str());
                         io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(device, filename.c_str());
                         if (!modelfile)
