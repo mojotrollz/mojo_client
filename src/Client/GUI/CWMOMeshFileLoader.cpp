@@ -60,7 +60,7 @@ IAnimatedMesh* CWMOMeshFileLoader::createMesh(io::IReadFile* file)
         {
             char grpfilename[255];
             sprintf(grpfilename,"%s_%03u.wmo",filename.substr(0,filename.length()-4).c_str(),i);
-            logdev("%s",grpfilename);
+            DEBUG(logdev("%s",grpfilename));
             MeshFile = io::IrrCreateIReadFileBasic(Device,grpfilename);
             if(!MeshFile)
             {
@@ -73,7 +73,7 @@ IAnimatedMesh* CWMOMeshFileLoader::createMesh(io::IReadFile* file)
     Device->getSceneManager()->getMeshManipulator()->flipSurfaces(Mesh); //Fix inverted surfaces after the rotation
     //Does this crash on windows?
     Device->getSceneManager()->getMeshManipulator()->recalculateNormals(Mesh,true);//just to be sure
-    logdev("Complete Mesh contains a total of %u submeshes!",Mesh->getMeshBufferCount());
+    DEBUG(logdev("Complete Mesh contains a total of %u submeshes!",Mesh->getMeshBufferCount()));
 	}
 	else
 	{
@@ -92,24 +92,24 @@ bool CWMOMeshFileLoader::load(bool _root)
     u32 size;
     u32 textureOffset;
 
-logdev("Trying to open file %s",MeshFile->getFileName());
+DEBUG(logdev("Trying to open file %s",MeshFile->getFileName()));
 
 while(MeshFile->getPos() < MeshFile->getSize())
 {
 MeshFile->read(fourcc,4);
 MeshFile->read(&size,4);
 flipcc(fourcc);
-logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
+DEBUG(logdev("Reading Chunk: %s size %u", (char*)fourcc,size));
 
      if(!strcmp((char*)fourcc,"MVER")){
-        logdev("MVER Chunk: %s",(char*)fourcc);
+        DEBUG(logdev("MVER Chunk: %s",(char*)fourcc));
         MeshFile->seek(size,true);
      }
 
     //Start root file parsing
      else if(!strcmp((char*)fourcc,"MOHD")){
         MeshFile->read(&rootHeader,sizeof(RootHeader));
-        logdev("Read Root Header: %u Textures, %u Groups, %u Models", rootHeader.nTextures, rootHeader.nGroups, rootHeader.nModels);
+        DEBUG(logdev("Read Root Header: %u Textures, %u Groups, %u Models", rootHeader.nTextures, rootHeader.nGroups, rootHeader.nModels));
         if(!isRootFile)//We should be reading a group file and found a root header, abort
             return 0;
      }
@@ -127,7 +127,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
             MeshFile->read(&tempMOMT,sizeof(MOMT_Data));
             WMOMTexDefinition.push_back(tempMOMT);
         }
-        logdev("Read %u/%u TextureDefinitions",WMOMTexDefinition.size(),(size/sizeof(MOMT_Data)));
+        DEBUG(logdev("Read %u/%u TextureDefinitions",WMOMTexDefinition.size(),(size/sizeof(MOMT_Data))));
 
         u32 tempOffset = MeshFile->getPos();//Save current position for further reading until texture file names are read.
 
@@ -141,7 +141,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
         texNameSize = WMOMTexDefinition[i].endNameIndex-WMOMTexDefinition[i].startNameIndex; tempTexName.resize(texNameSize); 
         MeshFile->seek(textureOffset+WMOMTexDefinition[i].startNameIndex);
         MeshFile->read((void*)tempTexName.c_str(),WMOMTexDefinition[i].endNameIndex-WMOMTexDefinition[i].startNameIndex);
-        logdev("Texture %u: %s",i,tempTexName.c_str());
+        DEBUG(logdev("Texture %u: %s",i,tempTexName.c_str()));
         WMOMTextureFiles.push_back(tempTexName.c_str());
         }
 
@@ -152,7 +152,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
 
      //Start Group file parsing
      else if(!strcmp((char*)fourcc,"MOGP")){
-        logdev("header okay: %s",(char*)fourcc);
+        DEBUG(logdev("header okay: %s",(char*)fourcc));
         MeshFile->seek(68,true);
         if(isRootFile)//We should be reading a root file and found a Group header, abort
             return 0;
@@ -174,7 +174,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
             previous_texid=tempMOPY.textureID;
         }
             submeshes.push_back(WMOMTexData.size()-1);//last read entry
-        logdev("Read %u/%u Texture Informations, counted %u submeshes",WMOMTexData.size(),(size/sizeof(MOPY_Data)),submeshes.size());
+        DEBUG(logdev("Read %u/%u Texture Informations, counted %u submeshes",WMOMTexData.size(),(size/sizeof(MOPY_Data)),submeshes.size()));
 
      }
      else if(!strcmp((char*)fourcc,"MOVI")){//Vertex indices (3 per triangle)
@@ -187,7 +187,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
             MeshFile->read(&tempWMOIndex,sizeof(u16));
             WMOMIndices.push_back(tempWMOIndex);
         }
-        logdev("Read %u/%u Indices",WMOMIndices.size(),(size/sizeof(u16)));
+        DEBUG(logdev("Read %u/%u Indices",WMOMIndices.size(),(size/sizeof(u16))));
 
      }
      else if(!strcmp((char*)fourcc,"MOVT")){//Vertex coordinates
@@ -204,7 +204,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
             tempWMOVertex.Z=tempYZ;
             WMOMVertices.push_back(tempWMOVertex);
         }
-        logdev("Read %u/%u Vertex Coordinates",WMOMVertices.size(),(size/sizeof(core::vector3df)));
+        DEBUG(logdev("Read %u/%u Vertex Coordinates",WMOMVertices.size(),(size/sizeof(core::vector3df))));
 
      }
     else if(!strcmp((char*)fourcc,"MONR")){//Normals
@@ -221,7 +221,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
             tempWMONormal.Z=tempYZ;
             WMOMNormals.push_back(tempWMONormal);
         }
-        logdev("Read %u/%u Normal Coordinates",WMOMNormals.size(),(size/sizeof(core::vector3df)));
+        DEBUG(logdev("Read %u/%u Normal Coordinates",WMOMNormals.size(),(size/sizeof(core::vector3df))));
 
      }
     else if(!strcmp((char*)fourcc,"MOTV")){//TexCoord
@@ -234,7 +234,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
             MeshFile->read(&tempWMOMTexcoord,sizeof(core::vector2df));
             WMOMTexcoord.push_back(tempWMOMTexcoord);
         }
-        logdev("Read %u/%u Texture Coordinates",WMOMTexcoord.size(),(size/sizeof(core::vector2df)));
+        DEBUG(logdev("Read %u/%u Texture Coordinates",WMOMTexcoord.size(),(size/sizeof(core::vector2df))));
 
      }
     else if(!strcmp((char*)fourcc,"MOCV")){//Vertex colors!! Scaaaary!
@@ -248,7 +248,7 @@ logdev("Reading Chunk: %s size %u", (char*)fourcc,size);
             MeshFile->read(&tempWMOMVertexColor,sizeof(WMOColor));
             WMOMVertexColor.push_back(video::SColor(tempWMOMVertexColor.a,tempWMOMVertexColor.r,tempWMOMVertexColor.g,tempWMOMVertexColor.b));
         }
-        logdev("Read %u/%u Vertex colors",WMOMVertexColor.size(),(size/sizeof(WMOColor)));
+        DEBUG(logdev("Read %u/%u Vertex colors",WMOMVertexColor.size(),(size/sizeof(WMOColor))));
 
      }
      //End Group file parsing
@@ -287,14 +287,14 @@ for(u32 i=0;i<submeshes.size();i++)//The mesh has to be split into submeshes bec
                 MeshBuffer->Indices.push_back(WMOMIndices[j*3+2]);
                 }
         }
-        logdev("Inserted %u Indices",MeshBuffer->Indices.size());
+        DEBUG(logdev("Inserted %u Indices",MeshBuffer->Indices.size()));
 
         for(u32 j=0;j<WMOVertices.size();j++)
         {
             MeshBuffer->Vertices_Standard.push_back(WMOVertices[j]);
         }
 
-        logdev("Inserted %u Vertices",MeshBuffer->Vertices_Standard.size());
+        DEBUG(logdev("Inserted %u Vertices",MeshBuffer->Vertices_Standard.size()));
 
 //         std::string TexName=Texdir.c_str();
 //         TexName+="/";
