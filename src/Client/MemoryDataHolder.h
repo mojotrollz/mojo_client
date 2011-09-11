@@ -54,6 +54,7 @@ namespace MemoryDataHolder
     void MakeWDTFilename(char*,uint32,std::string);
     void MakeTextureFilename(char*, std::string);
     void MakeModelFilename(char*, std::string);
+    void MakeWMOFilename(char*, std::string);
     bool FileExists(std::string);
 
     MemoryDataResult GetFile(std::string s, bool threaded = false, callback_func func = NULL,void *ptr = NULL, ZThread::Condition *cond = NULL, bool ref_counted = true);

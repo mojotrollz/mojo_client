@@ -215,13 +215,14 @@ bool ADTFile::LoadMem(ByteBuffer& buf)
         }
         else if(!strcmp((char*)fourcc,"MCNK"))
         {
+            uint32 endpos = buf.rpos()+size;
             _chunks[mcnkid].hdr = buf.read<ADTMapChunkHeader>();
             uint8 _cc2[5];
             uint8 *mfcc = &_cc2[0];
             mfcc[4]=0;
             uint32 msize;
             bool mcal_compressed = false;
-            while(buf.rpos()<buf.size())
+            while(buf.rpos()<endpos)
             {
                 buf.read(mfcc,4); flipcc(mfcc); 
                 buf.read((uint8*)&msize,4);
@@ -363,6 +364,7 @@ bool ADTFile::LoadMem(ByteBuffer& buf)
 
             }
             mcnkid++;
+            buf.rpos(endpos);
         }
         else
         {

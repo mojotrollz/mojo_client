@@ -96,6 +96,16 @@ namespace MemoryDataHolder
             sprintf(fn,"./data/model/%s",fname.c_str());
         }
     }  
+    void MakeWMOFilename(char* fn, std::string fname)
+    {
+        if(loadFromMPQ)
+            sprintf(fn,"%s",fname.c_str());
+        else
+        {
+            NormalizeFilename(_PathToFileName(fname));
+            sprintf(fn,"./data/wmos/%s",fname.c_str());
+        }
+    }  
 
     bool FileExists(std::string fname)
     {
