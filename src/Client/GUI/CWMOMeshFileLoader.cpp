@@ -321,6 +321,7 @@ for(u32 i=0;i<submeshes.size();i++)//The mesh has to be split into submeshes bec
         if(WMOMTexDefinition[WMOMTexData[lastindex].textureID].blendMode==1)
             MeshBuffer->getMaterial().MaterialType=video::EMT_TRANSPARENT_ALPHA_CHANNEL;
         MeshBuffer->recalculateBoundingBox();
+        MeshBuffer->setHardwareMappingHint(EHM_STATIC);
     }
     lastindex=submeshes[i];
 
