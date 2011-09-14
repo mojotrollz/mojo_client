@@ -66,6 +66,8 @@ struct CreatureTemplate
     uint8 RacialLeader;
     uint32 questItems[4];
     uint32 movementId;
+    uint32 PetSpellDataId;
+    uint16 civilian;
 };
 
 

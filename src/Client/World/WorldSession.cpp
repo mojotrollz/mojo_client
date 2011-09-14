@@ -1663,7 +1663,7 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
 
     CreatureTemplate *ct = new CreatureTemplate();
     std::string s;
-    //uint32 unk;
+    uint32 unk;
     float unkf;
     ct->entry = entry;
     recvPacket >> ct->name;
@@ -1671,24 +1671,37 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
     recvPacket >> s;
     recvPacket >> s;
     recvPacket >> ct->subname;
-    recvPacket >> ct->directions;
+    if(GetInstance()->GetConf()->clientbuild > 6005)
+      recvPacket >> ct->directions;
     recvPacket >> ct->flag1;
     recvPacket >> ct->type;
     recvPacket >> ct->family;
     recvPacket >> ct->rank;
-    for(uint32 i = 0; i < MAX_KILL_CREDIT; i++)
-        recvPacket >> ct->killCredit[i];
-    recvPacket >> ct->displayid_A;
-    recvPacket >> ct->displayid_H;
-    recvPacket >> ct->displayid_AF;
-    recvPacket >> ct->displayid_HF;
-    recvPacket >> unkf;
-    recvPacket >> unkf;
-    recvPacket >> ct->RacialLeader;
-    for(uint32 i = 0; i < 4; i++)
-        recvPacket >> ct->questItems[i];
-    recvPacket >> ct->movementId;
-
+    if(GetInstance()->GetConf()->clientbuild > 6005)
+    {
+      for(uint32 i = 0; i < MAX_KILL_CREDIT; i++)
+          recvPacket >> ct->killCredit[i];
+      recvPacket >> ct->displayid_A;
+      recvPacket >> ct->displayid_H;
+      recvPacket >> ct->displayid_AF;
+      recvPacket >> ct->displayid_HF;
+      recvPacket >> unkf;
+      recvPacket >> unkf;
+      recvPacket >> ct->RacialLeader;
+      for(uint32 i = 0; i < 4; i++)
+          recvPacket >> ct->questItems[i];
+      recvPacket >> ct->movementId;
+    }
+    else
+    {
+      recvPacket >> unk;
+      recvPacket >> ct->PetSpellDataId;
+      recvPacket >> ct->displayid_A;
+      ct->displayid_H = ct->displayid_A;
+      ct->displayid_AF = ct->displayid_A;
+      ct->displayid_HF = ct->displayid_A;
+      recvPacket >> ct->civilian;
+    }
     std::stringstream ss;
     ss << "Got info for creature " << entry << ":" << ct->name;
     if(!ct->subname.empty())
@@ -1724,15 +1737,20 @@ void WorldSession::_HandleGameobjectQueryResponseOpcode(WorldPacket& recvPacket)
     recvPacket >> other_names; // name1
     recvPacket >> other_names; // name2
     recvPacket >> other_names; // name3 (all unused)
-    recvPacket >> unks;
-    recvPacket >> go->castBarCaption;
-    recvPacket >> go->unk1;
+    if(GetInstance()->GetConf()->clientbuild > 6005)
+    {
+      recvPacket >> unks;
+      recvPacket >> go->castBarCaption;
+      recvPacket >> go->unk1;
+    }
     for(uint32 i = 0; i < GAMEOBJECT_DATA_FIELDS; i++)
         recvPacket >> go->raw.data[i];
-    recvPacket >> go->size;
-    for(uint32 i = 0; i < 4; i++)
+    if(GetInstance()->GetConf()->clientbuild > 6005)
+    {
+      recvPacket >> go->size;
+      for(uint32 i = 0; i < 4; i++)
         recvPacket >> go->questItems[i];
-
+    }
     std::stringstream ss;
     ss << "Got info for gameobject " << entry << ":" << go->name;
     ss << " type " << go->type;
@@ -1783,7 +1801,10 @@ void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
     uint8 unk, type;
     uint32 time, flags, movetime, waypoints;
     float x, y, z;
-    recvPacket >> unk >> x >> y >> z >> time >> type;
+    if(GetInstance()->GetConf()->clientbuild>6005)
+      recvPacket >> unk;
+    
+    recvPacket >> x >> y >> z >> time >> type;
 
     float oldx = ((WorldObject*)obj)->GetX(),
           oldy = ((WorldObject*)obj)->GetY();
