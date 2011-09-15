@@ -33,9 +33,11 @@ void MovementMgr::SetInstance(PseuInstance *inst)
 void MovementMgr::_BuildPacket(uint16 opcode)
 {
     WorldPacket *wp = new WorldPacket(opcode,4+2+4+16); // it can be larger, if we are jumping, on transport or swimming
-    wp->appendPackGUID(_mychar->GetGUID());
+    if(_instance->GetConf()->client > CLIENT_CLASSIC_WOW)
+      wp->appendPackGUID(_mychar->GetGUID());
     *wp << _moveFlags;
-    *wp << (uint16)0; // flags2 , safe to set 0 for now (shlainn)
+    if(_instance->GetConf()->client > CLIENT_CLASSIC_WOW)
+      *wp << (uint16)0; // flags2 , safe to set 0 for now (shlainn)
     *wp << getMSTime();
     *wp << _mychar->GetPosition();
     // TODO: transport not yet handled/done
