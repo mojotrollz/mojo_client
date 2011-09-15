@@ -1,5 +1,4 @@
 #include "WorldSession.h"
-#include "UpdateFields.h"
 
 #include "Item.h"
 #include "Bag.h"
