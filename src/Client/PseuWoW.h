@@ -29,6 +29,13 @@ enum InstanceConditions
     COND_MAX
 };
 
+enum Client
+{
+    CLIENT_CLASSIC_WOW,
+    CLIENT_TBC,
+    CLIENT_WOTLK,
+    CLIENT_CATA
+};
 
 class PseuInstanceConf
 {

@@ -494,11 +494,6 @@ void PseuInstanceConf::ApplyFromVarSet(VarSet &v)
     reconnect=atoi(v.Get("RECONNECT").c_str());
     realmport=atoi(v.Get("REALMPORT").c_str());
     client=atoi(v.Get("CLIENT").c_str());
-    if(client==9) //9 = Custom settings
-    {
-      clientversion_string=v.Get("CLIENTVERSION");
-      clientbuild=atoi(v.Get("CLIENTBUILD").c_str());
-    }
     clientlang=v.Get("CLIENTLANGUAGE");
     realmname=v.Get("REALMNAME");
     charname=v.Get("CHARNAME");
@@ -524,25 +519,25 @@ void PseuInstanceConf::ApplyFromVarSet(VarSet &v)
 
     switch(client)
     {
-      case 0:
+      case CLIENT_CLASSIC_WOW:
       {
         clientbuild = 6005;
         clientversion_string="1.12.2";
         break;
       }
-      case 1:
+      case CLIENT_TBC:
       {
         clientbuild = 8606;
         clientversion_string="2.4.3";
         break;
       }
-      case 2:
+      case CLIENT_WOTLK:
       {
         clientbuild = 12340;
         clientversion_string="3.3.5";
         break;
       }
-      case 3:
+      case CLIENT_CATA:
       default:
       {
         logerror("Unknown client - check conf");
