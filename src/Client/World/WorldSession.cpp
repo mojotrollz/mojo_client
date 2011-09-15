@@ -22,6 +22,17 @@ struct OpcodeHandler
     void (WorldSession::*handler)(WorldPacket& recvPacket);
 };
 
+uint32 Object::maxvalues[TYPEID_MAX]={    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0};
+
 WorldSession::WorldSession(PseuInstance *in)
 {
     logdebug("-> Starting WorldSession 0x%X from instance 0x%X",this,in); // should never output a null ptr
@@ -36,7 +47,34 @@ WorldSession::WorldSession(PseuInstance *in)
     objmgr.SetInstance(in);
     _lag_ms = 0;
     //...
-
+    switch(in->GetConf()->client)//TODO: Add TBC/WOTLK cases
+    {
+      case CLIENT_CLASSIC_WOW:
+      {
+        Object::maxvalues[TYPEID_OBJECT]=OBJECT_END;
+        Object::maxvalues[TYPEID_ITEM]=ITEM_END_6005;
+        Object::maxvalues[TYPEID_CONTAINER]=CONTAINER_END_6005;
+        Object::maxvalues[TYPEID_UNIT]=UNIT_END_6005;
+        Object::maxvalues[TYPEID_PLAYER]=PLAYER_END_6005;
+        Object::maxvalues[TYPEID_GAMEOBJECT]=GAMEOBJECT_END_6005;
+        Object::maxvalues[TYPEID_DYNAMICOBJECT]=DYNAMICOBJECT_END;
+        Object::maxvalues[TYPEID_CORPSE]=CORPSE_END;
+        break;
+      }
+      default:
+      {
+        Object::maxvalues[TYPEID_OBJECT]=OBJECT_END;
+        Object::maxvalues[TYPEID_ITEM]=ITEM_END;
+        Object::maxvalues[TYPEID_CONTAINER]=CONTAINER_END;
+        Object::maxvalues[TYPEID_UNIT]=UNIT_END;
+        Object::maxvalues[TYPEID_PLAYER]=PLAYER_END;
+        Object::maxvalues[TYPEID_GAMEOBJECT]=GAMEOBJECT_END;
+        Object::maxvalues[TYPEID_DYNAMICOBJECT]=DYNAMICOBJECT_END;
+        Object::maxvalues[TYPEID_CORPSE]=CORPSE_END;
+        break;
+      }
+    }
+    
     in->GetScripts()->RunScriptIfExists("_onworldsessioncreate");
 
     DEBUG(logdebug("WorldSession 0x%X constructor finished",this));

@@ -72,6 +72,7 @@ enum EItemFields
     ITEM_FIELD_CREATE_PLAYED_TIME             = OBJECT_END + 0x0038, // Size: 1, Type: INT, Flags: PUBLIC
     ITEM_FIELD_PAD                            = OBJECT_END + 0x0039, // Size: 1, Type: INT, Flags: NONE
     ITEM_END                                  = OBJECT_END + 0x003A,
+    ITEM_END_6005                             = OBJECT_END + 0x2A,
 };
 
 enum EContainerFields
@@ -80,6 +81,7 @@ enum EContainerFields
     CONTAINER_ALIGN_PAD                       = ITEM_END + 0x0001, // Size: 1, Type: BYTES, Flags: NONE
     CONTAINER_FIELD_SLOT_1                    = ITEM_END + 0x0002, // Size: 72, Type: LONG, Flags: PUBLIC
     CONTAINER_END                             = ITEM_END + 0x004A,
+    CONTAINER_END_6005                        = ITEM_END + 0x003A,
 };
 
 enum EUnitFields
@@ -174,6 +176,8 @@ enum EUnitFields
     UNIT_FIELD_HOVERHEIGHT                    = OBJECT_END + 0x008C, // Size: 1, Type: FLOAT, Flags: PUBLIC
     UNIT_FIELD_PADDING                        = OBJECT_END + 0x008D, // Size: 1, Type: INT, Flags: NONE
     UNIT_END                                  = OBJECT_END + 0x008E,
+
+    UNIT_END_6005                             = OBJECT_END + 0x00B6,
 
     PLAYER_DUEL_ARBITER                       = UNIT_END + 0x0000, // Size: 2, Type: LONG, Flags: PUBLIC
     PLAYER_FLAGS                              = UNIT_END + 0x0002, // Size: 1, Type: INT, Flags: PUBLIC
@@ -391,6 +395,7 @@ enum EUnitFields
     PLAYER_GLYPHS_ENABLED                     = UNIT_END + 0x0498, // Size: 1, Type: INT, Flags: PRIVATE
     PLAYER_PET_SPELL_POWER                    = UNIT_END + 0x0499, // Size: 1, Type: INT, Flags: PRIVATE
     PLAYER_END                                = UNIT_END + 0x049A,
+    PLAYER_END_6005                           = UNIT_END + 0x0446,
 };
 
 enum EGameObjectFields
@@ -404,6 +409,7 @@ enum EGameObjectFields
     GAMEOBJECT_LEVEL                          = OBJECT_END + 0x000A, // Size: 1, Type: INT, Flags: PUBLIC
     GAMEOBJECT_BYTES_1                        = OBJECT_END + 0x000B, // Size: 1, Type: BYTES, Flags: PUBLIC
     GAMEOBJECT_END                            = OBJECT_END + 0x000C,
+    GAMEOBJECT_END_6005                       = OBJECT_END + 0x0014,
 };
 
 enum EDynamicObjectFields

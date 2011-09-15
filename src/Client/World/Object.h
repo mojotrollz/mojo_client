@@ -32,7 +32,8 @@ enum TYPEID
     TYPEID_DYNAMICOBJECT = 6,
     TYPEID_CORPSE        = 7,
     TYPEID_AIGROUP       = 8,
-    TYPEID_AREATRIGGER   = 9
+    TYPEID_AREATRIGGER   = 9,
+    TYPEID_MAX
 };
 
 class Object
@@ -100,6 +101,8 @@ public:
     inline bool _IsDepleted(void) { return _depleted; }
     inline void _SetDepleted(void) { _depleted = true; }
     
+    static uint32 maxvalues[];
+    
 protected:
     Object();
     void _InitValues(void);
@@ -114,7 +117,9 @@ protected:
     uint8 _typeid;
     std::string _name;
     bool _depleted : 1; // true if the object was deleted from the objmgr, but not from memory
+    
 };
+
 
 class WorldObject : public Object
 {
@@ -145,17 +150,8 @@ protected:
 
 inline uint32 GetValuesCountByTypeId(uint8 tid)
 {
-    switch(tid)
-    {
-    case TYPEID_OBJECT: return OBJECT_END;
-    case TYPEID_UNIT: return UNIT_END;
-    case TYPEID_PLAYER: return PLAYER_END;
-    case TYPEID_ITEM: return ITEM_END;
-    case TYPEID_CONTAINER: return CONTAINER_END;
-    case TYPEID_GAMEOBJECT: return GAMEOBJECT_END;
-    case TYPEID_DYNAMICOBJECT: return DYNAMICOBJECT_END;
-    case TYPEID_CORPSE: return CORPSE_END;
-    }
+    if(tid < TYPEID_MAX)
+      return Object::maxvalues[tid];
     return 0;
 }
 
