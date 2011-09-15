@@ -3,7 +3,7 @@
 GameObject::GameObject() : WorldObject()
 {
     _uint32values=NULL;
-    _type=TYPE_GAMEOBJECT;
+    _type|=TYPE_GAMEOBJECT;
     _typeid=TYPEID_GAMEOBJECT;
     _valuescount=GAMEOBJECT_END;
 }
