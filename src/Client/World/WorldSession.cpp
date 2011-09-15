@@ -560,7 +560,7 @@ void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
 {
     //Read Packet    
     uint32 sp, serverseed;
-    if(GetInstance()->GetConf()->clientbuild>6005)//TODO: Check TBC
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)//TODO: Check TBC
     {
       recvPacket >> sp;
     }
@@ -585,7 +585,7 @@ void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
     
     // Send Reply
     WorldPacket auth;
-    if(GetInstance()->GetConf()->clientbuild<=6005)
+    if(GetInstance()->GetConf()->client==CLIENT_CLASSIC_WOW)
     {
       auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<clientseed_uint32;
       auth.append(digest.GetDigest(),20);
@@ -612,7 +612,7 @@ void WorldSession::_HandleAuthResponseOpcode(WorldPacket& recvPacket)
     uint8 BillingPlanFlags, expansion; uint32 BillingTimeRemaining, BillingTimeRested;
     recvPacket >> errcode;
     recvPacket >> BillingTimeRemaining >> BillingPlanFlags >> BillingTimeRested;
-    if(GetInstance()->GetConf()->clientbuild >6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
       recvPacket >> expansion;
     // TODO: add data to generic_text.scp and use the strings here
     if(errcode == AUTH_OK)
@@ -670,7 +670,7 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
             recvPacket >> plr[i]._z;
             recvPacket >> plr[i]._guildId;
             recvPacket >> plr[i]._flags;
-            if(GetInstance()->GetConf()->clientbuild > 6005)
+            if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
             {
               recvPacket >> dummy32; // at_login_customize
             }
@@ -681,7 +681,7 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
             for(unsigned int inv=0;inv<20;inv++)
             {
                 recvPacket >> plr[i]._items[inv].displayId >> plr[i]._items[inv].inventorytype ;
-                if(GetInstance()->GetConf()->clientbuild > 6005)
+                if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
                 {
                   recvPacket >> dummy32; // whatever
                 }
@@ -886,7 +886,7 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket) //TODO: REW
 
     if(lang == LANG_ADDON && GetInstance()->GetConf()->skipaddonchat)
         return;
-    if(GetInstance()->GetConf()->clientbuild > 6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
     {
       recvPacket >> source_guid;
       recvPacket >> unk32;
@@ -1081,7 +1081,7 @@ void WorldSession::_HandleNameQueryResponseOpcode(WorldPacket& recvPacket)
     uint8 realm;
     std::string pname;
     uint32 prace, pgender, pclass;
-    if(GetInstance()->GetConf()->clientbuild>6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
       pguid = recvPacket.GetPackedGuid();
     else
       recvPacket >> pguid;
@@ -1138,7 +1138,7 @@ void WorldSession::_HandleMovementOpcode(WorldPacket& recvPacket)
     uint16 flags2;
     guid = recvPacket.GetPackedGuid();
     recvPacket >> flags;
-    if(GetInstance()->GetConf()->clientbuild>6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
     {
       recvPacket >> flags2; 
     }
@@ -1429,7 +1429,7 @@ void WorldSession::_HandleInitialSpellsOpcode(WorldPacket& recvPacket)
         uint32 spellid;
         recvPacket >> unk >> count;
         logdebug("Got initial spells list, %u spells.",count);
-        if(GetInstance()->GetConf()->clientbuild > 6005)
+        if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
         {
           for(uint16 i = 0; i < count; i++)
           {
@@ -1709,13 +1709,13 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
     recvPacket >> s;
     recvPacket >> s;
     recvPacket >> ct->subname;
-    if(GetInstance()->GetConf()->clientbuild > 6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
       recvPacket >> ct->directions;
     recvPacket >> ct->flag1;
     recvPacket >> ct->type;
     recvPacket >> ct->family;
     recvPacket >> ct->rank;
-    if(GetInstance()->GetConf()->clientbuild > 6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
     {
       for(uint32 i = 0; i < MAX_KILL_CREDIT; i++)
           recvPacket >> ct->killCredit[i];
@@ -1775,7 +1775,7 @@ void WorldSession::_HandleGameobjectQueryResponseOpcode(WorldPacket& recvPacket)
     recvPacket >> other_names; // name1
     recvPacket >> other_names; // name2
     recvPacket >> other_names; // name3 (all unused)
-    if(GetInstance()->GetConf()->clientbuild > 6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
     {
       recvPacket >> unks;
       recvPacket >> go->castBarCaption;
@@ -1783,7 +1783,7 @@ void WorldSession::_HandleGameobjectQueryResponseOpcode(WorldPacket& recvPacket)
     }
     for(uint32 i = 0; i < GAMEOBJECT_DATA_FIELDS; i++)
         recvPacket >> go->raw.data[i];
-    if(GetInstance()->GetConf()->clientbuild > 6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
     {
       recvPacket >> go->size;
       for(uint32 i = 0; i < 4; i++)
@@ -1839,7 +1839,7 @@ void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
     uint8 unk, type;
     uint32 time, flags, movetime, waypoints;
     float x, y, z;
-    if(GetInstance()->GetConf()->clientbuild>6005)
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
       recvPacket >> unk;
     
     recvPacket >> x >> y >> z >> time >> type;

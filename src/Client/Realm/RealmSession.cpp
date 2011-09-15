@@ -248,9 +248,9 @@ void RealmSession::_HandleRealmList(ByteBuffer& pkt)
     std::string realmAddr;
 
     SRealmHeader rh;
-    uint16 cb = GetInstance()->GetConf()->clientbuild;
+    uint16 client = GetInstance()->GetConf()->client;
     pkt >> rh.cmd >> rh.size >> rh.unknown;
-    if(cb<=6005)
+    if(client==CLIENT_CLASSIC_WOW)
     {
       uint8 count;
       pkt >> count;
@@ -272,7 +272,7 @@ void RealmSession::_HandleRealmList(ByteBuffer& pkt)
     // readout realms
     for(uint8 i=0;i<rh.count;i++)
     {
-        if(cb<=6005)
+        if(client==CLIENT_CLASSIC_WOW)
         {
           uint32 icon;
           pkt >> icon;
@@ -539,9 +539,7 @@ void RealmSession::_HandleLogonChallenge(ByteBuffer& pkt)
             packet.append(M1hash.GetDigest(),M1hash.GetLength());
             packet.append(crc_hash,20);
             packet << (uint8)0; // number of keys = 0
-
-            if(GetInstance()->GetConf()->clientbuild > 5302)
-                packet << (uint8)0; // 1.11.x compatibility (needs one more 0)
+            packet << (uint8)0; // 1.11.x compatibility (needs one more 0)
 
             GetInstance()->SetSessionKey(_key);
             memcpy(this->_m2,M2hash.GetDigest(),M2hash.GetLength()); // save M2 to an extern var to check it later
@@ -561,7 +559,7 @@ void RealmSession::_HandleLogonChallenge(ByteBuffer& pkt)
 void RealmSession::_HandleLogonProof(ByteBuffer& pkt)
 {
     PseuGUI *gui = GetInstance()->GetGUI();
-    logdebug("RealmSocket: Got AUTH_LOGON_PROOF [%u of %u bytes]",pkt.size(),(GetInstance()->GetConf()->clientbuild>6005 ? sizeof(sAuthLogonProof_S) : sizeof(sAuthLogonProof_S_6005)));
+    logdebug("RealmSocket: Got AUTH_LOGON_PROOF [%u of %u bytes]",pkt.size(),(GetInstance()->GetConf()->client>CLIENT_CLASSIC_WOW ? sizeof(sAuthLogonProof_S) : sizeof(sAuthLogonProof_S_6005)));
     if(pkt.size() < 2)
     {
         logerror("AUTH_LOGON_PROOF: Recieved incorrect/unknown packet. Hexdump:");
@@ -612,7 +610,7 @@ void RealmSession::_HandleLogonProof(ByteBuffer& pkt)
 
 
     sAuthLogonProof_S lp;
-    if(GetInstance()->GetConf()->clientbuild<=6005)
+    if(GetInstance()->GetConf()->client==CLIENT_CLASSIC_WOW)
     {
       sAuthLogonProof_S_6005 lp6005;
       pkt.read((uint8*)&lp6005, sizeof(sAuthLogonProof_S_6005));

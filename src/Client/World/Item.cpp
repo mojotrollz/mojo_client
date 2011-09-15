@@ -17,7 +17,7 @@ void WorldSession::_HandleItemQuerySingleResponseOpcode(WorldPacket& recvPacket)
         proto->Id = ItemID;
         recvPacket >> proto->Class;
         recvPacket >> proto->SubClass;
-        if(GetInstance()->GetConf()->clientbuild > 6005)
+        if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
         {
           recvPacket >> unk; // dont need that value?
         }

@@ -2,7 +2,6 @@
 #include "ZCompressor.h"
 #include "WorldSession.h"
 #include "UpdateData.h"
-#include "UpdateFields.h"
 #include "Object.h"
 #include "Unit.h"
 #include "Bag.h"
@@ -41,7 +40,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
     uint32 usize, ublocks, readblocks=0;
     uint64 uguid;
     recvPacket >> ublocks; // >> hasTransport;
-    if(GetInstance()->GetConf()->clientbuild <= 6005)
+    if(GetInstance()->GetConf()->client == CLIENT_CLASSIC_WOW)
       recvPacket >> hasTransport;
 
     logdev("UpdateObject: blocks = %u", ublocks);
@@ -245,7 +244,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     float speedWalk =0, speedRun =0, speedSwimBack =0, speedSwim =0, speedWalkBack =0, speedTurn =0, speedFly =0, speedFlyBack =0, speedPitchRate =0;
     uint32 unk32;
 
-    uint16 cb = GetInstance()->GetConf()->clientbuild;
+    uint16 client = GetInstance()->GetConf()->client;
     
     Object *obj = (Object*)objmgr.GetObj(uguid, true); // also depleted objects
     Unit *u = NULL;
@@ -261,7 +260,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         logerror("MovementUpdate for unknown object "I64FMT" typeid=%u",uguid,objtypeid);
     }
 
-    if(cb > 6005)
+    if(client > CLIENT_CLASSIC_WOW)
       recvPacket >> flags;
     else
     {
@@ -273,7 +272,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     if(flags & UPDATEFLAG_LIVING)
     {
         recvPacket >> mi.flags;
-        if(cb > 6005)
+        if(client > CLIENT_CLASSIC_WOW)
           recvPacket >> mi.unkFlags;
         recvPacket>> mi.time;
         
@@ -315,10 +314,10 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         }
 
         recvPacket >> speedWalk >> speedRun >> speedSwimBack >> speedSwim >> speedWalkBack; // speedRun can also be mounted speed if player is mounted; WalkBack is called RunBack in Mangos
-        if(cb > 6005)
+        if(client > CLIENT_CLASSIC_WOW)
           recvPacket >> speedFly >> speedFlyBack; // fly added in 2.0.x
         recvPacket >> speedTurn;
-        if(cb > 6005)
+        if(client > CLIENT_CLASSIC_WOW)
           recvPacket >> speedPitchRate;
         logdev("MovementUpdate: Got speeds, walk=%f run=%f turn=%f", speedWalk, speedRun, speedTurn);
         if(u)
@@ -375,20 +374,20 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         }
     }
 
-    if(cb > 6005 && flags & UPDATEFLAG_LOWGUID)
+    if(client > CLIENT_CLASSIC_WOW && flags & UPDATEFLAG_LOWGUID)
     {
         recvPacket >> unk32;
         logdev("MovementUpdate: UPDATEFLAG_LOWGUID is set, got %X", unk32);
     }
 
-    if(cb > 6005 && flags & UPDATEFLAG_HIGHGUID)
+    if(client > CLIENT_CLASSIC_WOW && flags & UPDATEFLAG_HIGHGUID)
     {
         recvPacket >> unk32;             // 2.0.6 - high guid was there, unk for 2.0.12
         // not sure if this is correct, MaNGOS sends 0 always.
         //obj->SetUInt32Value(OBJECT_FIELD_GUID+1,higuid); // note that this sets only the high part of the guid
         logdev("MovementUpdate: UPDATEFLAG_HIGHGUID is set, got %X", unk32);
     }
-    if(cb <= 6005 && flags & UPDATEFLAG_ALL_6005)
+    if(client == CLIENT_CLASSIC_WOW && flags & UPDATEFLAG_ALL_6005)
     {
         recvPacket >> unk32;            
         // MaNGOS sends 1 always.
@@ -404,7 +403,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
 
     if(flags & UPDATEFLAG_TRANSPORT)
     {
-        recvPacket >> unk32; // whats this used for?
+        recvPacket >> unk32; // mangos says: ms time
         logdev("MovementUpdate: UPDATEFLAG_TRANSPORT is set, got %u", unk32);
     }
 

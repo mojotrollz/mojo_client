@@ -84,7 +84,7 @@ void WorldSocket::OnRead()
                 break;
             }
 
-            if(GetSession()->GetInstance()->GetConf()->clientbuild > 6005)
+            if(GetSession()->GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
             {
               // read first byte and check if size is 3 or 2 bytes
               uint8 firstSizeByte;
@@ -166,9 +166,9 @@ void WorldSocket::SendWorldPacket(WorldPacket &pkt)
 void WorldSocket::InitCrypt(BigNumber *k)
 {
     //As crypt
-    switch(GetSession()->GetInstance()->GetConf()->clientbuild)
+    switch(GetSession()->GetInstance()->GetConf()->client)
     {
-      case 6005:
+      case CLIENT_CLASSIC_WOW:
       {
         logdebug("Setting Crypt to Build 6005");
         pInit = &AuthCrypt::Init_6005;
