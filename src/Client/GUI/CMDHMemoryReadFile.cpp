@@ -26,9 +26,8 @@ CMDHReadFile::CMDHReadFile(void* memory, long len, const c8* fileName)
 
 CMDHReadFile::~CMDHReadFile()
 {
-    // We should not drop the memory here... this model will possibly be loaded more than once
-    //if(getReferenceCount() <= 1)
-    //    MemoryDataHolder::Delete(getFileName());
+    // Drop the Memory, Irrlicht keeps a Model Cache of loaded models
+    MemoryDataHolder::Delete(getFileName());
 }
 
 

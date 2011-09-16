@@ -310,14 +310,22 @@ for(u32 i=0;i<submeshes.size();i++)//The mesh has to be split into submeshes bec
 //         std::transform(TexName.begin(), TexName.end(), TexName.begin(), tolower);
         char buf[1000];
         MemoryDataHolder::MakeTextureFilename(buf,WMOMTextureFiles[WMOMTexData[lastindex].textureID].c_str());
-        io::IReadFile* TexFile = io::IrrCreateIReadFileBasic(Device, buf);
-        if (!TexFile)
+        video::ITexture* tex = Device->getVideoDriver()->findTexture(buf);
+        if(!tex)
         {
-            logerror("Error! Texture file not found: %s", buf);
-            continue;
+          io::IReadFile* TexFile = io::IrrCreateIReadFileBasic(Device, buf);
+//             logdebug("Texture %s loading",M2MTextureFiles[M2MTextureLookup[M2MTextureUnit[j].textureIndex]].c_str());
+          if (!TexFile)
+          {
+              logerror("CM2MeshFileLoader: Texture file not found: %s", buf);
+              continue;
+          }
+//             logdebug("Texture %s loaded",M2MTextureFiles[M2MTextureLookup[M2MTextureUnit[j].textureIndex]].c_str());
+        tex = Device->getVideoDriver()->getTexture(TexFile);
+        TexFile->drop();
         }
 
-        MeshBuffer->getMaterial().setTexture(0,Device->getVideoDriver()->getTexture(TexFile));
+        MeshBuffer->getMaterial().setTexture(0,tex);
         if(WMOMTexDefinition[WMOMTexData[lastindex].textureID].blendMode==1)
             MeshBuffer->getMaterial().MaterialType=video::EMT_TRANSPARENT_ALPHA_CHANNEL;
         MeshBuffer->recalculateBoundingBox();

@@ -634,13 +634,23 @@ void SceneWorld::UpdateTerrain(void)
                         //because there is no point in loading them separately
 
 //                         logdebug("loading Doodad %s",filename.c_str());
-                        io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(device, filename.c_str());
-                        if (!modelfile)
-                            {
-                                logerror("Error! modelfile not found: %s", d->MPQpath.c_str());
-                                continue;
-                            }    
-                        scene::IAnimatedMesh *mesh = smgr->getMesh(modelfile);
+                        scene::IAnimatedMesh *mesh;
+                        if(!smgr->getMeshCache()->isMeshLoaded(filename.c_str()))
+                        {
+                          io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(device, filename.c_str());
+                          if (!modelfile)
+                              {
+                                  logerror("Error! modelfile not found: %s", filename.c_str());
+                                  continue;
+                              }    
+                          mesh = smgr->getMesh(modelfile);
+                          modelfile->drop();
+                        }
+                        else
+                        {
+                            mesh = smgr->getMeshCache()->getMeshByFilename(filename.c_str());
+                        }
+
                         if(mesh)
                         {
                             scene::IAnimatedMeshSceneNode *doodad = smgr->addAnimatedMeshSceneNode(mesh);
@@ -674,6 +684,10 @@ void SceneWorld::UpdateTerrain(void)
                                 _doodads[d->uniqueid] = gp;
                             }
                         }
+                        else
+                        {
+                            logerror("No mesh provided");
+                        }
                     }
                 }
                 // create WorldMapObjects (WMOs)
@@ -692,14 +706,24 @@ void SceneWorld::UpdateTerrain(void)
                         {
                             filename= wmo->model.c_str();
                         }
-//                         logdebug("loading WMO %s",filename.c_str());
-                        io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(device, filename.c_str());
-                        if (!modelfile)
-                            {
-                                logerror("Error! WMO file not found: %s", wmo->MPQpath.c_str());
-                                continue;
-                            }   
-                        scene::IAnimatedMesh *mesh = smgr->getMesh(modelfile);
+                        
+                        scene::IAnimatedMesh *mesh;
+                        if(!smgr->getMeshCache()->isMeshLoaded(filename.c_str()))
+                        {
+                          io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(device, filename.c_str());
+                          if (!modelfile)
+                              {
+                                  logerror("Error! modelfile not found: %s", filename.c_str());
+                                  continue;
+                              }    
+                          mesh = smgr->getMesh(modelfile);
+                          modelfile->drop();
+                        }
+                        else
+                        {
+                            mesh = smgr->getMeshCache()->getMeshByFilename(filename.c_str());
+                        }
+
                         if(mesh)
                         {
                             scene::IAnimatedMeshSceneNode *wmo_node = smgr->addAnimatedMeshSceneNode(mesh);

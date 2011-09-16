@@ -22,16 +22,7 @@ struct OpcodeHandler
     void (WorldSession::*handler)(WorldPacket& recvPacket);
 };
 
-uint32 Object::maxvalues[TYPEID_MAX]={    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0};
+uint32 Object::maxvalues[TYPEID_MAX];
 
 WorldSession::WorldSession(PseuInstance *in)
 {
