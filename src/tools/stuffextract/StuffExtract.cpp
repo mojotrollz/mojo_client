@@ -1146,7 +1146,7 @@ void FetchTexturesFromModel(ByteBuffer bb)
 
     bb.read((uint8*)&header, sizeof(header));
 
-    if (header.version[0] != 8 || header.version[1] != 1 || header.version[2] != 0 || header.version[3] != 0) {
+    if (header.version != 0x108) {
         printf("Not M2 model file!");
         return;
     }
