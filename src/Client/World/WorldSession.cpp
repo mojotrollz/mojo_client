@@ -1256,21 +1256,32 @@ void WorldSession::_HandleTelePortAckOpcode(WorldPacket& recvPacket)
     float x, y, z, o;
 
     guid = recvPacket.GetPackedGuid();
-    recvPacket >> unk32 >> flags >> unk16 >> time >> x >> y >> z >> o >> unk32;
+    recvPacket >> unk32 >> flags;
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      recvPacket >> unk16;
+    recvPacket >> time >> x >> y >> z >> o;
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      recvPacket >> unk32;
 
     logdetail("Got teleported, data: x: %f, y: %f, z: %f, o: %f, guid: "I64FMT, x, y, z, o, guid);
 
     WorldPacket wp(MSG_MOVE_TELEPORT_ACK,8+4+4);
-    //GUID must be packed!
-    wp.appendPackGUID(guid);
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      wp.appendPackGUID(guid);    //GUID must be packed!
+    else
+      wp << guid;
     wp << (uint32)0 << (uint32)getMSTime();
     SendWorldPacket(wp);
 
     // TODO: put this into a capsule class later, that autodetects movement flags etc.
     WorldPacket response(MSG_MOVE_FALL_LAND,4+2+4+4+4+4+4+4);
-    response.appendPackGUID(guid);
-    response << uint32(0) << (uint16)0 << (uint32)getMSTime(); //flags and flags2
-    response << x << y << z << o << uint32(100); // simulate 100 msec fall time
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      response.appendPackGUID(guid);
+    response << uint32(0);//flags
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      response << (uint16)0;//flags2
+
+    response << (uint32)getMSTime() << x << y << z << o << uint32(100); // simulate 100 msec fall time
     SendWorldPacket(response);
 
     _world->UpdatePos(x,y);
