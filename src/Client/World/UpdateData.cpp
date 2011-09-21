@@ -273,7 +273,6 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
       recvPacket >> flags_6005;
       flags = flags_6005;
     }
-
     mi.flags = 0; // not sure if its correct to set it to 0 (needs some starting flag?)
     if(flags & UPDATEFLAG_LIVING)
     {
@@ -470,7 +469,7 @@ void WorldSession::_ValuesUpdate(uint64 uguid, WorldPacket& recvPacket)
             {
                 recvPacket >> value;
                 obj->SetUInt32Value(i, value);  //It does not matter what type of value we are setting, just copy the bytes
-                logdev("%u %u",i,value);
+                DEBUG(logdev("%u %u",i,value));
             }
             else
             {
