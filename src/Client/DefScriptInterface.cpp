@@ -861,11 +861,11 @@ DefReturnResult DefScriptPackage::SCGetObjectValue(CmdSet &Set)
         else
         {
             if(DefScriptTools::stringToLower(Set.arg[1]) == "f")
-                return toString((ldbl)o->GetFloatValue(v));
+                return toString((ldbl)o->GetFloatValue((UpdateFieldName)v));
             else if(DefScriptTools::stringToLower(Set.arg[1]) == "i64")
-                return toString(o->GetUInt64Value(v));
+                return toString(o->GetUInt64Value((UpdateFieldName)v));
             else
-                return toString((uint64)o->GetUInt32Value(v));
+                return toString((uint64)o->GetUInt32Value((UpdateFieldName)v));
         }
     }
     return "";

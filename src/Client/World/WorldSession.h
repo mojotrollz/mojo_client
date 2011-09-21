@@ -126,6 +126,7 @@ private:
     void _DoTimedActions(void);
     void _DelayWorldPacket(WorldPacket&, uint32);
     void _HandleDelayedPackets(void);
+    void _SetupObjectFields(void);
 
     // Opcode Handlers
     void _HandleAuthChallengeOpcode(WorldPacket& recvPacket);
