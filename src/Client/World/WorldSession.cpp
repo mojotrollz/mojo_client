@@ -527,7 +527,7 @@ void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
 {
     //Read Packet    
     uint32 sp, serverseed;
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)//TODO: Check TBC
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
     {
       recvPacket >> sp;
     }
@@ -552,7 +552,7 @@ void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
     
     // Send Reply
     WorldPacket auth;
-    if(GetInstance()->GetConf()->client==CLIENT_CLASSIC_WOW)
+    if(GetInstance()->GetConf()->client<=CLIENT_TBC)
     {
       auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<clientseed_uint32;
       auth.append(digest.GetDigest(),20);
@@ -637,7 +637,7 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
             recvPacket >> plr[i]._z;
             recvPacket >> plr[i]._guildId;
             recvPacket >> plr[i]._flags;
-            if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+            if(GetInstance()->GetConf()->client > CLIENT_TBC)
             {
               recvPacket >> dummy32; // at_login_customize
             }
@@ -650,7 +650,7 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
                 recvPacket >> plr[i]._items[inv].displayId >> plr[i]._items[inv].inventorytype ;
                 if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
                 {
-                  recvPacket >> dummy32; // whatever
+                  recvPacket >> dummy32; //enchant aura id
                 }
             }
             plrNameCache.Add(plr[i]._guid, plr[i]._name); // TODO: set after loadingscreen, after loading cache
@@ -1407,7 +1407,7 @@ void WorldSession::_HandleInitialSpellsOpcode(WorldPacket& recvPacket)
         uint32 spellid;
         recvPacket >> unk >> count;
         logdebug("Got initial spells list, %u spells.",count);
-        if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+        if(GetInstance()->GetConf()->client > CLIENT_TBC)
         {
           for(uint16 i = 0; i < count; i++)
           {
