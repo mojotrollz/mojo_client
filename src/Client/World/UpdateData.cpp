@@ -40,7 +40,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
     uint32 usize, ublocks, readblocks=0;
     uint64 uguid;
     recvPacket >> ublocks; // >> hasTransport;
-    if(GetInstance()->GetConf()->client == CLIENT_CLASSIC_WOW)
+    if(GetInstance()->GetConf()->client <= CLIENT_TBC)
       recvPacket >> hasTransport;
 
     logdev("UpdateObject: blocks = %u", ublocks);
@@ -266,7 +266,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         logerror("MovementUpdate for unknown object "I64FMT" typeid=%u",uguid,objtypeid);
     }
 
-    if(client > CLIENT_CLASSIC_WOW)
+    if(client > CLIENT_TBC)
       recvPacket >> flags;
     else
     {
@@ -277,11 +277,17 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     if(flags & UPDATEFLAG_LIVING)
     {
         recvPacket >> mi.flags;
-        if(client > CLIENT_CLASSIC_WOW)
+        if(client == CLIENT_TBC)
+        {
+          uint8 tempUnkFlags;
+          recvPacket >> tempUnkFlags;
+          mi.unkFlags = tempUnkFlags;
+        }
+        if(client == CLIENT_WOTLK)
           recvPacket >> mi.unkFlags;
         recvPacket>> mi.time;
         
-        logdev("MovementUpdate: TypeID=%u GUID="I64FMT" pObj=%X flags=%u mi.flags=%u",objtypeid,uguid,obj,flags,mi.flags);
+        logdev("MovementUpdate: TypeID=%u GUID="I64FMT" pObj=%X flags=%x mi.flags=%x",objtypeid,uguid,obj,flags,mi.flags);
 
         recvPacket >> mi.x >> mi.y >> mi.z >> mi.o;
         logdev("FLOATS: x=%f y=%f z=%f o=%f",mi.x, mi.y, mi.z ,mi.o);
@@ -322,7 +328,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         if(client > CLIENT_CLASSIC_WOW)
           recvPacket >> speedFly >> speedFlyBack; // fly added in 2.0.x
         recvPacket >> speedTurn;
-        if(client > CLIENT_CLASSIC_WOW)
+        if(client > CLIENT_TBC)
           recvPacket >> speedPitchRate;
         logdev("MovementUpdate: Got speeds, walk=%f run=%f turn=%f", speedWalk, speedRun, speedTurn);
         if(u)
