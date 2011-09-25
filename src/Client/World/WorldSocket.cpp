@@ -84,7 +84,7 @@ void WorldSocket::OnRead()
                 break;
             }
 
-            if(GetSession()->GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+            if(GetSession()->GetInstance()->GetConf()->client > CLIENT_TBC)//Funny, old sources have this in TBC already...
             {
               // read first byte and check if size is 3 or 2 bytes
               uint8 firstSizeByte;
@@ -115,8 +115,8 @@ void WorldSocket::OnRead()
             else
             {
               ServerPktHeader hdr;
-              ibuf.Read(((char*)&hdr), sizeof(ServerPktHeader)); // read header, except first byte
-              (_crypt.*pDecryptRecv)(((uint8*)&hdr), sizeof(ServerPktHeader)); // decrypt all except first
+              ibuf.Read(((char*)&hdr), sizeof(ServerPktHeader)); // read header
+              (_crypt.*pDecryptRecv)(((uint8*)&hdr), sizeof(ServerPktHeader)); // decrypt all
 
               _remaining = ntohs(hdr.size) - 2;
               _opcode = hdr.cmd;
@@ -176,7 +176,15 @@ void WorldSocket::InitCrypt(BigNumber *k)
         pEncryptSend = &AuthCrypt::EncryptSend_6005;
         break;
       }
-      default:
+      case CLIENT_TBC:
+      {
+        logdebug("Setting Crypt to Build 8606");
+        pInit = &AuthCrypt::Init_8606;
+        pDecryptRecv = &AuthCrypt::DecryptRecv_6005;
+        pEncryptSend = &AuthCrypt::EncryptSend_6005;
+        break;
+      }
+      case CLIENT_WOTLK:
       {
         logdebug("Setting Crypt to Build 12340");
         pInit = &AuthCrypt::Init_12340;
@@ -184,6 +192,9 @@ void WorldSocket::InitCrypt(BigNumber *k)
         pEncryptSend = &AuthCrypt::EncryptSend_12340;
         break;
       }
+      default:
+        logerror("Error setting up Crypt - will crash now (check conf)");
+        break;
     }
     (_crypt.*pInit)(k);
     const char *hexstr = k->AsHexStr();

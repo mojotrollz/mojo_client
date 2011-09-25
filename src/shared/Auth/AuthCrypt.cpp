@@ -78,6 +78,25 @@ void AuthCrypt::EncryptSend_12340(uint8 *data, size_t len)
 }
 
 
+void AuthCrypt::Init_8606(BigNumber *K)
+{
+    uint8 *key = new uint8[SHA_DIGEST_LENGTH];
+    
+    uint8 recvSeed[SEED_KEY_SIZE] = { 0x38, 0xA7, 0x83, 0x15, 0xF8, 0x92, 0x25, 0x30, 0x71, 0x98, 0x67, 0xB1, 0x8C, 0x4, 0xE2, 0xAA };
+    HmacHash recvHash(SEED_KEY_SIZE, (uint8*)recvSeed);
+    recvHash.UpdateBigNumber(K);
+    recvHash.Finalize();
+    memcpy(key, recvHash.GetDigest(), SHA_DIGEST_LENGTH);
+    
+    _key.resize(SHA_DIGEST_LENGTH);
+    std::copy(key, key + SHA_DIGEST_LENGTH, _key.begin());
+    delete[] key;
+
+    _send_i = _send_j = _recv_i = _recv_j = 0;
+    _initialized = true;
+}
+
+
 //1.12.2
 void AuthCrypt::Init_6005(BigNumber *K)
 {

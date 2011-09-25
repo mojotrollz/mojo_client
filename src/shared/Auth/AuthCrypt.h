@@ -39,6 +39,9 @@ class AuthCrypt
         void DecryptRecv_12340(uint8 *, size_t);
         void EncryptSend_12340(uint8 *, size_t);
 
+        //2.4.3
+        void Init_8606(BigNumber *K);
+        
         //1.12.X
         void Init_6005(BigNumber *K);
         void SetKey_6005(uint8 *, size_t);
