@@ -13,7 +13,6 @@ public:
     WorldPacket(uint16 opcode) { _opcode=opcode; reserve(10); }
     inline void SetOpcode(uint16 opcode) { _opcode=opcode; }
     inline uint16 GetOpcode(void) { return _opcode; }
-    uint64 GetPackedGuid(void);
 
 private:
     uint16 _opcode;
