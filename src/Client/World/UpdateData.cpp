@@ -10,6 +10,7 @@
 #include "DynamicObject.h"
 #include "ObjMgr.h"
 #include "UpdateMask.h"
+#include "MovementInfo.h"
 
 
 void WorldSession::_HandleCompressedUpdateObjectOpcode(WorldPacket& recvPacket)
@@ -51,7 +52,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
         {
             case UPDATETYPE_VALUES:
             {
-                uguid = recvPacket.GetPackedGuid();
+                uguid = recvPacket.readPackGUID();
                 _ValuesUpdate(uguid,recvPacket);
             }
             break;
@@ -77,7 +78,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
             case UPDATETYPE_CREATE_OBJECT2: // will be sent when our very own character is created
             case UPDATETYPE_CREATE_OBJECT: // will be sent on any other object creation
             {
-                uguid = recvPacket.GetPackedGuid();
+                uguid = recvPacket.readPackGUID();
                 uint8 objtypeid;
                 recvPacket >> objtypeid;
                 logdebug("Create Object type %u with guid "I64FMT,objtypeid,uguid);
@@ -199,7 +200,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                 recvPacket >> usize;
                 for(uint16 i=0;i<usize;i++)
                 {
-                    uguid = recvPacket.GetPackedGuid(); // not 100% sure if this is correct
+                    uguid = recvPacket.readPackGUID(); // not 100% sure if this is correct
                     logdebug("GUID "I64FMT" out of range",uguid);
 
                     // call script just before object removal
@@ -276,51 +277,32 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     mi.flags = 0; // not sure if its correct to set it to 0 (needs some starting flag?)
     if(flags & UPDATEFLAG_LIVING)
     {
-        recvPacket >> mi.flags;
-        if(client == CLIENT_TBC)
-        {
-          uint8 tempUnkFlags;
-          recvPacket >> tempUnkFlags;
-          mi.unkFlags = tempUnkFlags;
-        }
-        if(client == CLIENT_WOTLK)
-          recvPacket >> mi.unkFlags;
-        recvPacket>> mi.time;
+        recvPacket >> mi;
         
         logdev("MovementUpdate: TypeID=%u GUID="I64FMT" pObj=%X flags=%x mi.flags=%x",objtypeid,uguid,obj,flags,mi.flags);
-
-        recvPacket >> mi.x >> mi.y >> mi.z >> mi.o;
-        logdev("FLOATS: x=%f y=%f z=%f o=%f",mi.x, mi.y, mi.z ,mi.o);
+        logdev("FLOATS: x=%f y=%f z=%f o=%f",mi.pos.x, mi.pos.y, mi.pos.z ,mi.pos.o);
         if(obj && obj->IsWorldObject())
-            ((WorldObject*)obj)->SetPosition(mi.x, mi.y, mi.z, mi.o);
+            ((WorldObject*)obj)->SetPosition(mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o);
 
         if(mi.flags & MOVEMENTFLAG_ONTRANSPORT)
         {
-            mi.t_guid = recvPacket.GetPackedGuid();
-            recvPacket >> mi.t_x >> mi.t_y >> mi.t_z >> mi.t_o;
-            recvPacket >> mi.t_time; // added in 2.0.3
-            recvPacket >> mi.t_seat;
-            logdev("TRANSPORT @ mi.flags: guid="I64FMT" x=%f y=%f z=%f o=%f", mi.t_guid, mi.t_x, mi.t_y, mi.t_z, mi.t_o);
+            logdev("TRANSPORT @ mi.flags: guid="I64FMT" x=%f y=%f z=%f o=%f", mi.t_guid, mi.t_pos.x, mi.t_pos.y, mi.t_pos.z, mi.t_pos.o);
         }
 
-        if((mi.flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (mi.unkFlags & 0x20)) //The last one is MOVEFLAG2_ALLOW_PITCHING in MaNGOS
+        if((mi.flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (mi.flags2 & MOVEMENTFLAG2_ALLOW_PITCHING)) 
         {
-            recvPacket >>  mi.s_angle;
             logdev("MovementUpdate: MOVEMENTFLAG_SWIMMING or FLYING is set, angle = %f!", mi.s_angle);
         }
         
-        recvPacket >> mi.fallTime;
         logdev("MovementUpdate: FallTime = %u", mi.fallTime);
 
         if(mi.flags & MOVEMENTFLAG_FALLING)
         {
-            recvPacket >> mi.j_unk >> mi.j_sinAngle >> mi.j_cosAngle >> mi.j_xyspeed;
-            logdev("MovementUpdate: MOVEMENTFLAG_FALLING is set, unk=%f sinA=%f cosA=%f xyspeed=%f = %u", mi.j_unk, mi.j_sinAngle, mi.j_cosAngle, mi.j_xyspeed);
+            logdev("MovementUpdate: MOVEMENTFLAG_FALLING is set, velocity=%f sinA=%f cosA=%f xyspeed=%f = %u", mi.j_velocity, mi.j_sinAngle, mi.j_cosAngle, mi.j_xyspeed);
         }
 
         if(mi.flags & MOVEMENTFLAG_SPLINE_ELEVATION)
         {
-            recvPacket >> mi.u_unk1;
             logdev("MovementUpdate: MOVEMENTFLAG_SPLINE is set, got %u", mi.u_unk1);
         }
 
@@ -333,7 +315,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         logdev("MovementUpdate: Got speeds, walk=%f run=%f turn=%f", speedWalk, speedRun, speedTurn);
         if(u)
         {
-            u->SetPosition(mi.x, mi.y, mi.z, mi.o);
+            u->SetPosition(mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o);
             u->SetSpeed(MOVE_WALK, speedWalk);
             u->SetSpeed(MOVE_RUN, speedRun);
             u->SetSpeed(MOVE_SWIMBACK, speedSwimBack);
@@ -356,7 +338,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     {
         if(flags & UPDATEFLAG_POSITION)
         {
-            uint64 pguid = recvPacket.GetPackedGuid();
+            uint64 pguid = recvPacket.readPackGUID();
             float x,y,z,o,sx,sy,sz,so;
             recvPacket >> x >> y >> z;
             recvPacket >> sx >> sy >> sz;
@@ -408,7 +390,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
 
     if(flags & UPDATEFLAG_HAS_TARGET)
     {
-        uint64 unkguid = recvPacket.GetPackedGuid(); // MaNGOS sends uint8(0) always, but its probably be a packed guid
+        uint64 unkguid = recvPacket.readPackGUID(); // MaNGOS sends uint8(0) always, but its probably be a packed guid
         logdev("MovementUpdate: UPDATEFLAG_FULLGUID is set, got "I64FMT, unkguid);
     }
 
@@ -539,4 +521,118 @@ void WorldSession::_QueryObjectInfo(uint64 guid)
         }
     }
 }
+
+void MovementInfo::Read(ByteBuffer &data)
+{
+    data >> flags;
+    if(_c == CLIENT_WOTLK)
+      data >> flags2;
+    if(_c == CLIENT_TBC)
+    {
+      uint8 tempFlags2;
+      data >> tempFlags2;
+      flags2 = tempFlags2;
+    }
+    data >> time;
+    data >> pos.x;
+    data >> pos.y;
+    data >> pos.z;
+    data >> pos.o;
+
+    if(flags & (MOVEMENTFLAG_ONTRANSPORT))
+    {
+        if(_c < CLIENT_WOTLK)
+          data >> t_guid;
+        else
+          t_guid =data.readPackGUID();
+        data >> t_pos.x;
+        data >> t_pos.y;
+        data >> t_pos.z;
+        data >> t_pos.o;
+        if(_c > CLIENT_CLASSIC_WOW)
+          data >> t_time;
+        if(_c > CLIENT_TBC)
+          data >> t_seat;
+
+        if(_c > CLIENT_TBC && flags2 & MOVEMENTFLAG2_INTERP_MOVEMENT)
+            data >> t_time2;
+    }
+
+    if((flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (flags2 & MOVEMENTFLAG2_ALLOW_PITCHING))
+    {
+        data >> s_angle;
+    }
+
+    data >> fallTime;
+
+    if(flags & (MOVEMENTFLAG_FALLING))
+    {
+        data >> j_velocity;
+        data >> j_sinAngle;
+        data >> j_cosAngle;
+        data >> j_xyspeed;
+    }
+
+    if(flags & (MOVEMENTFLAG_SPLINE_ELEVATION))
+    {
+        data >> u_unk1;
+    }
+}
+
+void MovementInfo::Write(ByteBuffer &data) const
+{
+    data << flags;
+    if(_c == CLIENT_WOTLK)
+      data << flags2;
+    if(_c == CLIENT_TBC)
+    {
+      data << (uint8)flags2;
+    }
+    data << time;
+    data << pos.x;
+    data << pos.y;
+    data << pos.z;
+    data << pos.o;
+
+    if(flags & (MOVEMENTFLAG_ONTRANSPORT))
+    {
+        if(_c < CLIENT_WOTLK)
+          data << t_guid;
+        else
+          data.appendPackGUID(t_guid);
+        data << t_pos.x;
+        data << t_pos.y;
+        data << t_pos.z;
+        data << t_pos.o;
+        if(_c > CLIENT_CLASSIC_WOW)
+          data << t_time;
+        if(_c > CLIENT_TBC)
+          data << t_seat;
+
+        if(_c > CLIENT_TBC && flags2 & MOVEMENTFLAG2_INTERP_MOVEMENT)
+            data << t_time2;
+    }
+
+    if((flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (flags2 & MOVEMENTFLAG2_ALLOW_PITCHING))
+    {
+        data << s_angle;
+    }
+
+    data << fallTime;
+
+    if(flags & (MOVEMENTFLAG_FALLING))
+    {
+        data << j_velocity;
+        data << j_sinAngle;
+        data << j_cosAngle;
+        data << j_xyspeed;
+    }
+
+    if(flags & (MOVEMENTFLAG_SPLINE_ELEVATION))
+    {
+        data << u_unk1;
+    }
+}
+
+
 

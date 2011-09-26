@@ -3,6 +3,7 @@
 #include "World.h"
 #include "MovementMgr.h"
 #include "Player.h"
+#include "MovementInfo.h"
 
 MovementMgr::MovementMgr()
 {
@@ -33,34 +34,18 @@ void MovementMgr::SetInstance(PseuInstance *inst)
 void MovementMgr::_BuildPacket(uint16 opcode)
 {
     WorldPacket *wp = new WorldPacket(opcode,4+2+4+16); // it can be larger, if we are jumping, on transport or swimming
-    if(_instance->GetConf()->client > CLIENT_CLASSIC_WOW)
+    if(_instance->GetConf()->client > CLIENT_TBC)
       wp->appendPackGUID(_mychar->GetGUID());
-    *wp << _moveFlags;
-    if(_instance->GetConf()->client > CLIENT_CLASSIC_WOW)
-      *wp << (uint16)0; // flags2 , safe to set 0 for now (shlainn)
-    *wp << getMSTime();
-    *wp << _mychar->GetPosition();
-    // TODO: transport not yet handled/done
-    if(_moveFlags & MOVEMENTFLAG_ONTRANSPORT)
-    {
-        *wp << (uint64)0; // transport guid
-        *wp << WorldPosition(); // transport position
-        *wp << getMSTime(); // transport time (??)
-    }
-    // TODO: swimming not yet done
-    if(_moveFlags & MOVEMENTFLAG_SWIMMING)
-    {
-        *wp << (float)0; // angle; 1.55=looking up, -1.55=looking down, 0=looking forward
-    }
-    *wp << (uint32)0; // last fall time (also used when jumping)
-    if(_moveFlags & MOVEMENTFLAG_PENDINGSTOP)
-    {
-        *wp << (float)0; //unk value, or as mangos calls it: j_unk ^^
-        *wp << sin(_mychar->GetO()+ (M_PI/2));
-        *wp << cos(_mychar->GetO()+ (M_PI/2));
-        *wp << _movespeed;
-    }
+    MovementInfo mi;
+    mi.SetMovementFlags(_moveFlags);
+    mi.time = getMSTime();
+    mi.pos = _mychar->GetPosition();
+    mi.fallTime = _falltime;
+    *wp << mi;
 
+    // TODO: transport not yet handled/done
+    // TODO: swimming not yet done
+    // TODO: jumping not done yet
     // TODO: spline not yet done
 
     DEBUG(logdebug("Move flags: 0x%X (packet: %u bytes)",_moveFlags,wp->size()));
@@ -68,6 +53,8 @@ void MovementMgr::_BuildPacket(uint16 opcode)
     _instance->GetWSession()->AddSendWorldPacket(wp);
     _moved = true;
     _optime = getMSTime();
+    _falltime = 0; //HACK!!!!
+
 
 }
 
@@ -171,6 +158,12 @@ void MovementMgr::MoveStop(void)
     _moveFlags &= ~(MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_BACKWARD | MOVEMENTFLAG_WALK_MODE);
     Update(true);
     _BuildPacket(MSG_MOVE_STOP);
+}
+
+void MovementMgr::MoveFallLand(void)
+{
+    Update(true);
+    _BuildPacket(MSG_MOVE_FALL_LAND);
 }
 
 void MovementMgr::MoveStartForward(void)

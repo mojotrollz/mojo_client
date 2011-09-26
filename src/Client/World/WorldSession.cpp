@@ -15,6 +15,8 @@
 #include "RealmSession.h"
 #include "WorldSession.h"
 #include "MemoryDataHolder.h"
+#include "MovementInfo.h"
+#include "MovementMgr.h"
 
 struct OpcodeHandler
 {
@@ -24,6 +26,7 @@ struct OpcodeHandler
 
 uint32 Object::maxvalues[TYPEID_MAX];
 UpdateField Object::updatefields[UPDATEFIELDS_NAME_COUNT];
+uint8 MovementInfo::_c=CLIENT_UNKNOWN;
 
 WorldSession::WorldSession(PseuInstance *in)
 {
@@ -41,6 +44,7 @@ WorldSession::WorldSession(PseuInstance *in)
     //...
 
     _SetupObjectFields();
+    MovementInfo::_c=in->GetConf()->client;
     
     in->GetScripts()->RunScriptIfExists("_onworldsessioncreate");
 
@@ -1049,7 +1053,7 @@ void WorldSession::_HandleNameQueryResponseOpcode(WorldPacket& recvPacket)
     std::string pname;
     uint32 prace, pgender, pclass;
     if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
-      pguid = recvPacket.GetPackedGuid();
+      pguid = recvPacket.readPackGUID();
     else
       recvPacket >> pguid;
     recvPacket >> pname >> realm >> prace >> pgender >> pclass;
@@ -1099,22 +1103,15 @@ void WorldSession::_HandleGroupInviteOpcode(WorldPacket& recvPacket)
 
 void WorldSession::_HandleMovementOpcode(WorldPacket& recvPacket)
 {
-    uint32 flags, time, unk32;
-    float x, y, z, o;
     uint64 guid;
-    uint16 flags2;
-    guid = recvPacket.GetPackedGuid();
-    recvPacket >> flags;
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
-    {
-      recvPacket >> flags2; 
-    }
-    recvPacket >> time >> x >> y >> z >> o >> unk32;
-    DEBUG(logdebug("MOVE: "I64FMT" -> time=%u flags=0x%X x=%.4f y=%.4f z=%.4f o=%.4f",guid,time,flags,x,y,z,o));
+    MovementInfo mi;
+    guid = recvPacket.readPackGUID();
+    recvPacket >> mi;
+    DEBUG(logdebug("MOVE: "I64FMT" -> time=%u flags=0x%X x=%.4f y=%.4f z=%.4f o=%.4f",guid,mi.time,mi.flags,mi.pos.x,mi.pos.y,mi.pos.z,mi.pos.o));
     Object *obj = objmgr.GetObj(guid);
     if(obj && obj->IsWorldObject())
     {
-        ((WorldObject*)obj)->SetPosition(x,y,z,o);
+        ((WorldObject*)obj)->SetPosition(mi.pos.x,mi.pos.y,mi.pos.z,mi.pos.o);
     }
     //TODO: Eval rest of Packet!!
 }
@@ -1122,10 +1119,10 @@ void WorldSession::_HandleMovementOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleSetSpeedOpcode(WorldPacket& recvPacket)
 {
     uint64 guid;
-    float x, y, z, o, speed;
-    uint32 unk32, movetype;
-    uint16 unk16;
-
+    float speed;
+    uint32 movetype;
+    MovementInfo mi;
+    
     switch(recvPacket.GetOpcode())
     {
     case MSG_MOVE_SET_WALK_SPEED:
@@ -1169,19 +1166,15 @@ void WorldSession::_HandleSetSpeedOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    guid = recvPacket.GetPackedGuid();
-    recvPacket >> unk32;
-    recvPacket >> unk16;
-    recvPacket >> unk32; /* getMSTime()*/
-    recvPacket >> x >> y >> z >> o;
-    recvPacket >> unk32; // falltime
+    guid = recvPacket.readPackGUID();
+    recvPacket >> mi;
     recvPacket >> speed;
 
     Object *obj = objmgr.GetObj(guid);
     if(obj && obj->IsUnit())
     {
         ((Unit*)obj)->SetSpeed(movetype, speed);
-        ((Unit*)obj)->SetPosition(x, y, z, o);
+        ((Unit*)obj)->SetPosition(mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o);
     }
 }
 
@@ -1235,7 +1228,7 @@ void WorldSession::_HandleForceSetSpeedOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    guid = recvPacket.GetPackedGuid();
+    guid = recvPacket.readPackGUID();
     recvPacket >> unk32;
     if (movetype == MOVE_RUN)
         recvPacket >> unk8;
@@ -1250,58 +1243,44 @@ void WorldSession::_HandleForceSetSpeedOpcode(WorldPacket& recvPacket)
 
 void WorldSession::_HandleTelePortAckOpcode(WorldPacket& recvPacket)
 {
-    uint32 unk32,time, flags; // movement flags
+    uint32 unk32;
     uint64 guid;
-    uint16 unk16;
-    float x, y, z, o;
+    MovementInfo mi;
+    guid = recvPacket.readPackGUID();
+    recvPacket >> unk32 >> mi;
 
-    guid = recvPacket.GetPackedGuid();
-    recvPacket >> unk32 >> flags;
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
-      recvPacket >> unk16;
-    recvPacket >> time >> x >> y >> z >> o;
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
-      recvPacket >> unk32;
+    logdetail("Got teleported, data: x: %f, y: %f, z: %f, o: %f, guid: "I64FMT, mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o, guid);
 
-    logdetail("Got teleported, data: x: %f, y: %f, z: %f, o: %f, guid: "I64FMT, x, y, z, o, guid);
-
-    WorldPacket wp(MSG_MOVE_TELEPORT_ACK,8+4+4);
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
-      wp.appendPackGUID(guid);    //GUID must be packed!
-    else
-      wp << guid;
-    wp << (uint32)0 << (uint32)getMSTime();
-    SendWorldPacket(wp);
-
-    // TODO: put this into a capsule class later, that autodetects movement flags etc.
-    WorldPacket response(MSG_MOVE_FALL_LAND,4+2+4+4+4+4+4+4);
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
-      response.appendPackGUID(guid);
-    response << uint32(0);//flags
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
-      response << (uint16)0;//flags2
-
-    response << (uint32)getMSTime() << x << y << z << o << uint32(100); // simulate 100 msec fall time
-    SendWorldPacket(response);
-
-    _world->UpdatePos(x,y);
+    _world->UpdatePos(mi.pos.x,mi.pos.y);
     _world->Update();
 
     if(MyCharacter *my = GetMyChar())
     {
-        my->SetPosition(x,y,z,o);
+        my->SetPosition(mi.pos.x,mi.pos.y,mi.pos.z,mi.pos.o);
     }
+
+    WorldPacket wp(MSG_MOVE_TELEPORT_ACK,8+4+4);
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
+      wp.appendPackGUID(guid);    //GUID must be packed!
+    else
+      wp << guid;
+    wp << (uint32)0 << (uint32)getMSTime(); //First value is some counter
+    SendWorldPacket(wp);
+    
+    _world->GetMoveMgr()->SetFallTime(100);
+    _world->GetMoveMgr()->MoveFallLand();
+
 
     if(GetInstance()->GetScripts()->ScriptExists("_onteleport"))
     {
         CmdSet Set;
         Set.defaultarg = "false"; // teleported to other map = false
         Set.arg[0] = DefScriptTools::toString(guid);
-        Set.arg[1] = DefScriptTools::toString(x);
-        Set.arg[2] = DefScriptTools::toString(y);
-        Set.arg[3] = DefScriptTools::toString(z);
-        Set.arg[4] = DefScriptTools::toString(o);
-        Set.arg[5] = DefScriptTools::toString(flags);
+        Set.arg[1] = DefScriptTools::toString(mi.pos.x);
+        Set.arg[2] = DefScriptTools::toString(mi.pos.y);
+        Set.arg[3] = DefScriptTools::toString(mi.pos.z);
+        Set.arg[4] = DefScriptTools::toString(mi.pos.o);
+        Set.arg[5] = DefScriptTools::toString(mi.flags);
         GetInstance()->GetScripts()->RunScriptIfExists("_onteleport");
     }
 }
@@ -1328,12 +1307,6 @@ void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
     wp << GetGuid();
     SendWorldPacket(wp);
 
-    // TODO: put this into a capsule class later, that autodetects movement flags etc.
-    WorldPacket response(MSG_MOVE_FALL_LAND,4+2+4+4+4+4+4+4);
-    response << uint32(0) << (uint16)0; // no flags; unk
-    response <<(uint32)getMSTime(); // time correct?
-    response << x << y << z << o << uint32(100); // simulate 100 msec fall time
-    SendWorldPacket(response);
 
 
 
@@ -1349,6 +1322,9 @@ void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
         my->ClearSpells(); // will be resent by server
         my->SetPosition(x,y,z,o,mapid);
     }
+    
+    _world->GetMoveMgr()->SetFallTime(100);
+    _world->GetMoveMgr()->MoveFallLand();//Must be sent after character was set to new position
 
     // TODO: need to switch to SCENESTATE_LOGINSCREEN here, and after everything is loaded, back to SCENESTATE_WORLD
 
@@ -1385,7 +1361,7 @@ void WorldSession::_HandleCastSuccessOpcode(WorldPacket& recvPacket)
     uint32 spellId;
     uint64 casterGuid;
 
-    casterGuid = recvPacket.GetPackedGuid();
+    casterGuid = recvPacket.readPackGUID();
     recvPacket >> spellId;
 
     if (GetMyChar()->GetGUID() == casterGuid)
@@ -1695,8 +1671,11 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
     recvPacket >> ct->rank;
     if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
     {
-      for(uint32 i = 0; i < MAX_KILL_CREDIT; i++)
-          recvPacket >> ct->killCredit[i];
+      if(GetInstance()->GetConf()->client == CLIENT_WOTLK)
+      {
+          for(uint32 i = 0; i < MAX_KILL_CREDIT; i++)
+              recvPacket >> ct->killCredit[i];
+      }
       recvPacket >> ct->displayid_A;
       recvPacket >> ct->displayid_H;
       recvPacket >> ct->displayid_AF;
@@ -1704,9 +1683,12 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
       recvPacket >> unkf;
       recvPacket >> unkf;
       recvPacket >> ct->RacialLeader;
-      for(uint32 i = 0; i < 4; i++)
-          recvPacket >> ct->questItems[i];
-      recvPacket >> ct->movementId;
+      if(GetInstance()->GetConf()->client == CLIENT_WOTLK)
+      {      
+          for(uint32 i = 0; i < 4; i++)
+              recvPacket >> ct->questItems[i];
+          recvPacket >> ct->movementId;
+      }
     }
     else
     {
@@ -1764,8 +1746,11 @@ void WorldSession::_HandleGameobjectQueryResponseOpcode(WorldPacket& recvPacket)
     if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
     {
       recvPacket >> go->size;
-      for(uint32 i = 0; i < 4; i++)
-        recvPacket >> go->questItems[i];
+      if(GetInstance()->GetConf()->client > CLIENT_TBC)
+      {
+        for(uint32 i = 0; i < 4; i++)
+          recvPacket >> go->questItems[i];
+      }
     }
     std::stringstream ss;
     ss << "Got info for gameobject " << entry << ":" << go->name;
@@ -1808,7 +1793,7 @@ void WorldSession::_HandleCharCreateOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
 {
     uint64 guid;
-    guid = recvPacket.GetPackedGuid();
+    guid = recvPacket.readPackGUID();
     
     Object* obj = objmgr.GetObj(guid);
     if (!obj || !obj->IsWorldObject())
@@ -1817,7 +1802,7 @@ void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
     uint8 unk, type;
     uint32 time, flags, movetime, waypoints;
     float x, y, z;
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
       recvPacket >> unk;
     
     recvPacket >> x >> y >> z >> time >> type;
