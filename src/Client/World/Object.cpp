@@ -111,7 +111,7 @@ void WorldSession::_HandleDestroyObjectOpcode(WorldPacket& recvPacket)
     uint8 dummy;
 
     recvPacket >> guid;
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
       recvPacket >> dummy;
     logdebug("Destroy Object "I64FMT,guid);
 
