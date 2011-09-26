@@ -31,6 +31,7 @@ enum InstanceConditions
 
 enum Client
 {
+    CLIENT_UNKNOWN,
     CLIENT_CLASSIC_WOW,
     CLIENT_TBC,
     CLIENT_WOTLK,
