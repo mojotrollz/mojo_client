@@ -74,18 +74,11 @@ charname=Pseuwow
 
 
 // Client emulation configuration
-// Client 0: Classic WoW 1.12.2 Build 6005
-// Client 1: TBC 2.4.3  Build 8606
-// Client 2: WoTLK 3.3.5 Build 12340
-// Client 3: Cata 4.x.x Build XXX NOT IMPLEMENTED
-// !!!! 
-// !!!! WARNING!!!! For all of the above Client Version and Client Build are IGNORED
-// !!!!
-// Client 9: Custom Settings for Client Version and Client Build
+// Client 1: Classic WoW 1.12.2 Build 6005
+// Client 2: TBC 2.4.3  Build 8606
+// Client 3: WoTLK 3.3.5 Build 12340
+// Client 4: Cata 4.x.x Build XXX NOT IMPLEMENTED
 Client=0
-// Uncomment if you use Client=9
-// ClientVersion=3.3.5
-// ClientBuild=12340
 
 ClientLanguage=enGB
 // or change to enGB, deDE, ...

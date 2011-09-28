@@ -7,6 +7,7 @@
 class WorldSession;
 class BigNumber;
 
+
 #if defined( __GNUC__ )
 #pragma pack(1)
 #else
@@ -60,6 +61,9 @@ public:
 private:
     WorldSession *_session;
     AuthCrypt _crypt;
+    void (AuthCrypt::*pInit)(BigNumber *);
+    void (AuthCrypt::*pDecryptRecv)(uint8 *, size_t);
+    void (AuthCrypt::*pEncryptSend)(uint8 *, size_t);
     bool _gothdr; // true if only the header was recieved yet
     uint16 _opcode; // stores the last recieved opcode
     uint32 _remaining; // bytes amount of the next data packet

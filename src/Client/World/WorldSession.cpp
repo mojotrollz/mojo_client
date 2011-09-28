@@ -15,12 +15,18 @@
 #include "RealmSession.h"
 #include "WorldSession.h"
 #include "MemoryDataHolder.h"
+#include "MovementInfo.h"
+#include "MovementMgr.h"
 
 struct OpcodeHandler
 {
     uint16 opcode;
     void (WorldSession::*handler)(WorldPacket& recvPacket);
 };
+
+uint32 Object::maxvalues[TYPEID_MAX];
+UpdateField Object::updatefields[UPDATEFIELDS_NAME_COUNT];
+uint8 MovementInfo::_c=CLIENT_UNKNOWN;
 
 WorldSession::WorldSession(PseuInstance *in)
 {
@@ -37,6 +43,9 @@ WorldSession::WorldSession(PseuInstance *in)
     _lag_ms = 0;
     //...
 
+    _SetupObjectFields();
+    MovementInfo::_c=in->GetConf()->client;
+    
     in->GetScripts()->RunScriptIfExists("_onworldsessioncreate");
 
     DEBUG(logdebug("WorldSession 0x%X constructor finished",this));
@@ -520,47 +529,62 @@ std::string WorldSession::GetOrRequestPlayerName(uint64 guid)
 
 void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
 {
+    //Read Packet    
+    uint32 sp, serverseed;
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
+    {
+      recvPacket >> sp;
+    }
+    recvPacket >> serverseed;
+
+    // Do stuff with the data
     std::string acc = stringToUpper(GetInstance()->GetConf()->accname);
-        uint32 sp;
-        recvPacket >> sp;
-        uint32 serverseed;
-        recvPacket >> serverseed;
 
-        logdebug("Auth: serverseed=0x%X",serverseed);
-        Sha1Hash digest;
-        digest.UpdateData(acc);
-        uint32 unk=0;
-        uint64 unk64=0;
-        digest.UpdateData((uint8*)&unk,sizeof(uint32));
-        BigNumber clientseed;
-        clientseed.SetRand(8*4);
-        uint32 clientseed_uint32=clientseed.AsDword();
-        digest.UpdateData((uint8*)&clientseed_uint32,sizeof(uint32));
-        digest.UpdateData((uint8*)&serverseed,sizeof(uint32));
-        digest.UpdateBigNumbers(GetInstance()->GetSessionKey(),NULL);
-        digest.Finalize();
-        WorldPacket auth;
-        auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<unk<<clientseed_uint32<<unk<<unk<<unk<<unk64;
-        auth.append(digest.GetDigest(),20);
-        auth << (uint32)0; // TODO: this is not correct value, expected: 160 bytes of addon_data
+    logdebug("Auth: serverseed=0x%X",serverseed);
+    Sha1Hash digest;
+    digest.UpdateData(acc);
+    uint32 unk=0;
+    uint64 unk64=0;
+    digest.UpdateData((uint8*)&unk,sizeof(uint32));
+    BigNumber clientseed;
+    clientseed.SetRand(8*4);
+    uint32 clientseed_uint32=clientseed.AsDword();
+    digest.UpdateData((uint8*)&clientseed_uint32,sizeof(uint32));
+    digest.UpdateData((uint8*)&serverseed,sizeof(uint32));
+    digest.UpdateBigNumbers(GetInstance()->GetSessionKey(),NULL);
+    digest.Finalize();
+    
+    // Send Reply
+    WorldPacket auth;
+    if(GetInstance()->GetConf()->client<=CLIENT_TBC)
+    {
+      auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<clientseed_uint32;
+      auth.append(digest.GetDigest(),20);
+    }
+    else
+    {
+      auth<<(uint32)(GetInstance()->GetConf()->clientbuild)<<unk<<acc<<unk<<clientseed_uint32<<unk<<unk<<unk<<unk64;
+      auth.append(digest.GetDigest(),20);
+    }
+    auth << (uint32)0; // TODO: this is not correct value, expected: 160 bytes of addon_data
+    auth.SetOpcode(CMSG_AUTH_SESSION);
 
-        auth.SetOpcode(CMSG_AUTH_SESSION);
+    SendWorldPacket(auth);
 
-        SendWorldPacket(auth);
-
-        // note that if the sessionkey/auth is wrong or failed, the server sends the following packet UNENCRYPTED!
-        // so its not 100% correct to init the crypt here, but it should do the job if authing was correct
-        _socket->InitCrypt(GetInstance()->GetSessionKey());
+    // note that if the sessionkey/auth is wrong or failed, the server sends the following packet UNENCRYPTED!
+    // so its not 100% correct to init the crypt here, but it should do the job if authing was correct
+    _socket->InitCrypt(GetInstance()->GetSessionKey());
 
 }
 
 void WorldSession::_HandleAuthResponseOpcode(WorldPacket& recvPacket)
 {
     uint8 errcode;
-    uint8 dummy8, expansion; uint32 dummy32;
+    uint8 BillingPlanFlags, expansion; uint32 BillingTimeRemaining, BillingTimeRested;
     recvPacket >> errcode;
-    recvPacket >> dummy32 >> dummy8 >> dummy32;
-    recvPacket >> expansion;
+    recvPacket >> BillingTimeRemaining >> BillingPlanFlags >> BillingTimeRested;
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      recvPacket >> expansion;
     // TODO: add data to generic_text.scp and use the strings here
     if(errcode == AUTH_OK)
     {
@@ -570,7 +594,7 @@ void WorldSession::_HandleAuthResponseOpcode(WorldPacket& recvPacket)
     }
     else
     {
-        logerror("World Authentication failed, errcode=0x%X",(unsigned char)errcode);
+        logerror("World Authentication failed, errcode=0x%X",(uint8)errcode);
         SetMustDie();
     }
 }
@@ -604,11 +628,11 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
             recvPacket >> plr[i]._race;
             recvPacket >> plr[i]._class;
             recvPacket >> plr[i]._gender;
-            recvPacket >> plr[i]._bytes1;
-            recvPacket >> plr[i]._bytes2;
-            recvPacket >> plr[i]._bytes3;
-            recvPacket >> plr[i]._bytes4;
-            recvPacket >> plr[i]._bytesx;
+            recvPacket >> plr[i]._bytes1;//skin
+            recvPacket >> plr[i]._bytes2;//face
+            recvPacket >> plr[i]._bytes3;//hair style
+            recvPacket >> plr[i]._bytes4;//hair color
+            recvPacket >> plr[i]._bytesx;//facial hair
             recvPacket >> plr[i]._level;
             recvPacket >> plr[i]._zoneId;
             recvPacket >> plr[i]._mapId;
@@ -617,14 +641,21 @@ void WorldSession::_HandleCharEnumOpcode(WorldPacket& recvPacket)
             recvPacket >> plr[i]._z;
             recvPacket >> plr[i]._guildId;
             recvPacket >> plr[i]._flags;
-            recvPacket >> dummy32; // at_login_customize
+            if(GetInstance()->GetConf()->client > CLIENT_TBC)
+            {
+              recvPacket >> dummy32; // at_login_customize
+            }
             recvPacket >> dummy8;
             recvPacket >> plr[i]._petInfoId;
             recvPacket >> plr[i]._petLevel;
             recvPacket >> plr[i]._petFamilyId;
             for(unsigned int inv=0;inv<20;inv++)
             {
-                recvPacket >> plr[i]._items[inv].displayId >> plr[i]._items[inv].inventorytype >> dummy32;
+                recvPacket >> plr[i]._items[inv].displayId >> plr[i]._items[inv].inventorytype ;
+                if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+                {
+                  recvPacket >> dummy32; //enchant aura id
+                }
             }
             plrNameCache.Add(plr[i]._guid, plr[i]._name); // TODO: set after loadingscreen, after loading cache
 
@@ -811,7 +842,7 @@ void WorldSession::_HandleAccountDataMD5Opcode(WorldPacket& recvPacket)
     // packet structure not yet known
 }
 
-void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
+void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket) //TODO: REWRITE ME!!!
 {
     uint8 type, chatTag;
     uint32 lang;
@@ -826,9 +857,11 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket)
 
     if(lang == LANG_ADDON && GetInstance()->GetConf()->skipaddonchat)
         return;
-
-    recvPacket >> source_guid;
-    recvPacket >> unk32;
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+    {
+      recvPacket >> source_guid;
+      recvPacket >> unk32;
+    }
 
     switch(type)
     {
@@ -1016,13 +1049,19 @@ void WorldSession::_HandleNotificationOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleNameQueryResponseOpcode(WorldPacket& recvPacket)
 {
     uint64 pguid;
-    uint8 unk;
+    uint8 realm;
     std::string pname;
-    
-    pguid = recvPacket.GetPackedGuid();
-    recvPacket >> unk >> pname;
+    uint32 prace, pgender, pclass;
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      pguid = recvPacket.readPackGUID();
+    else
+      recvPacket >> pguid;
+    recvPacket >> pname >> realm >> prace >> pgender >> pclass;
     if(pname.length()>MAX_PLAYERNAME_LENGTH || pname.length()<MIN_PLAYERNAME_LENGTH)
+    {
+        logerror("Playername Length outside bounds: %u",pname.length());
         return; // playernames maxlen=12, minlen=2
+    }
     // rest of the packet is not interesting for now
     plrNameCache.Add(pguid,pname);
     logdetail("CACHE: Assigned new player name: '%s' = " I64FMTD ,pname.c_str(),pguid);
@@ -1064,27 +1103,26 @@ void WorldSession::_HandleGroupInviteOpcode(WorldPacket& recvPacket)
 
 void WorldSession::_HandleMovementOpcode(WorldPacket& recvPacket)
 {
-    uint32 flags, time, unk32;
-    float x, y, z, o;
     uint64 guid;
-    uint16 flags2;
-    guid = recvPacket.GetPackedGuid();
-    recvPacket >> flags >> flags2 >> time >> x >> y >> z >> o >> unk32;
-    DEBUG(logdebug("MOVE: "I64FMT" -> time=%u flags=0x%X x=%.4f y=%.4f z=%.4f o=%.4f",guid,time,flags,x,y,z,o));
+    MovementInfo mi;
+    guid = recvPacket.readPackGUID();
+    recvPacket >> mi;
+    DEBUG(logdebug("MOVE: "I64FMT" -> time=%u flags=0x%X x=%.4f y=%.4f z=%.4f o=%.4f",guid,mi.time,mi.flags,mi.pos.x,mi.pos.y,mi.pos.z,mi.pos.o));
     Object *obj = objmgr.GetObj(guid);
     if(obj && obj->IsWorldObject())
     {
-        ((WorldObject*)obj)->SetPosition(x,y,z,o);
+        ((WorldObject*)obj)->SetPosition(mi.pos.x,mi.pos.y,mi.pos.z,mi.pos.o);
     }
+    //TODO: Eval rest of Packet!!
 }
 
 void WorldSession::_HandleSetSpeedOpcode(WorldPacket& recvPacket)
 {
     uint64 guid;
-    float x, y, z, o, speed;
-    uint32 unk32, movetype;
-    uint16 unk16;
-
+    float speed;
+    uint32 movetype;
+    MovementInfo mi;
+    
     switch(recvPacket.GetOpcode())
     {
     case MSG_MOVE_SET_WALK_SPEED:
@@ -1128,19 +1166,15 @@ void WorldSession::_HandleSetSpeedOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    guid = recvPacket.GetPackedGuid();
-    recvPacket >> unk32;
-    recvPacket >> unk16;
-    recvPacket >> unk32; /* getMSTime()*/
-    recvPacket >> x >> y >> z >> o;
-    recvPacket >> unk32; // falltime
+    guid = recvPacket.readPackGUID();
+    recvPacket >> mi;
     recvPacket >> speed;
 
     Object *obj = objmgr.GetObj(guid);
     if(obj && obj->IsUnit())
     {
         ((Unit*)obj)->SetSpeed(movetype, speed);
-        ((Unit*)obj)->SetPosition(x, y, z, o);
+        ((Unit*)obj)->SetPosition(mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o);
     }
 }
 
@@ -1194,7 +1228,7 @@ void WorldSession::_HandleForceSetSpeedOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    guid = recvPacket.GetPackedGuid();
+    guid = recvPacket.readPackGUID();
     recvPacket >> unk32;
     if (movetype == MOVE_RUN)
         recvPacket >> unk8;
@@ -1209,47 +1243,44 @@ void WorldSession::_HandleForceSetSpeedOpcode(WorldPacket& recvPacket)
 
 void WorldSession::_HandleTelePortAckOpcode(WorldPacket& recvPacket)
 {
-    uint32 unk32,time, flags; // movement flags
+    uint32 unk32;
     uint64 guid;
-    uint16 unk16;
-    float x, y, z, o;
+    MovementInfo mi;
+    guid = recvPacket.readPackGUID();
+    recvPacket >> unk32 >> mi;
 
-    guid = recvPacket.GetPackedGuid();
-    recvPacket >> unk32 >> flags >> unk16 >> time >> x >> y >> z >> o >> unk32;
+    logdetail("Got teleported, data: x: %f, y: %f, z: %f, o: %f, guid: "I64FMT, mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o, guid);
 
-    logdetail("Got teleported, data: x: %f, y: %f, z: %f, o: %f, guid: "I64FMT, x, y, z, o, guid);
-
-    WorldPacket wp(MSG_MOVE_TELEPORT_ACK,8+4+4);
-    //GUID must be packed!
-    wp.appendPackGUID(guid);
-    wp << (uint32)0 << (uint32)getMSTime();
-    SendWorldPacket(wp);
-
-    // TODO: put this into a capsule class later, that autodetects movement flags etc.
-    WorldPacket response(MSG_MOVE_FALL_LAND,4+2+4+4+4+4+4+4);
-    response.appendPackGUID(guid);
-    response << uint32(0) << (uint16)0 << (uint32)getMSTime(); //flags and flags2
-    response << x << y << z << o << uint32(100); // simulate 100 msec fall time
-    SendWorldPacket(response);
-
-    _world->UpdatePos(x,y);
+    _world->UpdatePos(mi.pos.x,mi.pos.y);
     _world->Update();
 
     if(MyCharacter *my = GetMyChar())
     {
-        my->SetPosition(x,y,z,o);
+        my->SetPosition(mi.pos.x,mi.pos.y,mi.pos.z,mi.pos.o);
     }
+
+    WorldPacket wp(MSG_MOVE_TELEPORT_ACK,8+4+4);
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
+      wp.appendPackGUID(guid);    //GUID must be packed!
+    else
+      wp << guid;
+    wp << (uint32)0 << (uint32)getMSTime(); //First value is some counter
+    SendWorldPacket(wp);
+    
+    _world->GetMoveMgr()->SetFallTime(100);
+    _world->GetMoveMgr()->MoveFallLand();
+
 
     if(GetInstance()->GetScripts()->ScriptExists("_onteleport"))
     {
         CmdSet Set;
         Set.defaultarg = "false"; // teleported to other map = false
         Set.arg[0] = DefScriptTools::toString(guid);
-        Set.arg[1] = DefScriptTools::toString(x);
-        Set.arg[2] = DefScriptTools::toString(y);
-        Set.arg[3] = DefScriptTools::toString(z);
-        Set.arg[4] = DefScriptTools::toString(o);
-        Set.arg[5] = DefScriptTools::toString(flags);
+        Set.arg[1] = DefScriptTools::toString(mi.pos.x);
+        Set.arg[2] = DefScriptTools::toString(mi.pos.y);
+        Set.arg[3] = DefScriptTools::toString(mi.pos.z);
+        Set.arg[4] = DefScriptTools::toString(mi.pos.o);
+        Set.arg[5] = DefScriptTools::toString(mi.flags);
         GetInstance()->GetScripts()->RunScriptIfExists("_onteleport");
     }
 }
@@ -1276,12 +1307,6 @@ void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
     wp << GetGuid();
     SendWorldPacket(wp);
 
-    // TODO: put this into a capsule class later, that autodetects movement flags etc.
-    WorldPacket response(MSG_MOVE_FALL_LAND,4+2+4+4+4+4+4+4);
-    response << uint32(0) << (uint16)0; // no flags; unk
-    response <<(uint32)getMSTime(); // time correct?
-    response << x << y << z << o << uint32(100); // simulate 100 msec fall time
-    SendWorldPacket(response);
 
 
 
@@ -1297,6 +1322,9 @@ void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
         my->ClearSpells(); // will be resent by server
         my->SetPosition(x,y,z,o,mapid);
     }
+    
+    _world->GetMoveMgr()->SetFallTime(100);
+    _world->GetMoveMgr()->MoveFallLand();//Must be sent after character was set to new position
 
     // TODO: need to switch to SCENESTATE_LOGINSCREEN here, and after everything is loaded, back to SCENESTATE_WORLD
 
@@ -1333,7 +1361,7 @@ void WorldSession::_HandleCastSuccessOpcode(WorldPacket& recvPacket)
     uint32 spellId;
     uint64 casterGuid;
 
-    casterGuid = recvPacket.GetPackedGuid();
+    casterGuid = recvPacket.readPackGUID();
     recvPacket >> spellId;
 
     if (GetMyChar()->GetGUID() == casterGuid)
@@ -1351,16 +1379,31 @@ void WorldSession::_HandleCastSuccessOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleInitialSpellsOpcode(WorldPacket& recvPacket)
 {
         uint8 unk;
-        uint16 spellslot,count;
+        uint16 not_spellslot,count,spellid16;
         uint32 spellid;
         recvPacket >> unk >> count;
         logdebug("Got initial spells list, %u spells.",count);
-        for(uint16 i = 0; i < count; i++)
+        if(GetInstance()->GetConf()->client > CLIENT_TBC)
         {
-            recvPacket >> spellid >> spellslot;
-            logdebug("Initial Spell: id=%u slot=%u",spellid,spellslot);
-            GetMyChar()->AddSpell(spellid, spellslot);
+          for(uint16 i = 0; i < count; i++)
+          {
+              recvPacket >> spellid >> not_spellslot;
+              logdebug("Initial Spell: id=%u slot=%u",spellid,not_spellslot);
+              GetMyChar()->AddSpell(spellid, not_spellslot);
+          }
         }
+        else
+        {
+          for(uint16 i = 0; i < count; i++)
+          {
+              recvPacket >> spellid16 >> not_spellslot;
+              spellid = spellid16;
+              logdebug("Initial Spell: id=%u slot=%u",spellid,not_spellslot);
+              GetMyChar()->AddSpell(spellid, not_spellslot);
+          }
+          
+        }
+        //TODO: Parse packet completely
 }
 
 void WorldSession::_HandleLearnedSpellOpcode(WorldPacket& recvPacket)
@@ -1612,7 +1655,7 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
 
     CreatureTemplate *ct = new CreatureTemplate();
     std::string s;
-    //uint32 unk;
+    uint32 unk;
     float unkf;
     ct->entry = entry;
     recvPacket >> ct->name;
@@ -1620,24 +1663,43 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
     recvPacket >> s;
     recvPacket >> s;
     recvPacket >> ct->subname;
-    recvPacket >> ct->directions;
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      recvPacket >> ct->directions;
     recvPacket >> ct->flag1;
     recvPacket >> ct->type;
     recvPacket >> ct->family;
     recvPacket >> ct->rank;
-    for(uint32 i = 0; i < MAX_KILL_CREDIT; i++)
-        recvPacket >> ct->killCredit[i];
-    recvPacket >> ct->displayid_A;
-    recvPacket >> ct->displayid_H;
-    recvPacket >> ct->displayid_AF;
-    recvPacket >> ct->displayid_HF;
-    recvPacket >> unkf;
-    recvPacket >> unkf;
-    recvPacket >> ct->RacialLeader;
-    for(uint32 i = 0; i < 4; i++)
-        recvPacket >> ct->questItems[i];
-    recvPacket >> ct->movementId;
-
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+    {
+      if(GetInstance()->GetConf()->client == CLIENT_WOTLK)
+      {
+          for(uint32 i = 0; i < MAX_KILL_CREDIT; i++)
+              recvPacket >> ct->killCredit[i];
+      }
+      recvPacket >> ct->displayid_A;
+      recvPacket >> ct->displayid_H;
+      recvPacket >> ct->displayid_AF;
+      recvPacket >> ct->displayid_HF;
+      recvPacket >> unkf;
+      recvPacket >> unkf;
+      recvPacket >> ct->RacialLeader;
+      if(GetInstance()->GetConf()->client == CLIENT_WOTLK)
+      {      
+          for(uint32 i = 0; i < 4; i++)
+              recvPacket >> ct->questItems[i];
+          recvPacket >> ct->movementId;
+      }
+    }
+    else
+    {
+      recvPacket >> unk;
+      recvPacket >> ct->PetSpellDataId;
+      recvPacket >> ct->displayid_A;
+      ct->displayid_H = ct->displayid_A;
+      ct->displayid_AF = ct->displayid_A;
+      ct->displayid_HF = ct->displayid_A;
+      recvPacket >> ct->civilian;
+    }
     std::stringstream ss;
     ss << "Got info for creature " << entry << ":" << ct->name;
     if(!ct->subname.empty())
@@ -1673,15 +1735,23 @@ void WorldSession::_HandleGameobjectQueryResponseOpcode(WorldPacket& recvPacket)
     recvPacket >> other_names; // name1
     recvPacket >> other_names; // name2
     recvPacket >> other_names; // name3 (all unused)
-    recvPacket >> unks;
-    recvPacket >> go->castBarCaption;
-    recvPacket >> go->unk1;
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+    {
+      recvPacket >> unks;
+      recvPacket >> go->castBarCaption;
+      recvPacket >> go->unk1;
+    }
     for(uint32 i = 0; i < GAMEOBJECT_DATA_FIELDS; i++)
         recvPacket >> go->raw.data[i];
-    recvPacket >> go->size;
-    for(uint32 i = 0; i < 4; i++)
-        recvPacket >> go->questItems[i];
-
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+    {
+      recvPacket >> go->size;
+      if(GetInstance()->GetConf()->client > CLIENT_TBC)
+      {
+        for(uint32 i = 0; i < 4; i++)
+          recvPacket >> go->questItems[i];
+      }
+    }
     std::stringstream ss;
     ss << "Got info for gameobject " << entry << ":" << go->name;
     ss << " type " << go->type;
@@ -1723,7 +1793,7 @@ void WorldSession::_HandleCharCreateOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
 {
     uint64 guid;
-    guid = recvPacket.GetPackedGuid();
+    guid = recvPacket.readPackGUID();
     
     Object* obj = objmgr.GetObj(guid);
     if (!obj || !obj->IsWorldObject())
@@ -1732,7 +1802,10 @@ void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
     uint8 unk, type;
     uint32 time, flags, movetime, waypoints;
     float x, y, z;
-    recvPacket >> unk >> x >> y >> z >> time >> type;
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
+      recvPacket >> unk;
+    
+    recvPacket >> x >> y >> z >> time >> type;
 
     float oldx = ((WorldObject*)obj)->GetX(),
           oldy = ((WorldObject*)obj)->GetY();

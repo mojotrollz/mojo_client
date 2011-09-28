@@ -11,80 +11,86 @@ namespace scene
 {
 
 struct ModelHeader {
-	c8 id[4];
-	u8 version[4];
+	c8 id[4];               //0x00
+	u32 version;            
 	u32 nameLength;
-	u32 nameOfs;
-	u32 type;
+	u32 nameOfs;            
+	u32 type;               //0x10
 
+    //Anim Block @ 0x14
 	u32 nGlobalSequences;
 	u32 ofsGlobalSequences;
 	u32 nAnimations;
-	u32 ofsAnimations;
-	u32 nC;
-	u32 ofsC;
+	u32 ofsAnimations;      //0x20
+	u32 nAnimationLookup;
+	u32 ofsAnimationLookup;
+    u32 nD;
+    u32 ofsD;               //0x30
 	u32 nBones;
 	u32 ofsBones;
-	u32 nF;
-	u32 ofsF;
+	u32 nSkelBoneLookup;
+	u32 ofsSkelBoneLookup;  //0x40
 
-	u32 nVertices;
+	u32 nVertices;          //0x44
 	u32 ofsVertices;
 	u32 nViews; // number of skins ?
+    u32 ofsViews;           //0x50
 
 	u32 nColors;
 	u32 ofsColors;
 
 	u32 nTextures;
-	u32 ofsTextures;
+	u32 ofsTextures;        //0x60
 
-	u32 nTransparency; // H
+	u32 nTransparency;
 	u32 ofsTransparency;
-	u32 nTexAnims;	// J
+    u32 nI;
+    u32 ofsI;               //0x70
+	u32 nTexAnims;
 	u32 ofsTexAnims;
 	u32 nTexReplace;
-	u32 ofsTexReplace;
+	u32 ofsTexReplace;      //0x80
 
 	u32 nTexFlags;
 	u32 ofsTexFlags;
 	u32 nY;
-	u32 ofsY;
+	u32 ofsY;               //0x90
 
 	u32 nTexLookup;
 	u32 ofsTexLookup;
 
-	u32 nTexUnitLookup;		// L
-	u32 ofsTexUnitLookup;
-	u32 nTransparencyLookup; // M
+	u32 nTexUnitLookup;
+	u32 ofsTexUnitLookup;   //0xa0
+	u32 nTransparencyLookup;
 	u32 ofsTransparencyLookup;
 	u32 nTexAnimLookup;
-	u32 ofsTexAnimLookup;
+	u32 ofsTexAnimLookup;   //0xb0
 
 	f32 floats[14];
 
-	u32 nBoundingTriangles;
-	u32 ofsBoundingTriangles;
+	u32 nBoundingTriangles; 
+	u32 ofsBoundingTriangles; //0xf0
 	u32 nBoundingVertices;
 	u32 ofsBoundingVertices;
 	u32 nBoundingNormals;
-	u32 ofsBoundingNormals;
+	u32 ofsBoundingNormals; //0x100
 
-	u32 nAttachments; // O
+	u32 nAttachments;
 	u32 ofsAttachments;
-	u32 nAttachLookup; // P
-	u32 ofsAttachLookup;
-	u32 nQ; // Q
-	u32 ofsQ;
-	u32 nLights; // R
-	u32 ofsLights;
-	u32 nCameras; // S
+	u32 nAttachLookup;
+	u32 ofsAttachLookup;    //0x110
+	u32 nAttachments_2;
+	u32 ofsAttachments_2;
+	u32 nLights;
+	u32 ofsLights;          //0x120
+	u32 nCameras;
 	u32 ofsCameras;
-	u32 nT;
-	u32 ofsT;
-	u32 nRibbonEmitters; // U
+	u32 nCameraLookup;
+	u32 ofsnCameraLookup;   //0x130
+	u32 nRibbonEmitters;
 	u32 ofsRibbonEmitters;
-	u32 nParticleEmitters; // V
-	u32 ofsParticleEmitters;
+	u32 nParticleEmitters;
+	u32 ofsParticleEmitters;//0x140
 
 };
 
@@ -106,13 +112,13 @@ struct ModelVertex {
 };
 
 struct ModelView {
-    c8 id[4]; // always "SKIN"
+//     c8 id[4]; // always "SKIN"
     u32 nIndex, ofsIndex; // Vertices in this model (index into vertices[])
     u32 nTris, ofsTris;	 // indices
     u32 nProps, ofsProps; // additional vtx properties
     u32 nSub, ofsSub;	 // materials/renderops/submeshes
     u32 nTex, ofsTex;	 // material properties/textures
-	s32 lod;				 // LOD bias?
+	u32 lod;				 // LOD bias?
 };
 
 struct ModelViewSubmesh {
@@ -212,17 +218,21 @@ public:
 private:
 
 	bool load();
+    void ReadVertices();
+    void ReadTextureDefinitions();
+    void ReadViewData(io::IReadFile* file);
 
-	IrrlichtDevice* Device;
+	IrrlichtDevice *Device;
     core::stringc Texdir;
-    io::IReadFile* MeshFile;
+    io::IReadFile *MeshFile, *SkinFile;
 
-    CSkinnedMesh* AnimatedMesh;
-    scene::CSkinnedMesh::SJoint* ParentJoint;
+    CSkinnedMesh *AnimatedMesh;
+    scene::CSkinnedMesh::SJoint *ParentJoint;
 
 
 
     ModelHeader header;
+    ModelView currentView;
     core::stringc M2MeshName;
     SMesh* Mesh;
     //SSkinMeshBuffer* MeshBuffer;

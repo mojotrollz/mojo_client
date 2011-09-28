@@ -13,7 +13,7 @@ Player::Player() : Unit()
 {
     _type |= TYPE_PLAYER;
     _typeid = TYPEID_PLAYER;
-    _valuescount = PLAYER_END;
+    _valuescount = Object::maxvalues[_typeid];
 }
 
 void Player::Create(uint64 guid)

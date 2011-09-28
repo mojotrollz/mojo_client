@@ -88,12 +88,26 @@ namespace MemoryDataHolder
     }    
     void MakeModelFilename(char* fn, std::string fname)
     {
+        if(fname.find(".mdx")!=std::string::npos)
+          fname.replace(fname.length()-3,3,"m2");
+        if(loadFromMPQ)
+        {
+            sprintf(fn,"%s",fname.c_str());
+        }
+        else
+        {
+            NormalizeFilename(_PathToFileName(fname));
+            sprintf(fn,"./data/model/%s",fname.c_str());
+        }
+    }  
+    void MakeWMOFilename(char* fn, std::string fname)
+    {
         if(loadFromMPQ)
             sprintf(fn,"%s",fname.c_str());
         else
         {
             NormalizeFilename(_PathToFileName(fname));
-            sprintf(fn,"./data/model/%s",fname.c_str());
+            sprintf(fn,"./data/wmos/%s",fname.c_str());
         }
     }  
 
@@ -117,7 +131,7 @@ namespace MemoryDataHolder
         }
         ~DataLoaderRunnable()
         {
-            logdev("~DataLoaderRunnable(%s) 0x%X", _name.c_str(), this);
+            DEBUG(logdev("~DataLoaderRunnable(%s) 0x%X", _name.c_str(), this));
         }
         void SetStores(TypeStorage<memblock> *mem, TypeStorage<DataLoaderRunnable> *ldrs)
         {
@@ -139,7 +153,7 @@ namespace MemoryDataHolder
                     delete mb;
                     return;
                 }
-                logdev("DataLoaderRunnable: Reading From MPQ'%s'... (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str());
+                DEBUG(logdev("DataLoaderRunnable: Reading From MPQ'%s'... (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str()));
                 const ByteBuffer& bb = mpq.ExtractFile(_name.c_str());
 //                 fh.read((char*)mb->ptr, mb->size);
                 if(!bb.size())
@@ -161,7 +175,7 @@ namespace MemoryDataHolder
                     _storage->Assign(_name, mb);
                     _loaders->Unlink(_name); // must be unlinked after the file is fully loaded, but before the callbacks are processed!
                 }
-                logdev("DataLoaderRunnable: Done with '%s' (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str());
+                DEBUG(logdev("DataLoaderRunnable: Done with '%s' (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str()));
                 DoCallbacks(_name, MDH_FILE_OK | MDH_FILE_JUST_LOADED);              
             }
             else
@@ -194,7 +208,7 @@ namespace MemoryDataHolder
                     DoCallbacks(_name, MDH_FILE_ERROR);
                     return;
                 }
-                logdev("DataLoaderRunnable: Reading '%s'... (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str());
+                DEBUG(logdev("DataLoaderRunnable: Reading '%s'... (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str()));
                 fh.read((char*)mb->ptr, mb->size);
                 fh.close();
                 {
@@ -202,7 +216,7 @@ namespace MemoryDataHolder
                     _storage->Assign(_name, mb);
                     _loaders->Unlink(_name); // must be unlinked after the file is fully loaded, but before the callbacks are processed!
                 }
-                logdev("DataLoaderRunnable: Done with '%s' (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str());
+                DEBUG(logdev("DataLoaderRunnable: Done with '%s' (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str()));
                 DoCallbacks(_name, MDH_FILE_OK | MDH_FILE_JUST_LOADED);
             }
         }
@@ -358,14 +372,14 @@ namespace MemoryDataHolder
         {
             if(*refcount > 0)
                 (*refcount)--;
-            logdev("MemoryDataHolder::Delete(\"%s\"): refcount dropped to %u", s.c_str(), *refcount);
+            DEBUG(logdev("MemoryDataHolder::Delete(\"%s\"): refcount dropped to %u", s.c_str(), *refcount));
         }
         if(!*refcount)
         {
             refs.Delete(s);
             if(memblock *mb = storage.GetNoCreate(s))
             {
-                logdev("MemoryDataHolder:: deleting 0x%X (size %s)", mb->ptr, FilesizeFormat(mb->size).c_str());
+                DEBUG(logdev("MemoryDataHolder:: deleting 0x%X (size %s)", mb->ptr, FilesizeFormat(mb->size).c_str()));
                 mb->free();
                 storage.Delete(s);
                 return true;

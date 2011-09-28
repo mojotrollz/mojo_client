@@ -4,11 +4,17 @@
 #include "WorldSocket.h"
 #include "Opcodes.h"
 
+
+
 WorldSocket::WorldSocket(SocketHandler &h, WorldSession *s) : TcpSocket(h)
 {
     _session = s;
     _gothdr = false;
     _ok=false;
+    
+    //Dummy functions for unencrypted packets on WorldSocket
+    pDecryptRecv = &AuthCrypt::DecryptRecvDummy;
+    pEncryptSend = &AuthCrypt::EncryptSendDummy;
 }
 
 bool WorldSocket::IsOk(void)
@@ -78,31 +84,43 @@ void WorldSocket::OnRead()
                 break;
             }
 
-            // read first byte and check if size is 3 or 2 bytes
-            uint8 firstSizeByte;
-            ibuf.Read((char*)&firstSizeByte, 1);
-            _crypt.DecryptRecv(&firstSizeByte, 1);
-
-            if (firstSizeByte & 0x80) // got large packet
+            if(GetSession()->GetInstance()->GetConf()->client > CLIENT_TBC)//Funny, old sources have this in TBC already...
             {
-                ServerPktHeaderBig hdr;
-                ibuf.Read(((char*)&hdr) + 1, sizeof(ServerPktHeaderBig) - 1); // read *big* header, except first byte
-                _crypt.DecryptRecv(((uint8*)&hdr) + 1, sizeof(ServerPktHeaderBig) - 1); // decrypt 2 of 3 bytes (first one already decrypted above) of size, and cmd
-                hdr.size[0] = firstSizeByte; // assign missing first byte
+              // read first byte and check if size is 3 or 2 bytes
+              uint8 firstSizeByte;
+              ibuf.Read((char*)&firstSizeByte, 1);
+              (_crypt.*pDecryptRecv)(&firstSizeByte, 1);
+              if (firstSizeByte & 0x80) // got large packet
+              {
+                  ServerPktHeaderBig hdr;
+                  ibuf.Read(((char*)&hdr) + 1, sizeof(ServerPktHeaderBig) - 1); // read *big* header, except first byte
+                  (_crypt.*pDecryptRecv)(((uint8*)&hdr) + 1, sizeof(ServerPktHeaderBig) - 1); // decrypt 2 of 3 bytes (first one already decrypted above) of size, and cmd
+                  hdr.size[0] = firstSizeByte; // assign missing first byte
 
-                uint32 realsize = ((hdr.size[0]&0x7F) << 16) | (hdr.size[1] << 8) | hdr.size[2];
-                _remaining = realsize - 2;
-                _opcode = hdr.cmd;
+                  uint32 realsize = ((hdr.size[0]&0x7F) << 16) | (hdr.size[1] << 8) | hdr.size[2];
+                  _remaining = realsize - 2;
+                  _opcode = hdr.cmd;
+              }
+              else // "normal" packet
+              {
+                  ServerPktHeader hdr;
+                  ibuf.Read(((char*)&hdr) + 1, sizeof(ServerPktHeader) - 1); // read header, except first byte
+                  (_crypt.*pDecryptRecv)(((uint8*)&hdr) + 1, sizeof(ServerPktHeader) - 1); // decrypt all except first
+                  hdr.size |= firstSizeByte; // add already decrypted first byte
+
+                  _remaining = ntohs(hdr.size) - 2;
+                  _opcode = hdr.cmd;
+              }
             }
-            else // "normal" packet
+            else
             {
-                ServerPktHeader hdr;
-                ibuf.Read(((char*)&hdr) + 1, sizeof(ServerPktHeader) - 1); // read header, except first byte
-                _crypt.DecryptRecv(((uint8*)&hdr) + 1, sizeof(ServerPktHeader) - 1); // decrypt all except first
-                hdr.size |= firstSizeByte; // add already decrypted first byte
+              ServerPktHeader hdr;
+              ibuf.Read(((char*)&hdr), sizeof(ServerPktHeader)); // read header
+              (_crypt.*pDecryptRecv)(((uint8*)&hdr), sizeof(ServerPktHeader)); // decrypt all
 
-                _remaining = ntohs(hdr.size) - 2;
-                _opcode = hdr.cmd;
+              _remaining = ntohs(hdr.size) - 2;
+              _opcode = hdr.cmd;
+              
             }
             
             if(_opcode > MAX_OPCODE_ID)
@@ -114,7 +132,6 @@ void WorldSocket::OnRead()
                 // TODO: invent some way how to recover the crypt (reconnect?)
                 return;
             }
-
             // the header is fine, now check if there are more data
             if(_remaining == 0) // this is a packet with no data (like CMSG_NULL_ACTION)
             {
@@ -138,7 +155,7 @@ void WorldSocket::SendWorldPacket(WorldPacket &pkt)
     memset(&hdr,0,sizeof(ClientPktHeader));
     hdr.size = ntohs(pkt.size()+4);
     hdr.cmd = pkt.GetOpcode();
-    _crypt.EncryptSend((uint8*)&hdr, 6);
+    (_crypt.*pEncryptSend)((uint8*)&hdr, 6);
     ByteBuffer final(pkt.size()+6);
     final.append((uint8*)&hdr,sizeof(ClientPktHeader));
     if(pkt.size())
@@ -148,7 +165,38 @@ void WorldSocket::SendWorldPacket(WorldPacket &pkt)
 
 void WorldSocket::InitCrypt(BigNumber *k)
 {
-    _crypt.Init(k);
+    //As crypt
+    switch(GetSession()->GetInstance()->GetConf()->client)
+    {
+      case CLIENT_CLASSIC_WOW:
+      {
+        logdebug("Setting Crypt to Build 6005");
+        pInit = &AuthCrypt::Init_6005;
+        pDecryptRecv = &AuthCrypt::DecryptRecv_6005;
+        pEncryptSend = &AuthCrypt::EncryptSend_6005;
+        break;
+      }
+      case CLIENT_TBC:
+      {
+        logdebug("Setting Crypt to Build 8606");
+        pInit = &AuthCrypt::Init_8606;
+        pDecryptRecv = &AuthCrypt::DecryptRecv_6005;
+        pEncryptSend = &AuthCrypt::EncryptSend_6005;
+        break;
+      }
+      case CLIENT_WOTLK:
+      {
+        logdebug("Setting Crypt to Build 12340");
+        pInit = &AuthCrypt::Init_12340;
+        pDecryptRecv = &AuthCrypt::DecryptRecv_12340;
+        pEncryptSend = &AuthCrypt::EncryptSend_12340;
+        break;
+      }
+      default:
+        logerror("Error setting up Crypt - will crash now (check conf)");
+        break;
+    }
+    (_crypt.*pInit)(k);
     const char *hexstr = k->AsHexStr();
     logdebug("WorldSocket: Crypt initialized [%s]",hexstr);
     OPENSSL_free((void*)hexstr);

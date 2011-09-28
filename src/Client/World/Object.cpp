@@ -9,7 +9,7 @@ Object::Object()
     _uint32values=NULL;
     _type=TYPE_OBJECT;
     _typeid=TYPEID_OBJECT;
-    _valuescount=OBJECT_END; // base class. this value will be set by derived classes
+    _valuescount=Object::maxvalues[_typeid]; // base class. this value will be set by derived classes
 }
 
 Object::~Object()
@@ -110,7 +110,9 @@ void WorldSession::_HandleDestroyObjectOpcode(WorldPacket& recvPacket)
     uint64 guid;
     uint8 dummy;
 
-    recvPacket >> guid >> dummy;
+    recvPacket >> guid;
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
+      recvPacket >> dummy;
     logdebug("Destroy Object "I64FMT,guid);
 
     // call script just before object removal

@@ -1,5 +1,4 @@
 #include "WorldSession.h"
-#include "UpdateFields.h"
 
 #include "Item.h"
 #include "Bag.h"
@@ -18,7 +17,10 @@ void WorldSession::_HandleItemQuerySingleResponseOpcode(WorldPacket& recvPacket)
         proto->Id = ItemID;
         recvPacket >> proto->Class;
         recvPacket >> proto->SubClass;
-		recvPacket >> unk; // dont need that value?
+        if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+        {
+          recvPacket >> unk; // dont need that value?
+        }
         recvPacket >> proto->Name;
         recvPacket >> unk8;
         recvPacket >> unk8;
@@ -132,7 +134,7 @@ Item::Item()
     _type |= TYPE_ITEM;
     _typeid = TYPEID_ITEM;
 
-    _valuescount = ITEM_END;
+    _valuescount = Object::maxvalues[_typeid];
     _slot = 0;
     //_bag = NULL; // not yet implemented
 }

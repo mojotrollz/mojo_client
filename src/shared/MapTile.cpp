@@ -1,6 +1,7 @@
 #include "common.h"
 #include "MapTile.h"
 #include "log.h"
+#include "MemoryDataHolder.h"
 
 MapTile::MapTile()
 {
@@ -12,13 +13,6 @@ MapTile::~MapTile()
 
 void MapTile::ImportFromADT(ADTFile *adt)
 {
-    // strip the path name from the dependency files, just store the plain filename
-    for(std::vector<std::string>::iterator it = adt->_textures.begin(); it != adt->_textures.end(); it++)
-        this->_textures.push_back(_PathToFileName(*it));
-    for(std::vector<std::string>::iterator it = adt->_models.begin(); it != adt->_models.end(); it++)
-        this->_models.push_back(_PathToFileName(*it));
-    for(std::vector<std::string>::iterator it = adt->_wmos.begin(); it != adt->_wmos.end(); it++)
-        this->_wmos.push_back(_PathToFileName(*it));
 
     // import the height map
     for(uint32 ch=0; ch<CHUNKS_PER_TILE; ch++)
@@ -53,7 +47,9 @@ void MapTile::ImportFromADT(ADTFile *adt)
         for(uint32 ly = 0; ly < adt->_chunks[ch].hdr.nLayers; ly++)
         {
             uint32 texoffs = adt->_chunks[ch].layer[ly].textureId;
-            _chunks[ch].texlayer.push_back(std::string("data/texture/") + NormalizeFilename(std::string(adt->_textures[texoffs])).c_str());
+            char fname[255];
+            MemoryDataHolder::MakeTextureFilename(fname,adt->_textures[texoffs]);
+            _chunks[ch].texlayer.push_back(fname);
         }
 
         memcpy(_chunks[ch].alphamap, adt->_chunks[ch].alphamap, adt->_chunks[ch].hdr.sizeAlpha - 8);
@@ -90,7 +86,9 @@ void MapTile::ImportFromADT(ADTFile *adt)
         d.flags = mddf.flags;
         d.uniqueid = mddf.uniqueid;
         d.MPQpath = adt->_models[mddf.id];
-        d.model = std::string("./data/model/") + NormalizeFilename(_PathToFileName(adt->_models[mddf.id]));
+        char fname[255];
+        MemoryDataHolder::MakeModelFilename(fname,adt->_models[mddf.id]);
+        d.model = fname;
         // this .mdx -> .m2 transformation is annoying >.< - replace "mdx" and end of string with "m2"
         // d.model = d.model.substr(0, d.model.length() - 3) + "m2";
         // 3.1.3 - no more .mdx in ADT 
@@ -115,7 +113,9 @@ void MapTile::ImportFromADT(ADTFile *adt)
         wmo.flags = modf.flags;
         wmo.uniqueid = modf.uniqueid;
         wmo.MPQpath = adt->_wmos[modf.id];
-        wmo.model = std::string("./data/wmo/") + NormalizeFilename(_PathToFileName(adt->_wmos[modf.id]));
+        char fname[255];
+        MemoryDataHolder::MakeWMOFilename(fname,adt->_wmos[modf.id]);
+        wmo.model = fname;
         _wmo_data.push_back(wmo);
     }
 

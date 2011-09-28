@@ -2,7 +2,7 @@
 #define MOVEMENTMGR_H
 
 #include "common.h"
-#include "UpdateData.h"
+#include "MovementInfo.h"
 
 #define MOVE_HEARTBEAT_DELAY 500
 #define MOVE_TURN_UPDATE_DIFF 0.15f // not sure about original/real value, but this seems good
@@ -58,7 +58,7 @@ public:
     bool IsTurning(void); // spinning around?
     bool IsWalking(void); // walking straight forward/backward?
     bool IsStrafing(void); // strafing left/right?
-
+    inline void SetFallTime(uint32 falltime){_falltime = falltime; }
 
 
 private:
@@ -71,6 +71,7 @@ private:
     uint8 _movemode; // automatic or manual
     float _movespeed; // current xy movement speed
     float _jumptime;
+    uint32 _falltime;
     UnitMoveType _movetype; // index used for speed selection
     bool _moved;
 

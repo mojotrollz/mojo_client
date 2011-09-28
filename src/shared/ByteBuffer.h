@@ -272,6 +272,25 @@ class ByteBuffer
             if(buffer.size()) append(buffer.contents(),buffer.size());
         }
 
+        uint64 readPackGUID()
+        {
+            uint64 guid = 0;
+            uint8 guidmark = 0;
+            (*this) >> guidmark;
+
+            for(int i = 0; i < 8; ++i)
+            {
+                if(guidmark & (uint8(1) << i))
+                {
+                    uint8 bit;
+                    (*this) >> bit;
+                    guid |= (uint64(bit) << (i * 8));
+                }
+            }
+
+            return guid;
+        }
+
         void appendPackGUID(uint64 guid)
         {
             if (_storage.size() < _wpos + sizeof(guid) + 1)
