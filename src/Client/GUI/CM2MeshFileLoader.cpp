@@ -205,11 +205,16 @@ DEBUG(logdebug("Trying to open file %s",MeshFile->getFileName()));
 
 
 MeshFile->read(&header,20);
+DEBUG(logdebug("M2 Version %X",header.version));
+
 switch(header.version)
 {
   case 0x100:
+  case 0x104://HACK
+  case 0x105://HACK
+  case 0x106://HACK
+  case 0x107://HACK
   {
-    DEBUG(logdebug("M2 Version 1.00"));
     MeshFile->read((u8*)&header+20,sizeof(ModelHeader)-20);
     ReadVertices();
     MeshFile->seek(header.ofsViews);
@@ -218,15 +223,8 @@ switch(header.version)
     ReadTextureDefinitions();
     break;
   }
-  case 0x104:
-  {
-    DEBUG(logdebug("M2 Version 1.04"));
-    return 0;
-    break;
-  }
   case 0x108:
   {
-    DEBUG(logdebug("M2 Version 1.08"));
     return 0;
     break;
   }
