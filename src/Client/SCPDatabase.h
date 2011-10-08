@@ -1,7 +1,7 @@
 #ifndef _SCPDATABASE_H
 #define _SCPDATABASE_H
 
-#include "DefScript/TypeStorage.h"
+#include "TypeStorage.h"
 #include "ZCompressor.h"
 #include <set>
 

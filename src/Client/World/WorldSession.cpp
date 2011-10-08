@@ -6,17 +6,18 @@
 #include "Auth/AuthCrypt.h"
 #include "WorldPacket.h"
 #include "WorldSocket.h"
-#include "RealmSocket.h"
 #include "Channel.h"
 #include "ObjMgr.h"
 #include "World.h"
 #include "MapMgr.h"
 #include "MapTile.h"
-#include "RealmSession.h"
 #include "WorldSession.h"
 #include "MemoryDataHolder.h"
 #include "MovementInfo.h"
 #include "MovementMgr.h"
+#include "Realm/RealmSession.h"
+#include "Realm/RealmSocket.h"
+
 
 struct OpcodeHandler
 {

@@ -3,8 +3,8 @@
 #include "PseuWoW.h"
 #include "Scene.h"
 #include "GUIEventReceiver.h"
-#include "RealmSession.h"
-#include "WorldSession.h"
+#include "Realm/RealmSession.h"
+#include "World/WorldSession.h"
 
 enum GuiElementID
 {

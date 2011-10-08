@@ -1,6 +1,6 @@
 #include <fstream>
 #include "MemoryDataHolder.h"
-#include "DefScript/TypeStorage.h"
+#include "TypeStorage.h"
 #include "zthread/Condition.h"
 #include "zthread/Task.h"
 #include "zthread/PoolExecutor.h"

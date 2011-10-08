@@ -2,7 +2,7 @@
 #include "PseuGUI.h"
 #include "PseuWoW.h"
 #include "Scene.h"
-#include "RealmSession.h"
+#include "Realm/RealmSession.h"
 #include "GUIEventReceiver.h"
 
 enum GuiElementID

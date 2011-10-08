@@ -16,9 +16,9 @@ tutorial, we use a lot stuff from the gui namespace.
 #include <irrlicht/irrlicht.h>
 #include <iostream>
 #include "common.h"
-#include "CM2MeshFileLoader.h"
-#include "CWMOMeshFileLoader.h"
-#include "CImageLoaderBLP.h"
+#include "GUI/CM2MeshFileLoader.h"
+#include "GUI/CWMOMeshFileLoader.h"
+#include "GUI/CImageLoaderBLP.h"
 
 
 using namespace irr;

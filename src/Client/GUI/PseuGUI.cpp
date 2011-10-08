@@ -3,7 +3,7 @@
 #include "CM2MeshFileLoader.h"
 #include "CWMOMeshFileLoader.h"
 #include "CImageLoaderBLP.h"
-#include "Object.h"
+#include "World/Object.h"
 #include "DrawObject.h"
 #include "PseuWoW.h"
 #include "Scene.h"

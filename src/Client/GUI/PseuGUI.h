@@ -5,7 +5,7 @@
 #include "irrklang/irrKlang.h"
 #include "SceneData.h"
 #include "DrawObjMgr.h"
-#include "World.h"
+#include "World/World.h"
 
 class PseuGUI;
 class Object;

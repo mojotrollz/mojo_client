@@ -1,0 +1,7 @@
+add_subdirectory (irrlicht)
+add_subdirectory (zlib)
+add_subdirectory (zthread)
+add_subdirectory (StormLib)
+if(MAKE_IRRKLANG_STUB)
+  add_subdirectory(irrKlang)
+endif()
