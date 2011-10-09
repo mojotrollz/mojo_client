@@ -1,5 +1,5 @@
 #include "common.h"
-#include "Locale.h"
+#include "MPQLocale.h"
 #include <fstream>
 #include "ByteBuffer.h"
 

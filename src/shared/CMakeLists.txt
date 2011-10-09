@@ -1,7 +1,7 @@
 include_directories (${PROJECT_SOURCE_DIR}/src/dep/include ${PROJECT_SOURCE_DIR}/src/dep/src ${PROJECT_SOURCE_DIR}/src/shared)
 add_library(shared
 WDTFile.cpp
-Locale.cpp
+MPQLocale.cpp
 MPQFile.cpp
 MPQHelper.cpp
 ProgressBar.cpp
