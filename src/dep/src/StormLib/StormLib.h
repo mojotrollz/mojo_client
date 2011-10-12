@@ -73,21 +73,21 @@
 //  Z - S for static C library, D for multithreaded DLL C-library
 //
 
-#if defined(_MSC_VER) && !defined (__STORMLIB_SELF__)
-  #ifdef _DEBUG                                 // DEBUG VERSIONS
-    #ifdef _DLL                               
-      #pragma comment(lib, "StormLibDAD.lib")   // Debug Ansi Dynamic version
-    #else        
-      #pragma comment(lib, "StormLibDAS.lib")   // Debug Ansi Static version
-    #endif
-  #else                                         // RELEASE VERSIONS
-    #ifdef _DLL
-      #pragma comment(lib, "StormLibRAD.lib")   // Release Ansi Dynamic version
-    #else        
-      #pragma comment(lib, "StormLibRAS.lib")   // Release Ansi Static version
-    #endif
-  #endif
-#endif
+// #if defined(_MSC_VER) && !defined (__STORMLIB_SELF__)
+//   #ifdef _DEBUG                                 // DEBUG VERSIONS
+//     #ifdef _DLL                               
+//       #pragma comment(lib, "StormLibDAD.lib")   // Debug Ansi Dynamic version
+//     #else        
+//       #pragma comment(lib, "StormLibDAS.lib")   // Debug Ansi Static version
+//     #endif
+//   #else                                         // RELEASE VERSIONS
+//     #ifdef _DLL
+//       #pragma comment(lib, "StormLibRAD.lib")   // Release Ansi Dynamic version
+//     #else        
+//       #pragma comment(lib, "StormLibRAS.lib")   // Release Ansi Static version
+//     #endif
+//   #endif
+// #endif
 
 //-----------------------------------------------------------------------------
 // Defines

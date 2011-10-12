@@ -1,11 +1,23 @@
 include_directories (${PROJECT_SOURCE_DIR}/src/dep/include ${PROJECT_SOURCE_DIR}/src/shared ${PROJECT_SOURCE_DIR}/src/Client)
 
+set(PSEUWOW_LIBS
+PseuGUI DefScript irrKlang irrlicht shared zthread StormLib zlib ${OPENSSL_LIBRARIES} ${OPENSSL_EXTRA_LIBRARIES}
+)
+
+link_directories (${CMAKE_INSTALL_PREFIX})
+if(WIN32)
+  link_directories (${PROJECT_SOURCE_DIR}/src/dep/lib/static)
+  set(PSEUWOW_LIBS ${PSEUWOW_LIBS} Winmm)
+endif()
+if(UNIX)
+  set(EXECUTABLE_LINK_FLAGS "-pthread")
+  set(PSEUWOW_LIBS ${PSEUWOW_LIBS} GL Xxf86vm bz2)
+endif()
+
 add_subdirectory (DefScript)
 add_subdirectory (GUI)
 
-if(UNIX)
-  set(EXECUTABLE_LINK_FLAGS "-pthread")
-endif()
+
 
 add_executable (pseuwow 
 Realm/RealmSession.cpp
@@ -42,7 +54,9 @@ RemoteController.cpp
 SCPDatabase.cpp
 )
 
+
+
 # Link the executable to the libraries.
-target_link_libraries (pseuwow PseuGUI DefScript irrklang irrlicht GL Xxf86vm shared zthread StormLib zlib bz2 ssh crypto) 
+target_link_libraries (pseuwow ${PSEUWOW_LIBS}) 
 
 install(TARGETS pseuwow DESTINATION ${CMAKE_INSTALL_PREFIX})

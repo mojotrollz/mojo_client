@@ -29,6 +29,7 @@ option(BUILD_TOOLS "Build Tools" 0)
 
 
 find_package(Platform REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 # VS100 uses MSBuild.exe instead of devenv.com, so force it to use devenv.com
 if(WIN32 AND MSVC_VERSION MATCHES 1600)
@@ -78,9 +79,8 @@ if(CMAKE_INSTALL_PREFIX STREQUAL "/usr/local")
 endif()
 
 
-if(UNIX)
-  find_package(OpenSSL REQUIRED)
-endif()
+
+
 
 message("")
 message("Install binaries to     : ${CMAKE_INSTALL_PREFIX}")

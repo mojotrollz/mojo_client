@@ -1,4 +1,3 @@
-#define _DEBUG 1
 #include "common.h"
 
 #include "Auth/Sha1.h"

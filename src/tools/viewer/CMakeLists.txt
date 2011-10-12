@@ -8,9 +8,20 @@ ${PROJECT_SOURCE_DIR}/src/Client/GUI/CImageLoaderBLP.cpp
 ${PROJECT_SOURCE_DIR}/src/Client/GUI/SImage.cpp
 ${PROJECT_SOURCE_DIR}/src/Client/GUI/MemoryInterface.cpp
 ${PROJECT_SOURCE_DIR}/src/Client/GUI/CMDHMemoryReadFile.cpp
+${PROJECT_SOURCE_DIR}/src/Client/GUI/CBoneSceneNode.cpp
+${PROJECT_SOURCE_DIR}/src/Client/GUI/SSkinnedMesh.cpp
+
 )
 
 # Link the executable to the libraries.
-target_link_libraries (viewer shared irrlicht StormLib zthread GL Xxf86vm zlib bz2 ) 
+set(VIEWER_LIBS shared irrlicht StormLib zthread zlib)
+if(UNIX)
+  list(APPEND VIEWER_LIBS GL Xxf86vm bz2)
+endif()
+if(WIN32)
+  list(APPEND VIEWER_LIBS Winmm)
+endif()
+
+target_link_libraries (viewer ${VIEWER_LIBS} ) 
 
 install(TARGETS viewer DESTINATION ${CMAKE_INSTALL_PREFIX})

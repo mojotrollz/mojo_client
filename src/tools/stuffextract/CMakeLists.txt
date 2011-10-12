@@ -5,6 +5,14 @@ StuffExtract.cpp
 )
 
 # Link the executable to the libraries.
-target_link_libraries (stuffextract shared StormLib zlib bz2) 
+set(STUFFEXTRACT_LIBS shared StormLib zlib)
+if(UNIX)
+  list(APPEND STUFFEXTRACT_LIBS bz2)
+endif()
+if(WIN32)
+  list(APPEND STUFFEXTRACT_LIBS Winmm)
+endif()
+
+target_link_libraries (stuffextract ${STUFFEXTRACT_LIBS} ) 
 
 install(TARGETS stuffextract DESTINATION ${CMAKE_INSTALL_PREFIX})

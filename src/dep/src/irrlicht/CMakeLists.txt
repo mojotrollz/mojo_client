@@ -1,5 +1,25 @@
 include_directories (${PROJECT_SOURCE_DIR}/src/dep/include ${PROJECT_SOURCE_DIR}/src/dep/include/irrlicht)
-add_library(irrlicht
+if(WIN32)
+  set(LIBTYPE SHARED)
+else()
+  set(LIBTYPE STATIC)
+endif()
+
+add_library(irrlicht ${LIBTYPE} # this may be considered a hack.
+
+zlib/adler32.c
+zlib/compress.c
+zlib/crc32.c
+zlib/deflate.c
+zlib/gzio.c
+zlib/infback.c
+zlib/inffast.c
+zlib/inflate.c
+zlib/inftrees.c
+zlib/trees.c
+zlib/uncompr.c
+zlib/zutil.c
+
 libpng/example.c
 libpng/pnggccrd.c
 libpng/pngpread.c
@@ -271,3 +291,4 @@ Irrlicht.cpp
 irrXML.cpp
 os.cpp
 )
+SET_TARGET_PROPERTIES (irrlicht PROPERTIES DEFINE_SYMBOL  "IRRLICHT_EXPORTS" )
