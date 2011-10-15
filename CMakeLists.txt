@@ -30,6 +30,10 @@ option(BUILD_TOOLS "Build Tools" 0)
 
 find_package(Platform REQUIRED)
 find_package(OpenSSL REQUIRED)
+if(WIN32)
+  find_package(DirectX)
+endif()
+
 
 # VS100 uses MSBuild.exe instead of devenv.com, so force it to use devenv.com
 if(WIN32 AND MSVC_VERSION MATCHES 1600)

@@ -1,9 +1,11 @@
-include_directories (${PROJECT_SOURCE_DIR}/src/dep/include ${PROJECT_SOURCE_DIR}/src/dep/include/irrlicht)
+set(INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src/dep/include ${PROJECT_SOURCE_DIR}/src/dep/include/irrlicht ${PROJECT_SOURCE_DIR}/src/dep/include/zlib)
 if(WIN32)
   set(LIBTYPE SHARED)
+  set(INCLUDE_DIRS ${INCLUDE_DIRS} ${DirectX_D3D9_INCLUDE_DIR} ${DirectX_D3DX9_INCLUDE_DIR})
 else()
   set(LIBTYPE STATIC)
 endif()
+include_directories(${INCLUDE_DIRS})
 
 add_library(irrlicht ${LIBTYPE} # this may be considered a hack.
 
@@ -106,11 +108,11 @@ CColladaMeshWriter.cpp
 CColorConverter.cpp
 CCSMLoader.cpp
 CCubeSceneNode.cpp
-CD3D8Driver.cpp
-CD3D8NormalMapRenderer.cpp
-CD3D8ParallaxMapRenderer.cpp
-CD3D8ShaderMaterialRenderer.cpp
-CD3D8Texture.cpp
+# CD3D8Driver.cpp
+# CD3D8NormalMapRenderer.cpp
+# CD3D8ParallaxMapRenderer.cpp
+# CD3D8ShaderMaterialRenderer.cpp
+# CD3D8Texture.cpp
 CD3D9Driver.cpp
 CD3D9HLSLMaterialRenderer.cpp
 CD3D9NormalMapRenderer.cpp
@@ -291,4 +293,7 @@ Irrlicht.cpp
 irrXML.cpp
 os.cpp
 )
-SET_TARGET_PROPERTIES (irrlicht PROPERTIES DEFINE_SYMBOL  "IRRLICHT_EXPORTS" )
+if(WIN32)
+  SET_TARGET_PROPERTIES (irrlicht PROPERTIES DEFINE_SYMBOL  "IRRLICHT_EXPORTS" )
+  target_link_libraries (irrlicht ${DirectX_D3D9_LIBRARY} ${DirectX_D3DX9_LIBRARY} Winmm) 
+endif()
