@@ -3,7 +3,6 @@
 #include "MemoryDataHolder.h"
 #include "MemoryInterface.h"
 #include "CWMOMeshFileLoader.h"
-#include "SSkinnedMesh.h"
 #include "common.h"
 
 inline void flipcc(irr::u8 *fcc)
@@ -52,7 +51,7 @@ IAnimatedMesh* CWMOMeshFileLoader::createMesh(io::IReadFile* file)
         return 0;
     MeshFile = file;
     std::string filename=MeshFile->getFileName();
-    Mesh = new scene::CSkinnedMesh();
+    Mesh = new scene::CM2Mesh();
 
 	if ( load(true) )//We try loading a root file first!
     {
@@ -69,7 +68,7 @@ IAnimatedMesh* CWMOMeshFileLoader::createMesh(io::IReadFile* file)
             }
             load(false);
         }
-    Mesh->recalculateBoundingBox();
+    Mesh->updateBoundingBox();
     Device->getSceneManager()->getMeshManipulator()->flipSurfaces(Mesh); //Fix inverted surfaces after the rotation
     //Does this crash on windows?
     Device->getSceneManager()->getMeshManipulator()->recalculateNormals(Mesh,true);//just to be sure

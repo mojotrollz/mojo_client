@@ -9,8 +9,7 @@ ${PROJECT_SOURCE_DIR}/src/Client/GUI/SImage.cpp
 ${PROJECT_SOURCE_DIR}/src/Client/GUI/MemoryInterface.cpp
 ${PROJECT_SOURCE_DIR}/src/Client/GUI/CMDHMemoryReadFile.cpp
 ${PROJECT_SOURCE_DIR}/src/Client/GUI/CBoneSceneNode.cpp
-${PROJECT_SOURCE_DIR}/src/Client/GUI/SSkinnedMesh.cpp
-
+${PROJECT_SOURCE_DIR}/src/Client/GUI/CM2Mesh.cpp
 )
 
 # Link the executable to the libraries.

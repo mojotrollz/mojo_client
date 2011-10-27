@@ -1,6 +1,6 @@
 #include "irrlicht/irrlicht.h"
 #include "irrlicht/IMeshLoader.h"
-#include "SSkinnedMesh.h"
+#include "CM2Mesh.h"
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -53,8 +53,8 @@ struct ModelHeader {
 
 	u32 nTexFlags;
 	u32 ofsTexFlags;
-	u32 nY;
-	u32 ofsY;               //0x90
+	u32 nBoneLookupTable;
+	u32 ofsBoneLookupTable; //0x90
 
 	u32 nTexLookup;
 	u32 ofsTexLookup;
@@ -127,7 +127,7 @@ struct ModelViewSubmesh {
     u16 nVertex;
     u16 ofsTris;//Starting Triangle index
     u16 nTris;
-    u16 unk1, unk2, unk3, unk4;
+    u16 nBone, ofsBone, unk3, unk4;
     core::vector3df v;
     float unkf[4];
 };
@@ -220,14 +220,15 @@ private:
 	bool load();
     void ReadVertices();
     void ReadTextureDefinitions();
+    void ReadAnimationData();
     void ReadViewData(io::IReadFile* file);
 
 	IrrlichtDevice *Device;
     core::stringc Texdir;
     io::IReadFile *MeshFile, *SkinFile;
 
-    CSkinnedMesh *AnimatedMesh;
-    scene::CSkinnedMesh::SJoint *ParentJoint;
+    CM2Mesh *AnimatedMesh;
+    scene::CM2Mesh::SJoint *ParentJoint;
 
 
 
@@ -246,8 +247,11 @@ private:
     core::array<std::string> M2MTextureFiles;
     core::array<TextureUnit> M2MTextureUnit;
     core::array<RenderFlags> M2MRenderFlags;
+    core::array<u32> M2MGlobalSequences;
     core::array<Animation> M2MAnimations;
     core::array<Bone> M2MBones;
+    core::array<u16> M2MBoneLookupTable;
+    core::array<u16> M2MSkeleBoneLookupTable;
     //Used for the Mesh, thus m2_noM_*
     core::array<video::S3DVertex> M2Vertices;
     core::array<u16> M2Indices;

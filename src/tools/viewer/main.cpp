@@ -19,6 +19,7 @@ tutorial, we use a lot stuff from the gui namespace.
 #include "GUI/CM2MeshFileLoader.h"
 #include "GUI/CWMOMeshFileLoader.h"
 #include "GUI/CImageLoaderBLP.h"
+#include "MemoryDataHolder.h"
 
 
 using namespace irr;
@@ -33,7 +34,7 @@ using namespace gui;
 Some global variables used later on
 */
 IrrlichtDevice *Device = 0;
-core::stringc StartUpModelFile = "../../../bin/data/model/draeneifemale.m2";
+core::stringc StartUpModelFile = "";
 core::stringw MessageText;
 core::stringw Caption;
 scene::ISceneNode* Model = 0;
@@ -87,6 +88,11 @@ enum
 	GUI_ID_QUIT,
     
     GUI_ID_TREE_VIEW,
+    
+    GUI_ID_FRAME_START,
+    GUI_ID_FRAME_END,
+    GUI_ID_FRAME_SET,
+    
 	// And some magic numbers
 	MAX_FRAMERATE = 1000,
 	DEFAULT_FRAMERATE = 30,
@@ -193,19 +199,18 @@ void loadModel(const c8* fn)
 	else
 	{
 		scene::IAnimatedMeshSceneNode* animModel = Device->getSceneManager()->addAnimatedMeshSceneNode(m);
-		animModel->setAnimationSpeed(30);
+		animModel->setAnimationSpeed(1000);
+        animModel->setFrameLoop(3333,4333);
 		Model = animModel;
 	}
 	Model->setMaterialFlag(video::EMF_LIGHTING, true);
 //	Model->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
 	Model->setDebugDataVisible(scene::EDS_OFF);
-
+    Model->setRotation(core::vector3df(-90,0,0));
 	// we need to uncheck the menu entries. would be cool to fake a menu event, but
 	// that's not so simple. so we do it brute force
-	gui::IGUIContextMenu* menu = (gui::IGUIContextMenu*)Device->getGUIEnvironment()->getRootGUIElement()->getElementFromId(GUI_ID_TOGGLE_DEBUG_INFO, true);
-	if (menu)
-		for(int item = 1; item < 6; ++item)
-			menu->setItemChecked(item, false);
+	for(int id = GUI_ID_DEBUG_BOUNDING_BOX; id <= GUI_ID_DEBUG_WIRE_OVERLAY; ++id)
+			((IGUICheckBox*)Device->getGUIEnvironment()->getRootGUIElement()->getElementFromId(id,true))->setChecked(false);
 	IGUIElement* toolboxWnd = Device->getGUIEnvironment()->getRootGUIElement()->getElementFromId(GUI_ID_DIALOG_ROOT_WINDOW, true);
 	if ( toolboxWnd )
 	{
@@ -213,6 +218,11 @@ void loadModel(const c8* fn)
 		toolboxWnd->getElementFromId(GUI_ID_Y_SCALE, true)->setText(L"1.0");
 		toolboxWnd->getElementFromId(GUI_ID_Z_SCALE, true)->setText(L"1.0");
 	}
+    
+    FILE* f = fopen("./viewer_last.txt","w");
+    fwrite(filename.c_str(),1,filename.size(),f);
+    fclose(f);
+
 }
 
 
@@ -292,6 +302,19 @@ void createToolBox()
     env->addCheckBox(true, core::rect<s32>(22,142,130,156),t3,GUI_ID_LIGHT_VISIBLE,L"Visible");
     env->addButton(core::rect<s32>(10,164,85,185), t3, GUI_ID_LIGHT_SET, L"Set");
 	
+    IGUITab* t4 = tab->addTab(L"Debug");
+    env->addCheckBox(false, core::rect<s32>(22,48,130,68),t4,GUI_ID_DEBUG_BOUNDING_BOX,L"BBox");
+    env->addCheckBox(false, core::rect<s32>(22,78,130,98),t4,GUI_ID_DEBUG_BUFFERS_BOUNDING_BOXES,L"Buffers BBoxes");
+    env->addCheckBox(false, core::rect<s32>(22,108,130,128),t4,GUI_ID_DEBUG_HALF_TRANSPARENT,L"Half Transparent");
+    env->addCheckBox(false, core::rect<s32>(22,138,130,158),t4,GUI_ID_DEBUG_NORMALS,L"Normals");
+    env->addCheckBox(false, core::rect<s32>(22,168,130,188),t4,GUI_ID_DEBUG_SKELETON,L"Skeleton");
+    env->addCheckBox(false, core::rect<s32>(22,198,130,218),t4,GUI_ID_DEBUG_WIRE_OVERLAY,L"Wire Overlay");
+    env->addStaticText(L"Start:", core::rect<s32>(22,228,40,248), false, false, t4);
+    env->addEditBox(L"0", core::rect<s32>(40,248,130,268), true, t4, GUI_ID_FRAME_START);
+    env->addStaticText(L"End:", core::rect<s32>(22,268,40,288), false, false, t4);
+    env->addEditBox(L"0", core::rect<s32>(40,288,130,308), true, t4, GUI_ID_FRAME_END);
+    env->addButton(core::rect<s32>(10,318,85,338), t4, GUI_ID_FRAME_SET, L"Set");
+    
     // bring irrlicht engine logo to front, because it
 	// now may be below the newly created toolbox
 	root->bringToFront(root->getElementFromId(666, true));
@@ -344,6 +367,38 @@ public:
             scene::ISceneManager* smgr = Device->getSceneManager();
 			switch(event.GUIEvent.EventType)
 			{
+                case EGET_CHECKBOX_CHANGED:
+                {
+                    s32 pos = ((IGUICheckBox*)event.GUIEvent.Caller)->getID();
+                    switch (pos)
+                    {
+                    case GUI_ID_DEBUG_BOUNDING_BOX: // View -> Debug Information
+                        if (Model)
+                            Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_BBOX));
+                        break;
+                    case GUI_ID_DEBUG_NORMALS: // View -> Debug Information
+                        if (Model)
+                            Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_NORMALS));
+                        break;
+                    case GUI_ID_DEBUG_SKELETON: // View -> Debug Information
+                        if (Model)
+                            Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_SKELETON));
+                        break;
+                    case GUI_ID_DEBUG_WIRE_OVERLAY: // View -> Debug Information
+                        if (Model)
+                            Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_MESH_WIRE_OVERLAY));
+                        break;
+                    case GUI_ID_DEBUG_HALF_TRANSPARENT: // View -> Debug Information
+                        if (Model)
+                            Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_HALF_TRANSPARENCY));
+                        break;
+                    case GUI_ID_DEBUG_BUFFERS_BOUNDING_BOXES: // View -> Debug Information
+                        if (Model)
+                            Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_BBOX_BUFFERS));
+                        break;
+                    }
+                  break;
+                }
 			case EGET_MENU_ITEM_SELECTED:
 				{
 					// a menu item was clicked
@@ -369,56 +424,6 @@ public:
 					case GUI_ID_SKY_BOX_VISIBLE: // View -> Skybox
 						menu->setItemChecked(menu->getSelectedItem(), !menu->isItemChecked(menu->getSelectedItem()));
 						SkyBox->setVisible(!SkyBox->isVisible());
-						break;
-					case GUI_ID_DEBUG_OFF: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem()+1, false);
-						menu->setItemChecked(menu->getSelectedItem()+2, false);
-						menu->setItemChecked(menu->getSelectedItem()+3, false);
-						menu->setItemChecked(menu->getSelectedItem()+4, false);
-						menu->setItemChecked(menu->getSelectedItem()+5, false);
-						menu->setItemChecked(menu->getSelectedItem()+6, false);
-						if (Model)
-							Model->setDebugDataVisible(scene::EDS_OFF);
-						break;
-					case GUI_ID_DEBUG_BOUNDING_BOX: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem(), !menu->isItemChecked(menu->getSelectedItem()));
-						if (Model)
-							Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_BBOX));
-						break;
-					case GUI_ID_DEBUG_NORMALS: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem(), !menu->isItemChecked(menu->getSelectedItem()));
-						if (Model)
-							Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_NORMALS));
-						break;
-					case GUI_ID_DEBUG_SKELETON: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem(), !menu->isItemChecked(menu->getSelectedItem()));
-						if (Model)
-							Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_SKELETON));
-						break;
-					case GUI_ID_DEBUG_WIRE_OVERLAY: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem(), !menu->isItemChecked(menu->getSelectedItem()));
-						if (Model)
-							Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_MESH_WIRE_OVERLAY));
-						break;
-					case GUI_ID_DEBUG_HALF_TRANSPARENT: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem(), !menu->isItemChecked(menu->getSelectedItem()));
-						if (Model)
-							Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_HALF_TRANSPARENCY));
-						break;
-					case GUI_ID_DEBUG_BUFFERS_BOUNDING_BOXES: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem(), !menu->isItemChecked(menu->getSelectedItem()));
-						if (Model)
-							Model->setDebugDataVisible((scene::E_DEBUG_SCENE_TYPE)(Model->isDebugDataVisible()^scene::EDS_BBOX_BUFFERS));
-						break;
-					case GUI_ID_DEBUG_ALL: // View -> Debug Information
-						menu->setItemChecked(menu->getSelectedItem()-1, true);
-						menu->setItemChecked(menu->getSelectedItem()-2, true);
-						menu->setItemChecked(menu->getSelectedItem()-3, true);
-						menu->setItemChecked(menu->getSelectedItem()-4, true);
-						menu->setItemChecked(menu->getSelectedItem()-5, true);
-						menu->setItemChecked(menu->getSelectedItem()-6, true);
-						if (Model)
-							Model->setDebugDataVisible(scene::EDS_FULL);
 						break;
 					case GUI_ID_MODEL_MATERIAL_SOLID: // View -> Material -> Solid
 						if (Model)
@@ -450,6 +455,7 @@ public:
 					IGUIFileOpenDialog* dialog =
 						(IGUIFileOpenDialog*)event.GUIEvent.Caller;
 					loadModel(core::stringc(dialog->getFileName()).c_str());
+                    StartUpModelFile=core::stringc(dialog->getFileName()).c_str();
 				}
 				break;
 
@@ -577,6 +583,7 @@ public:
 					env->addFileOpenDialog(L"Please select your game archive/directory");
 					break;
                 case GUI_ID_LIGHT_SET:
+                {
                     scene::ISceneNode* light;
                     
                     s32 pos=((IGUIComboBox*)env->getRootGUIElement()->getElementFromId(GUI_ID_LIGHT_BOX,true))->getSelected();
@@ -600,9 +607,15 @@ public:
                                                            atof(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_LIGHT_Z_SCALE,true)->getText()).c_str()));
                     light->setPosition(lpos);
                     light->setVisible(((IGUICheckBox*)(env->getRootGUIElement()->getElementFromId(GUI_ID_LIGHT_VISIBLE,true)))->isChecked());
-
+                }
                     break;
-                    
+                case GUI_ID_FRAME_SET:
+                {
+                    if(Model)
+                      ((scene::IAnimatedMeshSceneNode*)Model)->setFrameLoop(atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_START,true)->getText()).c_str()),
+                                            atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_END,true)->getText()).c_str()));
+                }
+                    break;                    
                 }
 
 				break;
@@ -628,8 +641,23 @@ resizeable, which is quite useful for a mesh viewer.
 */
 int main(int argc, char* argv[])
 {
-	// ask user for driver
+  //config hacks
+  log_setloglevel(3);
+  log_prepare("viewerlog.txt","w");
+  MemoryDataHolder::SetUseMPQ("enUS");
 
+  FILE* f;
+  f = fopen("./viewer_last.txt","r");
+  if(f!=NULL)
+  {
+    log("Loading last used mesh");
+    c8 buffer[255];
+    fseek(f,0,SEEK_SET);
+    fread(&buffer,1,255,f);
+    StartUpModelFile = buffer;
+    fclose(f);
+  }
+  // ask user for driver
 	video::E_DRIVER_TYPE driverType = video::EDT_DIRECT3D8;
 
 	printf("Please select the driver you want for this example:\n"\
@@ -650,7 +678,7 @@ int main(int argc, char* argv[])
 		case 'f': driverType = video::EDT_NULL;     break;
 		default: return 1;
 	}
-
+    
 	// create device and exit if creation failed
 
 	MyEventReceiver receiver;
@@ -718,16 +746,6 @@ int main(int argc, char* argv[])
 	submenu->addItem(L"sky box visible", GUI_ID_SKY_BOX_VISIBLE, true, false, true);
 	submenu->addItem(L"toggle model debug information", GUI_ID_TOGGLE_DEBUG_INFO, true, true);
 	submenu->addItem(L"model material", -1, true, true );
-
-	submenu = submenu->getSubMenu(1);
-	submenu->addItem(L"Off", GUI_ID_DEBUG_OFF);
-	submenu->addItem(L"Bounding Box", GUI_ID_DEBUG_BOUNDING_BOX);
-	submenu->addItem(L"Normals", GUI_ID_DEBUG_NORMALS);
-	submenu->addItem(L"Skeleton", GUI_ID_DEBUG_SKELETON);
-	submenu->addItem(L"Wire overlay", GUI_ID_DEBUG_WIRE_OVERLAY);
-	submenu->addItem(L"Half-Transparent", GUI_ID_DEBUG_HALF_TRANSPARENT);
-	submenu->addItem(L"Buffers bounding boxes", GUI_ID_DEBUG_BUFFERS_BOUNDING_BOXES);
-	submenu->addItem(L"All", GUI_ID_DEBUG_ALL);
 
 	submenu = menu->getSubMenu(1)->getSubMenu(2);
 	submenu->addItem(L"Solid", GUI_ID_MODEL_MATERIAL_SOLID);
@@ -813,7 +831,8 @@ int main(int argc, char* argv[])
 	// show about message box and load default model
 // 	if (argc==1)
 // 		showAboutText();
-	loadModel(StartUpModelFile.c_str());
+    if(StartUpModelFile.c_str()!="")
+      loadModel(StartUpModelFile.c_str());
 
 	// add skybox
 
@@ -832,7 +851,7 @@ int main(int argc, char* argv[])
 	// where the mesh scene node is placed.
 	Camera[0]->setTarget(core::vector3df(0,0,0));
 
-	Camera[1] = smgr->addCameraSceneNodeFPS();
+	Camera[1] = smgr->addCameraSceneNodeFPS(0,50.0f,0.1f);
 	Camera[1]->setFarValue(20000.f);
 	Camera[1]->setPosition(core::vector3df(0,0,-70));
 	Camera[1]->setTarget(core::vector3df(0,0,0));
@@ -856,14 +875,17 @@ int main(int argc, char* argv[])
 		{
 			driver->beginScene(true, true, video::SColor(150,50,50,50));
 
-           
             smgr->drawAll();
-            video::SMaterial m2;
-            m2.Lighting = false;
-            driver->setMaterial(m2);
-            driver->draw3DLine(core::vector3df(0,0,0),core::vector3df(100,0,0),video::SColor(255,255,0,0));
-            driver->draw3DLine(core::vector3df(0,0,0),core::vector3df(0,100,0),video::SColor(255,0,255,0));
-            driver->draw3DLine(core::vector3df(0,0,0),core::vector3df(0,0,100),video::SColor(255,0,0,255));
+            
+            video::SMaterial m;
+            m.Lighting = false;
+            driver->setMaterial(m);
+            driver->setTransform(video::ETS_WORLD, core::matrix4());
+            driver->draw3DLine(core::vector3df(-1,-1,-1),core::vector3df(10,-1,-1),video::SColor(255,255,0,0));
+            driver->draw3DLine(core::vector3df(-1,-1,-1),core::vector3df(-1,10,-1),video::SColor(255,0,255,0));
+            driver->draw3DLine(core::vector3df(-1,-1,-1),core::vector3df(-1,-1,10),video::SColor(255,0,0,255));
+            driver->draw3DLine(core::vector3df(-1,-1,-1),core::vector3df(0,0,0),video::SColor(255,255,0,255));
+            
             env->drawAll();
 
 			driver->endScene();
@@ -872,8 +894,11 @@ int main(int argc, char* argv[])
 			str.append(core::stringw(driver->getFPS()));
 			str += L" Tris: ";
 			str.append(core::stringw(driver->getPrimitiveCountDrawn()));
+            str += L" Frame: ";
+            if(Model)
+              str.append(core::stringw(((scene::IAnimatedMeshSceneNode*)Model)->getFrameNr()));
 			fpstext->setText(str.c_str());
-
+        
 			scene::ICameraSceneNode* cam = Device->getSceneManager()->getActiveCamera();
 			str = L"Pos: ";
 			str.append(core::stringw(cam->getPosition().X));
@@ -893,7 +918,8 @@ int main(int argc, char* argv[])
 		else
 			Device->yield();
 	}
-
+	
+    
 	Device->drop();
 	return 0;
 }

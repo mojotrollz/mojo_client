@@ -90,6 +90,7 @@ namespace scene
 		private:
 			//! Internal members used by CSkinnedMesh
 			friend class CSkinnedMesh;
+            friend class CM2Mesh;            
 			bool *Moved;
 			core::vector3df StaticPos;
 			core::vector3df StaticNormal;
@@ -162,6 +163,7 @@ namespace scene
 		private:
 			//! Internal members used by CSkinnedMesh
 			friend class CSkinnedMesh;
+            friend class CM2Mesh;
 
 			SJoint *UseAnimationFrom;
 			bool LocalAnimatedMatrix_Animated;

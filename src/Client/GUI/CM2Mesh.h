@@ -1,11 +1,5 @@
-// Copyright (C) 2002-2007 Nikolaus Gebhardt
-// This file is part of the "Irrlicht Engine".
-// For conditions of distribution and use, see copyright notice in irrlicht.h
-
-//New skinned mesh
-
-#ifndef __C_SKINNED_MESH_H_INCLUDED__
-#define __C_SKINNED_MESH_H_INCLUDED__
+#ifndef __M2_MESH_H_INCLUDED__
+#define __M2_MESH_H_INCLUDED__
 
 #include "irrlicht/irrlicht.h"
 
@@ -17,15 +11,15 @@ namespace scene
 	class IAnimatedMeshSceneNode;
 	class IBoneSceneNode;
 
-	class CSkinnedMesh: public ISkinnedMesh
+	class CM2Mesh: public ISkinnedMesh
 	{
 	public:
 
 		//! constructor
-		CSkinnedMesh();
+		CM2Mesh();
 
 		//! destructor
-		virtual ~CSkinnedMesh();
+		virtual ~CM2Mesh();
 
 		//! returns the amount of frames. If the amount is 1, it is a static (=non animated) mesh.
 		virtual u32 getFrameCount() const;
@@ -58,19 +52,6 @@ namespace scene
 		//! set user axis aligned bounding box
 		virtual void setBoundingBox( const core::aabbox3df& box);
 
-        //! recalculates the bounding box
-        void recalculateBoundingBox()
-        {
-                if (LocalBuffers.size())
-                {
-                        BoundingBox = LocalBuffers[0]->getBoundingBox();
-                        for (u32 i=1; i<LocalBuffers.size(); ++i)
-                                BoundingBox.addInternalBox(LocalBuffers[i]->getBoundingBox());
-                }
-                else
-                        BoundingBox.reset(0.0f, 0.0f, 0.0f);
-        }
-
 		//! sets a flag of all contained materials to a new value
 		virtual void setMaterialFlag(video::E_MATERIAL_FLAG flag, bool newvalue);
 
@@ -80,8 +61,10 @@ namespace scene
 		//! flags the meshbuffer as changed, reloads hardware buffers
 		virtual void setDirty(E_BUFFER_TYPE buffer=EBT_VERTEX_AND_INDEX);
 
-
-		//! Returns the type of the animated mesh.
+        //! updates the bounding box
+        virtual void updateBoundingBox(void);
+		
+        //! Returns the type of the animated mesh.
 		virtual E_ANIMATED_MESH_TYPE getMeshType() const;
 
 		//! Gets joint count.
@@ -159,9 +142,7 @@ private:
 
 		void normalizeWeights();
 
-		void buildAll_LocalAnimatedMatrices(); //public?
-
-		void buildAll_GlobalAnimatedMatrices(SJoint *Joint=0, SJoint *ParentJoint=0);
+		void buildAllAnimatedMatrices(SJoint *Joint=0, SJoint *ParentJoint=0); //public?
 
 		void getFrameData(f32 frame, SJoint *Node,
 				core::vector3df &position, s32 &positionHint,
@@ -192,8 +173,7 @@ private:
 		f32 AnimationFrames;
 
 		f32 LastAnimatedFrame;
-		f32 LastSkinnedFrame;
-		bool BoneControlUsed;
+        bool SkinnedLastFrame;
 
 		bool AnimateNormals;
 

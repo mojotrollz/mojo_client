@@ -193,7 +193,7 @@ void DrawObject::Draw(void)
         WorldPosition pos = ((WorldObject*)_obj)->GetPosition();
         node->setPosition(WPToIrr(pos));
         rotation.Y = O_TO_IRR(pos.o);
-
+        rotation.X -=90;
         float s = _obj->GetFloatValue(OBJECT_FIELD_SCALE_X);
         if(s <= 0)
             s = 1;

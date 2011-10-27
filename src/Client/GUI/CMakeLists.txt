@@ -21,5 +21,5 @@ SceneLogin.cpp
 SceneWorld.cpp
 ShTlTerrainSceneNode.cpp
 SImage.cpp
-SSkinnedMesh.cpp
+CM2Mesh.cpp
 )

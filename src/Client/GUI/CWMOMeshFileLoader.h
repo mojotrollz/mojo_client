@@ -1,6 +1,6 @@
 #include "irrlicht/irrlicht.h"
 #include "irrlicht/IMeshLoader.h"
-#include "SSkinnedMesh.h"
+#include "CM2Mesh.h"
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -83,7 +83,7 @@ private:
     core::stringc Texdir;
     io::IReadFile* MeshFile;
 
-    CSkinnedMesh* Mesh;
+    CM2Mesh* Mesh;
 
 
 //Stuff from root file
