@@ -1,7 +1,7 @@
 include_directories (${PROJECT_SOURCE_DIR}/src/dep/include ${PROJECT_SOURCE_DIR}/src/shared ${PROJECT_SOURCE_DIR}/src/Client)
 
 set(PSEUWOW_LIBS
-PseuGUI DefScript irrKlang irrlicht shared zthread StormLib zlib ${OPENSSL_LIBRARIES} ${OPENSSL_EXTRA_LIBRARIES}
+PseuGUI DefScript IrrKlang irrlicht shared zthread StormLib zlib ${OPENSSL_LIBRARIES} ${OPENSSL_EXTRA_LIBRARIES}
 )
 
 link_directories (${CMAKE_INSTALL_PREFIX})
