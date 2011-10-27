@@ -32,7 +32,7 @@ namespace MemoryDataHolder
     void Shutdown(void)
     {
         //ZThread::Guard<ZThread::FastMutex> g(mutex);
-        logdev("MDH: Interrupting work...");
+//         logdev("MDH: Interrupting work..."); //@ FG: This line was causing segfaults
         executor->cancel(); // stop accepting new threads
         executor->interrupt(); // interrupt all working threads
         // executor will delete itself automatically

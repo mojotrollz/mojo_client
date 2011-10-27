@@ -204,9 +204,8 @@ void loadModel(const c8* fn)
 		Model = animModel;
 	}
 	Model->setMaterialFlag(video::EMF_LIGHTING, true);
-//	Model->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
+    //	Model->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
 	Model->setDebugDataVisible(scene::EDS_OFF);
-    Model->setRotation(core::vector3df(-90,0,0));
 	// we need to uncheck the menu entries. would be cool to fake a menu event, but
 	// that's not so simple. so we do it brute force
 	for(int id = GUI_ID_DEBUG_BOUNDING_BOX; id <= GUI_ID_DEBUG_WIRE_OVERLAY; ++id)
@@ -219,7 +218,7 @@ void loadModel(const c8* fn)
 		toolboxWnd->getElementFromId(GUI_ID_Z_SCALE, true)->setText(L"1.0");
 	}
     
-    FILE* f = fopen("./viewer_last.txt","w");
+    FILE* f = fopen("viewer_last.txt","w");
     fwrite(filename.c_str(),1,filename.size(),f);
     fclose(f);
 
@@ -647,7 +646,7 @@ int main(int argc, char* argv[])
   MemoryDataHolder::SetUseMPQ("enUS");
 
   FILE* f;
-  f = fopen("./viewer_last.txt","r");
+  f = fopen("viewer_last.txt","r");
   if(f!=NULL)
   {
     log("Loading last used mesh");

@@ -21,7 +21,15 @@ CM2MeshFileLoader::~CM2MeshFileLoader()
 
 }
 
+core::vector3df fixCoordSystem(core::vector3df v)
+{
+        return core::vector3df(v.X, v.Z, v.Y);
+}
 
+core::quaternion fixQuaternion(core::quaternion q)
+{
+        return core::quaternion(q.X, q.Z, q.Y, q.W);
+}
 bool CM2MeshFileLoader::isALoadableFileExtension(const c8* filename)const
 {
 	return strstr(filename, ".m2")!=0;
@@ -58,12 +66,13 @@ void CM2MeshFileLoader::ReadVertices()
         M2MVertices.clear();
 
     ModelVertex tempM2MVert;
-    f32 tempYZ;
     MeshFile->seek(header.ofsVertices);
 
     for(u32 i =0;i<header.nVertices;i++)
     {
         MeshFile->read(&tempM2MVert,sizeof(ModelVertex));
+        tempM2MVert.pos = fixCoordSystem(tempM2MVert.pos);
+        tempM2MVert.normal = fixCoordSystem(tempM2MVert.normal);
         M2MVertices.push_back(tempM2MVert);
     }
     DEBUG(logdebug("Read %u/%u Vertices",M2MVertices.size(),header.nVertices));
@@ -205,42 +214,16 @@ for(u32 i=0;i<header.nBones;i++)
     MeshFile->read(&tempBone.rotation.header,sizeof(AnimBlockHead));
     MeshFile->read(&tempBone.scaling.header,sizeof(AnimBlockHead));
     MeshFile->read(&tempBone.PivotPoint,sizeof(core::vector3df));
+    tempBone.PivotPoint=fixCoordSystem(tempBone.PivotPoint);
     M2MBones.push_back(tempBone);
     DEBUG(logdebug("Bone %u Parent %u PP %f %f %f",i,tempBone.parentBone,tempBone.PivotPoint.X,tempBone.PivotPoint.Y,tempBone.PivotPoint.Z));
 }
 //Fill in values referenced in Bones. local to each bone
-InterpolationRange tempBoneIR;
+//Interpolation Ranges are not used
 u32 tempBoneTS;
 float tempBoneValue;
 for(u32 i=0; i<M2MBones.size(); i++)
 {
-    if(M2MBones[i].translation.header.nInterpolationRange>0)
-    {
-        MeshFile->seek(M2MBones[i].translation.header.ofsInterpolationRange);
-        for(u32 j=0; j<M2MBones[i].translation.header.nInterpolationRange;j++)
-        {
-            MeshFile->read(&tempBoneIR, sizeof(InterpolationRange));
-            M2MBones[i].translation.keyframes.push_back(tempBoneIR);
-        }
-    }
-    if(M2MBones[i].rotation.header.nInterpolationRange>0)
-    {
-        MeshFile->seek(M2MBones[i].rotation.header.ofsInterpolationRange);
-        for(u32 j=0; j<M2MBones[i].rotation.header.nInterpolationRange;j++)
-        {
-            MeshFile->read(&tempBoneIR, sizeof(InterpolationRange));
-            M2MBones[i].rotation.keyframes.push_back(tempBoneIR);
-        }
-    }
-    if(M2MBones[i].scaling.header.nInterpolationRange>0)
-    {
-        MeshFile->seek(M2MBones[i].scaling.header.ofsInterpolationRange);
-        for(u32 j=0; j<M2MBones[i].scaling.header.nInterpolationRange;j++)
-        {
-            MeshFile->read(&tempBoneIR, sizeof(InterpolationRange));
-            M2MBones[i].scaling.keyframes.push_back(tempBoneIR);
-        }
-    }
 
     if(M2MBones[i].translation.header.nTimeStamp>0)
     {
@@ -283,10 +266,18 @@ for(u32 i=0; i<M2MBones.size(); i++)
         MeshFile->seek(M2MBones[i].rotation.header.ofsValues);
         for(u32 j=0; j<M2MBones[i].rotation.header.nValues*4;j++)
         {
+            if(header.version>=0x104)
+            {
             s16 tempBoneShort;
             MeshFile->read(&tempBoneShort, sizeof(s16));
             tempBoneValue=(tempBoneShort>0?tempBoneShort-32767:tempBoneShort+32767)/32767.0f;
             M2MBones[i].rotation.values.push_back(tempBoneValue);
+            }
+            else
+            {
+            MeshFile->read(&tempBoneValue, sizeof(f32));
+            M2MBones[i].rotation.values.push_back(tempBoneValue);
+            }
         }
     }
     if(M2MBones[i].scaling.header.nValues>0)
@@ -435,7 +426,7 @@ for(u32 i=0;i<M2MBones.size();i++)
     {
       scene::CM2Mesh::SPositionKey* pos=AnimatedMesh->createPositionKey(Joint);
       pos->frame=M2MBones[i].translation.timestamps[j];
-      pos->position=core::vector3df(M2MBones[i].translation.values[j*3],M2MBones[i].translation.values[j*3+1],M2MBones[i].translation.values[j*3+2]);
+      pos->position=fixCoordSystem(core::vector3df(M2MBones[i].translation.values[j*3],M2MBones[i].translation.values[j*3+1],M2MBones[i].translation.values[j*3+2]));
     }
   }
   if(M2MBones[i].rotation.header.nValues>0)
@@ -444,7 +435,8 @@ for(u32 i=0;i<M2MBones.size();i++)
     {
       scene::CM2Mesh::SRotationKey* rot=AnimatedMesh->createRotationKey(Joint);
       rot->frame=M2MBones[i].rotation.timestamps[j];
-      core::quaternion tempQ=core::quaternion(-M2MBones[i].rotation.values[j*4+0],-M2MBones[i].rotation.values[j*4+1],-M2MBones[i].rotation.values[j*4+2],M2MBones[i].rotation.values[j*4+3]);
+      core::quaternion tempQ=core::quaternion(M2MBones[i].rotation.values[j*4+0],M2MBones[i].rotation.values[j*4+1],M2MBones[i].rotation.values[j*4+2],M2MBones[i].rotation.values[j*4+3]);
+      tempQ = fixQuaternion(tempQ);
       tempQ.normalize();
       rot->rotation=tempQ;
     }
@@ -544,9 +536,9 @@ for(u32 i=0; i < currentView.nSub;i++)//
             MeshBuffer->getMaterial().BackfaceCulling=(M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].flags & 0x04)?false:true;
             switch(M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].blending)
             {
-              case 1:
-              case 2:
-              case 4:
+              case 1://This
+              case 2://be
+              case 4://HACK
               MeshBuffer->getMaterial().MaterialType=video::EMT_TRANSPARENT_ALPHA_CHANNEL;
               DEBUG(logdebug("Alpha Channel Transparency on"));
               break;
@@ -562,7 +554,7 @@ for(u32 i=0; i < currentView.nSub;i++)//
       MeshBuffer->setHardwareMappingHint(EHM_STREAM);
 
 }
-
+Device->getSceneManager()->getMeshManipulator()->flipSurfaces(AnimatedMesh);
 
 // SkinFile->drop();
 M2MTriangles.clear();
