@@ -536,9 +536,11 @@ for(u32 i=0; i < currentView.nSub;i++)//
             MeshBuffer->getMaterial().BackfaceCulling=(M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].flags & 0x04)?false:true;
             switch(M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].blending)
             {
-              case 1://This
-              case 2://be
-              case 4://HACK
+              case 1:
+                MeshBuffer->getMaterial().MaterialType=video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF ;
+                break;
+              case 2:
+              case 4:
               MeshBuffer->getMaterial().MaterialType=video::EMT_TRANSPARENT_ALPHA_CHANNEL;
               DEBUG(logdebug("Alpha Channel Transparency on"));
               break;
