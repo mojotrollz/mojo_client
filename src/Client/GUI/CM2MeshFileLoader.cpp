@@ -209,7 +209,7 @@ if(!M2MBones.empty())
 MeshFile->seek(header.ofsBones);
 for(u32 i=0;i<header.nBones;i++)
 {
-    MeshFile->read(&tempBone,16);
+    MeshFile->read(&tempBone,12+(header.version==0x100?0:4));
     MeshFile->read(&tempBone.translation.header,sizeof(AnimBlockHead));
     MeshFile->read(&tempBone.rotation.header,sizeof(AnimBlockHead));
     MeshFile->read(&tempBone.scaling.header,sizeof(AnimBlockHead));
