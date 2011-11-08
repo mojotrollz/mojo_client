@@ -499,10 +499,11 @@ for(u32 i=0; i < currentView.nSub;i++)//
         MeshBuffer->Vertices_Standard.push_back(M2Vertices[j]);
         for(u32 k=0; k<4; k++)
         {
-            if((M2MVertices[j].weights[k]/255.0f)>0.0f)
+            if((M2MVertices[j].weights[k])>0)
             {
-            scene::CM2Mesh::SWeight* weight = AnimatedMesh->createWeight(AnimatedMesh->getAllJoints()[(u32)M2MVertices[j].bones[k]]);
-            weight->strength=M2MVertices[j].weights[k]/255.0f;
+            u32 boneIndex = M2MVertices[j].bones[k];
+            scene::CM2Mesh::SWeight* weight = AnimatedMesh->createWeight(AnimatedMesh->getAllJoints()[boneIndex]);
+            weight->strength=M2MVertices[j].weights[k];
             weight->vertex_id=MeshBuffer->Vertices_Standard.size()-1;
             weight->buffer_id=i;
             }
