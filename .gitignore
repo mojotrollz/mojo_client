@@ -9,33 +9,23 @@
 *.so
 *.d
 *.so.*
-Makefile
-Makefile.in
 *~
-.deps
-.libs
 
-#
-# Build generated files
-#
-aclocal.m4
-autom4te.cache
-compile
-config.guess
-config.h.in
-config.log
-config.status
-config.sub
-configure
-depcomp
-libtool
-install-sh
-ltmain.sh
-missing
-stamp-h1
+# CMake temporary files #
+#########################
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
 
-Makefile.in
-Makefile
+# generic stuff #
+#################
+build
+
+# linux binaries #
+##################
+bin/pseuwow
+bin/stuffextract
+bin/viewer
 
 # Packages #
 ############
@@ -63,8 +53,4 @@ Makefile
 ehthumbs.db
 Icon?
 Thumbs.db
-
-# EXCEPTIONS         #
-######################
-!src/dep/src/irrlicht/Makefile
 
