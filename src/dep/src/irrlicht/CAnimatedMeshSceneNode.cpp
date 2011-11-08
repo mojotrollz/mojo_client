@@ -18,6 +18,10 @@
 #include "IAnimatedMesh.h"
 #include "quaternion.h"
 
+#include "IGUIEnvironment.h"
+#include "IGUIFont.h"
+#include "ISceneCollisionManager.h"
+
 
 namespace irr
 {
@@ -427,10 +431,19 @@ void CAnimatedMeshSceneNode::render()
 			if (Mesh->getMeshType() == EAMT_SKINNED)
 			{
 				// draw skeleton
-
+				ISceneCollisionManager* Coll = SceneManager->getSceneCollisionManager();
+				irr::gui::IGUIFont* Font = SceneManager->getGUIEnvironment()->getBuiltInFont();
 				for (u32 g=0; g < ((ISkinnedMesh*)Mesh)->getAllJoints().size(); ++g)
 				{
 					ISkinnedMesh::SJoint *joint=((ISkinnedMesh*)Mesh)->getAllJoints()[g];
+					core::vector3df a = joint->GlobalAnimatedMatrix.getTranslation()-core::vector3df(0.05,0.05,0.05);
+					core::vector3df b = joint->GlobalAnimatedMatrix.getTranslation()+core::vector3df(0.05,0.05,0.05);
+					core::aabbox3df marker = core::aabbox3df(a,b);
+					driver->draw3DBox(marker,video::SColor(255,51,66,255));
+
+					core::position2d<s32> pos = Coll->getScreenCoordinatesFrom3DPosition(a, SceneManager->getActiveCamera());
+					core::rect<s32> r(pos, core::dimension2d<s32>(1,1));
+					Font->draw(core::stringw(g).c_str(), r, video::SColor(255,51,255,66), true, true);
 
 					for (u32 n=0;n<joint->Children.size();++n)
 					{
