@@ -151,8 +151,9 @@ void CM2Mesh::buildAllAnimatedMatrices(SJoint *joint, SJoint *parentJoint)
         }
         else
         {
-            joint->GlobalAnimatedMatrix=core::matrix4();
+        //If this joint has no animation we don't care. I think. --shlainn
         }
+
         if(parentJoint)
           joint->GlobalAnimatedMatrix=parentJoint->GlobalAnimatedMatrix*joint->GlobalAnimatedMatrix;
         for (u32 j=0; j<joint->Children.size(); ++j)
