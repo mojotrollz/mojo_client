@@ -57,6 +57,11 @@ void DrawObject::_Init(void)
             uint32 displayid = _obj->GetUInt32Value(UNIT_FIELD_DISPLAYID);
             SCPDatabase *cdi = _instance->dbmgr.GetDB("creaturedisplayinfo");
             SCPDatabase *cmd = _instance->dbmgr.GetDB("creaturemodeldata");
+			if(cdi == NULL || cmd == NULL)
+			{
+			  logerror("DrawObject: Could not open SCP Database");
+			  return;
+			}
             uint32 modelid = cdi && displayid ? cdi->GetUint32(displayid,"model") : 0;
             logdebug("modelid = %u, displayid = %u",modelid,displayid);
 //             modelfilename = std::string("data/model/") + (cmd ? cmd->GetString(modelid,"file") : "");
