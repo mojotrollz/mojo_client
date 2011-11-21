@@ -1,4 +1,4 @@
-#define _DEBUG 1
+// #define _DEBUG 1
 #include <iostream>
 #include "MemoryDataHolder.h"
 #include "MemoryInterface.h"
@@ -66,16 +66,16 @@ void CM2MeshFileLoader::ReadVertices()
         M2MVertices.clear();
 
     ModelVertex tempM2MVert;
-    MeshFile->seek(header.ofsVertices);
+    MeshFile->seek(header.Vertices.ofs);
 
-    for(u32 i =0;i<header.nVertices;i++)
+    for(u32 i =0;i<header.Vertices.num;i++)
     {
         MeshFile->read(&tempM2MVert,sizeof(ModelVertex));
         tempM2MVert.pos = fixCoordSystem(tempM2MVert.pos);
         tempM2MVert.normal = fixCoordSystem(tempM2MVert.normal);
         M2MVertices.push_back(tempM2MVert);
     }
-    DEBUG(logdebug("Read %u/%u Vertices",M2MVertices.size(),header.nVertices));
+    DEBUG(logdebug("Read %u/%u Vertices",M2MVertices.size(),header.Vertices.num));
 }
 
 void CM2MeshFileLoader::ReadViewData(io::IReadFile* file)
@@ -85,40 +85,40 @@ void CM2MeshFileLoader::ReadViewData(io::IReadFile* file)
         M2MIndices.clear();
 
     u16 tempM2Index;
-    file->seek(currentView.ofsIndex);
-    for(u32 i =0;i<currentView.nIndex;i++)
+    file->seek(currentView.Index.ofs);
+    for(u32 i =0;i<currentView.Index.num;i++)
     {
         file->read(&tempM2Index,sizeof(u16));
         M2MIndices.push_back(tempM2Index);
     }
-    DEBUG(logdebug("Read %u/%u Indices",M2MIndices.size(),currentView.nIndex));
+    DEBUG(logdebug("Read %u/%u Indices",M2MIndices.size(),currentView.Index.num));
 
     //Triangles. Data Points point to the Vertex Indices, not the vertices themself. 3 Points = 1 Triangle, Local to View 0
     if(M2MTriangles.size()>0)
         M2MTriangles.clear();
 
     u16 tempM2Triangle;
-    file->seek(currentView.ofsTris);
-    for(u32 i =0;i<currentView.nTris;i++)
+    file->seek(currentView.Triangle.ofs);
+    for(u32 i =0;i<currentView.Triangle.num;i++)
     {
         file->read(&tempM2Triangle,sizeof(u16));
         M2MTriangles.push_back(tempM2Triangle);
     }
-    DEBUG(logdebug("Read %u/%u Triangles",M2MTriangles.size(),currentView.nTris));
+    DEBUG(logdebug("Read %u/%u Triangles",M2MTriangles.size(),currentView.Triangle.num));
     //Submeshes, Local to View 0
     if(M2MSubmeshes.size()>0)
         M2MSubmeshes.clear();
 
     ModelViewSubmesh tempM2Submesh;
-    file->seek(currentView.ofsSub);
-    for(u32 i =0;i<currentView.nSub;i++)
+    file->seek(currentView.Submesh.ofs);
+    for(u32 i =0;i<currentView.Submesh.num;i++)
     {
         file->read(&tempM2Submesh,sizeof(ModelViewSubmesh)-(header.version==0x100?16:0));
         M2MSubmeshes.push_back(tempM2Submesh);
         DEBUG(logdebug("Submesh %u nBone: %u ofsBone: %u",i,tempM2Submesh.nBone, tempM2Submesh.ofsBone));
     //    std::cout<< "Submesh " <<i<<" ID "<<tempM2Submesh.meshpartId<<" starts at V/T "<<tempM2Submesh.ofsVertex<<"/"<<tempM2Submesh.ofsTris<<" and has "<<tempM2Submesh.nVertex<<"/"<<tempM2Submesh.nTris<<" V/T\n";
     }
-    DEBUG(logdebug("Read %u/%u Submeshes",M2MSubmeshes.size(),currentView.nSub));
+    DEBUG(logdebug("Read %u/%u Submeshes",M2MSubmeshes.size(),currentView.Submesh.num));
 
     //Texture units. Local to view 0
     TextureUnit tempM2TexUnit;
@@ -126,79 +126,19 @@ void CM2MeshFileLoader::ReadViewData(io::IReadFile* file)
     {
         M2MTextureUnit.clear();
     }
-    file->seek(currentView.ofsTex);
-    for(u32 i=0;i<currentView.nTex;i++)
+    file->seek(currentView.Tex.ofs);
+    for(u32 i=0;i<currentView.Tex.num;i++)
     {
         file->read(&tempM2TexUnit,sizeof(TextureUnit));
         M2MTextureUnit.push_back(tempM2TexUnit);
     DEBUG(logdebug(" TexUnit %u: Submesh: %u %u Render Flag: %u TextureUnitNumber: %u %u TTU: %u",i,tempM2TexUnit.submeshIndex1,tempM2TexUnit.submeshIndex2, tempM2TexUnit.renderFlagsIndex, tempM2TexUnit.TextureUnitNumber, tempM2TexUnit.TextureUnitNumber2 ,tempM2TexUnit.textureIndex));
     }
     DEBUG(logdebug("Read %u Texture Unit entries for View 0",M2MTextureUnit.size()));
-    
+
 }
 
-void CM2MeshFileLoader::ReadAnimationData()
+void CM2MeshFileLoader::ReadBones()
 {
-
-    //Global Sequences. This is global data
-    u32 tempGlobalSeq;
-    if(!M2MGlobalSequences.empty())
-    {
-        M2MGlobalSequences.clear();
-    }
-    MeshFile->seek(header.ofsGlobalSequences);
-    for(u32 i=0;i<header.nGlobalSequences;i++)
-    {
-        MeshFile->read(&tempGlobalSeq,sizeof(u32));
-        M2MGlobalSequences.push_back(tempGlobalSeq);
-        DEBUG(logdebug("Global Sequence %u End %u",i,tempGlobalSeq));
-    }
-    DEBUG(logdebug("Read %u Global Sequence entries",M2MGlobalSequences.size()));
-
-    //BoneLookupTable. This is global data
-    u16 tempBoneLookup;
-    if(!M2MBoneLookupTable.empty())
-    {
-        M2MBoneLookupTable.clear();
-    }
-    MeshFile->seek(header.ofsBoneLookupTable);
-    for(u32 i=0;i<header.nBoneLookupTable;i++)
-    {
-        MeshFile->read(&tempBoneLookup,sizeof(u16));
-        M2MBoneLookupTable.push_back(tempBoneLookup);
-        DEBUG(logdebug("BoneLookupTable %u Value %u",i,tempBoneLookup));
-    }
-    DEBUG(logdebug("Read %u BoneLookupTable entries",M2MBoneLookupTable.size()));
-
-    //SkeleBoneLookupTable. This is global data
-    u16 tempSkeleBoneLookup;
-    if(!M2MSkeleBoneLookupTable.empty())
-    {
-        M2MSkeleBoneLookupTable.clear();
-    }
-    MeshFile->seek(header.ofsSkelBoneLookup);
-    for(u32 i=0;i<header.nSkelBoneLookup;i++)
-    {
-        MeshFile->read(&tempSkeleBoneLookup,sizeof(u16));
-        M2MSkeleBoneLookupTable.push_back(tempSkeleBoneLookup);
-        DEBUG(logdebug("SkeleBoneLookupTable %u Value %u",i,tempSkeleBoneLookup));
-    }
-    DEBUG(logdebug("Read %u SkeleBoneLookupTable entries",M2MSkeleBoneLookupTable.size()));
-    
-    //Animations. This is global data
-    Animation tempAnimation;
-    if(!M2MAnimations.empty())
-    {
-        M2MAnimations.clear();
-    }
-    MeshFile->seek(header.ofsAnimations);
-    for(u32 i=0;i<header.nAnimations;i++)
-    {
-        MeshFile->read(&tempAnimation,sizeof(Animation));
-        M2MAnimations.push_back(tempAnimation);
-        DEBUG(logdebug("Animation %u Id %u Start %u End %u",i,tempAnimation.animationID,tempAnimation.start,tempAnimation.end));
-    }
-    DEBUG(logdebug("Read %u Animations",M2MAnimations.size()));
 
 //Bones. This is global data
 Bone tempBone;
@@ -206,65 +146,68 @@ if(!M2MBones.empty())
 {
     M2MBones.clear();
 }
-MeshFile->seek(header.ofsBones);
-for(u32 i=0;i<header.nBones;i++)
+MeshFile->seek(header.Bones.ofs);
+for(u32 i=0;i<header.Bones.num;i++)
 {
     MeshFile->read(&tempBone,12+(header.version==0x100?0:4));
+
     MeshFile->read(&tempBone.translation.header,sizeof(AnimBlockHead));
     MeshFile->read(&tempBone.rotation.header,sizeof(AnimBlockHead));
     MeshFile->read(&tempBone.scaling.header,sizeof(AnimBlockHead));
+
     MeshFile->read(&tempBone.PivotPoint,sizeof(core::vector3df));
     tempBone.PivotPoint=fixCoordSystem(tempBone.PivotPoint);
     M2MBones.push_back(tempBone);
-    DEBUG(logdebug("Bone %u Parent %u PP %f %f %f",i,tempBone.parentBone,tempBone.PivotPoint.X,tempBone.PivotPoint.Y,tempBone.PivotPoint.Z));
+    DEBUG(logdebug("Bone %u Parent %u PP %f %f %f Flags %X",i,tempBone.parentBone,tempBone.PivotPoint.X,tempBone.PivotPoint.Y,tempBone.PivotPoint.Z, tempBone.flags));
 }
 //Fill in values referenced in Bones. local to each bone
 //Interpolation Ranges are not used
 u32 tempBoneTS;
+numofs tempBoneNumOfs;
 float tempBoneValue;
 for(u32 i=0; i<M2MBones.size(); i++)
 {
 
-    if(M2MBones[i].translation.header.nTimeStamp>0)
+    if(M2MBones[i].translation.header.TimeStamp.num>0)
     {
-        MeshFile->seek(M2MBones[i].translation.header.ofsTimeStamp);
-        for(u32 j=0; j<M2MBones[i].translation.header.nTimeStamp;j++)
+        MeshFile->seek(M2MBones[i].translation.header.TimeStamp.ofs);
+        for(u32 j=0; j<M2MBones[i].translation.header.TimeStamp.num;j++)
         {
             MeshFile->read(&tempBoneTS, sizeof(u32));
             M2MBones[i].translation.timestamps.push_back(tempBoneTS);
         }
     }
-    if(M2MBones[i].rotation.header.nTimeStamp>0)
+    if(M2MBones[i].rotation.header.TimeStamp.num>0)
     {
-        MeshFile->seek(M2MBones[i].rotation.header.ofsTimeStamp);
-        for(u32 j=0; j<M2MBones[i].rotation.header.nTimeStamp;j++)
+        MeshFile->seek(M2MBones[i].rotation.header.TimeStamp.ofs);
+        for(u32 j=0; j<M2MBones[i].rotation.header.TimeStamp.num;j++)
         {
             MeshFile->read(&tempBoneTS, sizeof(u32));
             M2MBones[i].rotation.timestamps.push_back(tempBoneTS);
         }
     }
-    if(M2MBones[i].scaling.header.nTimeStamp>0)
+    if(M2MBones[i].scaling.header.TimeStamp.num>0)
     {
-        MeshFile->seek(M2MBones[i].scaling.header.ofsTimeStamp);
-        for(u32 j=0; j<M2MBones[i].scaling.header.nTimeStamp;j++)
+        MeshFile->seek(M2MBones[i].scaling.header.TimeStamp.ofs);
+        for(u32 j=0; j<M2MBones[i].scaling.header.TimeStamp.num;j++)
         {
             MeshFile->read(&tempBoneTS, sizeof(u32));
             M2MBones[i].scaling.timestamps.push_back(tempBoneTS);
         }
     }
-    if(M2MBones[i].translation.header.nValues>0)
+    if(M2MBones[i].translation.header.Values.num>0)
     {
-        MeshFile->seek(M2MBones[i].translation.header.ofsValues);
-        for(u32 j=0; j<M2MBones[i].translation.header.nValues*3;j++)
+        MeshFile->seek(M2MBones[i].translation.header.Values.ofs);
+        for(u32 j=0; j<M2MBones[i].translation.header.Values.num*3;j++)
         {
             MeshFile->read(&tempBoneValue, sizeof(float));
             M2MBones[i].translation.values.push_back(tempBoneValue);
         }
     }
-    if(M2MBones[i].rotation.header.nValues>0)
+    if(M2MBones[i].rotation.header.Values.num>0)
     {
-        MeshFile->seek(M2MBones[i].rotation.header.ofsValues);
-        for(u32 j=0; j<M2MBones[i].rotation.header.nValues*4;j++)
+        MeshFile->seek(M2MBones[i].rotation.header.Values.ofs);
+        for(u32 j=0; j<M2MBones[i].rotation.header.Values.num*4;j++)
         {
             if(header.version>=0x104)
             {
@@ -280,10 +223,10 @@ for(u32 i=0; i<M2MBones.size(); i++)
             }
         }
     }
-    if(M2MBones[i].scaling.header.nValues>0)
+    if(M2MBones[i].scaling.header.Values.num>0)
     {
-        MeshFile->seek(M2MBones[i].scaling.header.ofsValues);
-        for(u32 j=0; j<M2MBones[i].scaling.header.nValues*3;j++)
+        MeshFile->seek(M2MBones[i].scaling.header.Values.ofs);
+        for(u32 j=0; j<M2MBones[i].scaling.header.Values.num*3;j++)
         {
             MeshFile->read(&tempBoneValue, sizeof(float));
             M2MBones[i].scaling.values.push_back(tempBoneValue);
@@ -292,9 +235,292 @@ for(u32 i=0; i<M2MBones.size(); i++)
 }
 
 DEBUG(logdebug("Read %u Bones",M2MBones.size()));
+}
 
-    
-    
+void CM2MeshFileLoader::ReadBonesWOTLK()
+{
+//Bones. This is global data
+Bone tempBone;
+if(!M2MBones.empty())
+{
+    M2MBones.clear();
+}
+MeshFile->seek(header.Bones.ofs);
+for(u32 i=0;i<header.Bones.num;i++)
+{
+    MeshFile->read(&tempBone,16);
+    //Skip Interpolation Ranges
+    MeshFile->read(&tempBone.translation.header,4);
+    MeshFile->read(&tempBone.translation.header.TimeStamp,sizeof(numofs));
+    MeshFile->read(&tempBone.translation.header.Values,sizeof(numofs));
+    MeshFile->read(&tempBone.rotation.header,4);
+    MeshFile->read(&tempBone.rotation.header.TimeStamp,sizeof(numofs));
+    MeshFile->read(&tempBone.rotation.header.Values,sizeof(numofs));
+    MeshFile->read(&tempBone.scaling.header,4);
+    MeshFile->read(&tempBone.scaling.header.TimeStamp,sizeof(numofs));
+    MeshFile->read(&tempBone.scaling.header.Values,sizeof(numofs));
+
+    MeshFile->read(&tempBone.PivotPoint,sizeof(core::vector3df));
+    tempBone.PivotPoint=fixCoordSystem(tempBone.PivotPoint);
+    M2MBones.push_back(tempBone);
+    DEBUG(logdebug("Bone %u Parent %u PP %f %f %f Flags %X",i,tempBone.parentBone,tempBone.PivotPoint.X,tempBone.PivotPoint.Y,tempBone.PivotPoint.Z, tempBone.flags));
+}
+//Fill in values referenced in Bones. local to each bone
+//Interpolation Ranges are not used
+u32 tempBoneTS;
+numofs tempBoneNumOfs;
+core::array<numofs> tempNumOfsList;
+float tempBoneValue;
+s16 tempBoneShort;
+for(u32 i=0; i<M2MBones.size(); i++)
+{
+    if(M2MBones[i].translation.header.TimeStamp.num>0)
+    {
+        tempNumOfsList.clear();
+        MeshFile->seek(M2MBones[i].translation.header.TimeStamp.ofs);
+        for(u32 j=0; j<M2MBones[i].translation.header.TimeStamp.num;j++)
+        {
+            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+            tempNumOfsList.push_back(tempBoneNumOfs);
+        }
+        for(u32 j=0; j<tempNumOfsList.size();j++)
+        {
+          numofs n = tempNumOfsList[j];
+          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
+          {
+            MeshFile->seek(n.ofs);
+            for(u32 k=0; k<n.num;k++)
+            {
+              MeshFile->read(&tempBoneTS, sizeof(u32));
+              M2MBones[i].translation.timestamps.push_back(tempBoneTS+M2MAnimations[j].start);//Bit of a HACK squash Multitimeline into single timeline.
+            }
+          }
+        }
+    }
+    if(M2MBones[i].rotation.header.TimeStamp.num>0)
+    {
+        tempNumOfsList.clear();
+        MeshFile->seek(M2MBones[i].rotation.header.TimeStamp.ofs);
+        for(u32 j=0; j<M2MBones[i].rotation.header.TimeStamp.num;j++)
+        {
+            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+            tempNumOfsList.push_back(tempBoneNumOfs);
+        }
+        for(u32 j=0; j<tempNumOfsList.size();j++)
+        {
+          numofs n = tempNumOfsList[j];
+          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
+          {
+            MeshFile->seek(n.ofs);
+            for(u32 k=0; k<n.num;k++)
+            {
+              MeshFile->read(&tempBoneTS, sizeof(u32));
+              M2MBones[i].rotation.timestamps.push_back(tempBoneTS+M2MAnimations[j].start);//Bit of a HACK squash Multitimeline into single timeline.
+            }
+          }
+        }
+    }
+    if(M2MBones[i].scaling.header.TimeStamp.num>0)
+    {
+        tempNumOfsList.clear();
+        MeshFile->seek(M2MBones[i].scaling.header.TimeStamp.ofs);
+        for(u32 j=0; j<M2MBones[i].scaling.header.TimeStamp.num;j++)
+        {
+            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+            tempNumOfsList.push_back(tempBoneNumOfs);
+        }
+        for(u32 j=0; j<tempNumOfsList.size();j++)
+        {
+          numofs n = tempNumOfsList[j];
+          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
+          {
+            MeshFile->seek(n.ofs);
+            for(u32 k=0; k<n.num;k++)
+            {
+              MeshFile->read(&tempBoneTS, sizeof(u32));
+              M2MBones[i].scaling.timestamps.push_back(tempBoneTS+M2MAnimations[j].start);//Bit of a HACK squash Multitimeline into single timeline.
+            }
+          }
+        }
+    }
+
+    if(M2MBones[i].translation.header.Values.num>0)
+    {
+        tempNumOfsList.clear();
+        MeshFile->seek(M2MBones[i].translation.header.Values.ofs);
+        for(u32 j=0; j<M2MBones[i].translation.header.Values.num;j++)
+        {
+            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+            tempNumOfsList.push_back(tempBoneNumOfs);
+        }
+        for(u32 j=0; j<tempNumOfsList.size();j++)
+        {
+          numofs n = tempNumOfsList[j];
+          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
+          {
+            MeshFile->seek(n.ofs);
+
+            for(u32 k=0; k<n.num*3;k++)
+            {
+              MeshFile->read(&tempBoneValue, sizeof(float));
+              M2MBones[i].translation.values.push_back(tempBoneValue);
+            }
+          }
+        }
+    }
+    if(M2MBones[i].rotation.header.Values.num>0)
+    {
+        tempNumOfsList.clear();
+        MeshFile->seek(M2MBones[i].rotation.header.Values.ofs);
+        for(u32 j=0; j<M2MBones[i].rotation.header.Values.num;j++)
+        {
+            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+            tempNumOfsList.push_back(tempBoneNumOfs);
+        }
+        for(u32 j=0; j<tempNumOfsList.size();j++)
+        {
+          numofs n = tempNumOfsList[j];
+          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
+          {
+            MeshFile->seek(n.ofs);
+            for(u32 k=0; k<n.num*4;k++)
+            {
+              MeshFile->read(&tempBoneShort, sizeof(s16));
+              tempBoneValue=(tempBoneShort>0?tempBoneShort-32767:tempBoneShort+32767)/32767.0f;
+              M2MBones[i].rotation.values.push_back(tempBoneValue);
+            }
+          }
+        }
+    }
+
+    if(M2MBones[i].scaling.header.Values.num>0)
+    {
+        tempNumOfsList.clear();
+        MeshFile->seek(M2MBones[i].scaling.header.Values.ofs);
+        for(u32 j=0; j<M2MBones[i].scaling.header.Values.num;j++)
+        {
+            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+            tempNumOfsList.push_back(tempBoneNumOfs);
+        }
+        for(u32 j=0; j<tempNumOfsList.size();j++)
+        {
+          numofs n = tempNumOfsList[j];
+          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
+          {
+            MeshFile->seek(n.ofs);
+            for(u32 k=0; k<n.num*3;k++)
+            {
+              MeshFile->read(&tempBoneValue, sizeof(float));
+              M2MBones[i].scaling.values.push_back(tempBoneValue);
+            }
+          }
+        }
+    }
+
+}
+
+DEBUG(logdebug("Read %u Bones",M2MBones.size()));
+
+
+}
+
+
+void CM2MeshFileLoader::ReadAnimationData()
+{
+logdebug("Reading Animation Data");
+    //Global Sequences. This is global data
+    u32 tempGlobalSeq;
+    if(!M2MGlobalSequences.empty())
+    {
+        M2MGlobalSequences.clear();
+    }
+    MeshFile->seek(header.GlobalSequences.ofs);
+    for(u32 i=0;i<header.GlobalSequences.num;i++)
+    {
+        MeshFile->read(&tempGlobalSeq,sizeof(u32));
+        M2MGlobalSequences.push_back(tempGlobalSeq);
+        DEBUG(logdebug("Global Sequence %u End %u",i,tempGlobalSeq));
+    }
+    DEBUG(logdebug("Read %u Global Sequence entries",M2MGlobalSequences.size()));
+
+    //BoneLookupTable. This is global data
+    u16 tempBoneLookup;
+    if(!M2MBoneLookupTable.empty())
+    {
+        M2MBoneLookupTable.clear();
+    }
+    MeshFile->seek(header.BoneLookupTable.ofs);
+    for(u32 i=0;i<header.BoneLookupTable.num;i++)
+    {
+        MeshFile->read(&tempBoneLookup,sizeof(u16));
+        M2MBoneLookupTable.push_back(tempBoneLookup);
+        DEBUG(logdebug("BoneLookupTable %u Value %u",i,tempBoneLookup));
+    }
+    DEBUG(logdebug("Read %u BoneLookupTable entries",M2MBoneLookupTable.size()));
+
+    //SkeleBoneLookupTable. This is global data
+    u16 tempSkeleBoneLookup;
+    if(!M2MSkeleBoneLookupTable.empty())
+    {
+        M2MSkeleBoneLookupTable.clear();
+    }
+    MeshFile->seek(header.SkelBoneLookup.ofs);
+    for(u32 i=0;i<header.SkelBoneLookup.num;i++)
+    {
+        MeshFile->read(&tempSkeleBoneLookup,sizeof(u16));
+        M2MSkeleBoneLookupTable.push_back(tempSkeleBoneLookup);
+        DEBUG(logdebug("SkeleBoneLookupTable %u Value %u",i,tempSkeleBoneLookup));
+    }
+    DEBUG(logdebug("Read %u SkeleBoneLookupTable entries",M2MSkeleBoneLookupTable.size()));
+
+    //Animations. This is global data
+    u32 laststart = 0;
+    if(!M2MAnimations.empty())
+    {
+        M2MAnimations.clear();
+    }
+    MeshFile->seek(header.Animations.ofs);
+    for(u32 i=0;i<header.Animations.num;i++)
+    {
+        Animation tempAnimation;
+        if(header.version < 0x108)
+        {
+          RawAnimation tempRaw;
+          MeshFile->read(&tempRaw,sizeof(RawAnimation));
+          tempAnimation.animationID = tempRaw.animationID;
+          tempAnimation.flags = tempRaw.flags;
+          tempAnimation.start = tempRaw.start;
+          tempAnimation.end = tempRaw.end;
+        }
+        else
+        {
+          RawAnimationWOTLK tempRaw;
+          MeshFile->read(&tempRaw,sizeof(RawAnimationWOTLK));
+          tempAnimation.animationID = tempRaw.animationID;
+          tempAnimation.subanimationID = tempRaw.subanimationID;
+          tempAnimation.flags = tempRaw.flags;
+          tempAnimation.start = laststart;
+          tempAnimation.end = laststart + tempRaw.length;
+          laststart += tempRaw.length + 1000;
+        }
+        M2MAnimations.push_back(tempAnimation);
+        DEBUG(logdebug("Animation %u Id %u Start %u End %u",i,tempAnimation.animationID,tempAnimation.start,tempAnimation.end));
+    }
+    DEBUG(logdebug("Read %u Animations",M2MAnimations.size()));
+    //Animation Lookup. This is global data
+    s16 tempAniLookup;
+    if(!M2MAnimationLookup.empty())
+    {
+        M2MAnimationLookup.clear();
+    }
+    MeshFile->seek(header.AnimationLookup.ofs);
+    for(u32 i=0;i<header.AnimationLookup.num;i++)
+    {
+        MeshFile->read(&tempAniLookup,sizeof(s16));
+        M2MAnimationLookup.push_back(tempAniLookup);
+        DEBUG(logdebug("Animation Lookup %u Id %u",i,tempAniLookup));
+    }
+    DEBUG(logdebug("Read %u AnimationLookup",M2MAnimationLookup.size()));
 }
 
 void CM2MeshFileLoader::ReadTextureDefinitions()
@@ -305,8 +531,8 @@ void CM2MeshFileLoader::ReadTextureDefinitions()
     {
         M2MTextureLookup.clear();
     }
-    MeshFile->seek(header.ofsTexLookup);
-    for(u32 i=0;i<header.nTexLookup;i++)
+    MeshFile->seek(header.TexLookup.ofs);
+    for(u32 i=0;i<header.TexLookup.num;i++)
     {
         MeshFile->read(&tempM2TexLookup,sizeof(u16));
         M2MTextureLookup.push_back(tempM2TexLookup);
@@ -320,8 +546,8 @@ void CM2MeshFileLoader::ReadTextureDefinitions()
     {
         M2MTextureDef.clear();
     }
-    MeshFile->seek(header.ofsTextures);
-    for(u32 i=0;i<header.nTextures;i++)
+    MeshFile->seek(header.Textures.ofs);
+    for(u32 i=0;i<header.Textures.num;i++)
     {
         MeshFile->read(&tempM2TexDef,sizeof(TextureDefinition));
         M2MTextureDef.push_back(tempM2TexDef);
@@ -335,8 +561,8 @@ void CM2MeshFileLoader::ReadTextureDefinitions()
     {
         M2MRenderFlags.clear();
     }
-    MeshFile->seek(header.ofsTexFlags);
-    for(u32 i=0;i<header.nTexFlags;i++)
+    MeshFile->seek(header.TexFlags.ofs);
+    for(u32 i=0;i<header.TexFlags.num;i++)
     {
         MeshFile->read(&tempM2RF,sizeof(RenderFlags));
         M2MRenderFlags.push_back(tempM2RF);
@@ -364,7 +590,7 @@ void CM2MeshFileLoader::ReadTextureDefinitions()
 bool CM2MeshFileLoader::load()
 {
 DEBUG(logdebug("Trying to open file %s",MeshFile->getFileName()));
-
+logdebug("Trying to open file %s",MeshFile->getFileName());
 
 MeshFile->read(&header,20);
 DEBUG(logdebug("M2 Version %X",header.version));
@@ -372,23 +598,50 @@ DEBUG(logdebug("M2 Version %X",header.version));
 switch(header.version)
 {
   case 0x100:
-  case 0x104://HACK
-  case 0x105://HACK
-  case 0x106://HACK
-  case 0x107://HACK
+  case 0x104://NEED CHECK
+  case 0x105://NEED CHECK
+  case 0x106://NEED CHECK
+  case 0x107://NEED CHECK
   {
     MeshFile->read((u8*)&header+20,sizeof(ModelHeader)-20);
-    ReadVertices();
-    MeshFile->seek(header.ofsViews);
+    MeshFile->seek(header.Views.ofs);
     MeshFile->read(&currentView,sizeof(ModelView));
     ReadViewData(MeshFile);
+    ReadVertices();
+
     ReadTextureDefinitions();
     ReadAnimationData();
+
+    ReadBones();
     break;
   }
   case 0x108:
   {
-    return 0;
+    //This is pretty ugly... Any suggestions how to make this nicer?
+    MeshFile->read((u8*)&header+0x14,24);//nGlobalSequences - ofsAnimationLookup
+    MeshFile->read((u8*)&header+0x34,28);//nBones - nViews
+    MeshFile->read((u8*)&header+0x54,24);//nColors - nTransparency
+    MeshFile->read((u8*)&header+0x74,sizeof(ModelHeader)-0x74);//nTexAnims - END
+
+    std::string SkinName = MeshFile->getFileName();
+    SkinName = SkinName.substr(0, SkinName.length()-3) + "00.skin"; // FIX ME if we need more skins
+    io::IReadFile* SkinFile = io::IrrCreateIReadFileBasic(Device, SkinName.c_str());
+    if (!SkinFile)
+    {
+        logerror("Error! Skin file not found: %s", SkinName.c_str());
+        return 0;
+    }
+    SkinFile->seek(4); // Header of Skin Files is always SKIN
+    SkinFile->read(&currentView,sizeof(ModelView));
+    ReadViewData(SkinFile);
+    SkinFile->drop();
+
+    ReadVertices();
+
+    ReadTextureDefinitions();
+    ReadAnimationData();
+
+    ReadBonesWOTLK();
     break;
   }
   default:
@@ -420,18 +673,18 @@ for(u32 i=0;i<M2MBones.size();i++)
   }
   Joint=AnimatedMesh->createJoint(ParentJoint);
 
-  if(M2MBones[i].translation.header.nValues>0)
+  if(M2MBones[i].translation.timestamps.size()>0)
   {
-    for(u32 j=0;j<M2MBones[i].translation.header.nValues;j++)
+    for(u32 j=0;j<M2MBones[i].translation.timestamps.size();j++)
     {
       scene::CM2Mesh::SPositionKey* pos=AnimatedMesh->createPositionKey(Joint);
       pos->frame=M2MBones[i].translation.timestamps[j];
       pos->position=fixCoordSystem(core::vector3df(M2MBones[i].translation.values[j*3],M2MBones[i].translation.values[j*3+1],M2MBones[i].translation.values[j*3+2]));
     }
   }
-  if(M2MBones[i].rotation.header.nValues>0)
+  if(M2MBones[i].rotation.timestamps.size()>0)
   {
-    for(u32 j=0;j<M2MBones[i].rotation.header.nValues;j++)
+    for(u32 j=0;j<M2MBones[i].rotation.timestamps.size();j++)
     {
       scene::CM2Mesh::SRotationKey* rot=AnimatedMesh->createRotationKey(Joint);
       rot->frame=M2MBones[i].rotation.timestamps[j];
@@ -442,9 +695,9 @@ for(u32 i=0;i<M2MBones.size();i++)
     }
   }
 
-  if(M2MBones[i].scaling.header.nValues>0)
+  if(M2MBones[i].scaling.timestamps.size()>0)
   {
-    for(u32 j=0;j<M2MBones[i].scaling.header.nValues;j++)
+    for(u32 j=0;j<M2MBones[i].scaling.timestamps.size();j++)
     {
     scene::CM2Mesh::SScaleKey* scale=AnimatedMesh->createScaleKey(Joint);
     scale->frame=M2MBones[i].scaling.timestamps[j];
@@ -455,7 +708,7 @@ for(u32 i=0;i<M2MBones.size();i++)
   Joint->Animatedposition=M2MBones[i].PivotPoint;
   Joint->Animatedscale=core::vector3df(1.0f,1.0f,1.0f);
   Joint->Animatedrotation=core::quaternion(0.0f,0.0f,0.0f,1.0f);
-  
+
   core::matrix4 positionMatrix;
   positionMatrix.setTranslation( Joint->Animatedposition );
 
@@ -481,7 +734,7 @@ for(u32 i=0;i<M2MVertices.size();i++)
     M2Vertices.push_back(video::S3DVertex(core::vector3df(M2MVertices[i].pos.X,M2MVertices[i].pos.Y,M2MVertices[i].pos.Z),core::vector3df(M2MVertices[i].normal.X,M2MVertices[i].normal.Y,M2MVertices[i].normal.Z), video::SColor(255,100,100,100),M2MVertices[i].texcoords));
 }
 //Loop through the submeshes
-for(u32 i=0; i < currentView.nSub;i++)//
+for(u32 i=0; i < currentView.Submesh.num;i++)//
 {
     //Now, M2MTriangles refers to M2MIndices and not to M2MVertices.
     scene::SSkinMeshBuffer *MeshBuffer = AnimatedMesh->createBuffer();
@@ -507,7 +760,7 @@ for(u32 i=0; i < currentView.nSub;i++)//
             weight->vertex_id=MeshBuffer->Vertices_Standard.size()-1;
             weight->buffer_id=i;
             }
-            
+
         }
     }
 
@@ -532,7 +785,7 @@ for(u32 i=0; i < currentView.nSub;i++)//
             TexFile->drop();
             }
             MeshBuffer->getMaterial().setTexture(M2MTextureUnit[j].TextureUnitNumber,tex);
-            
+
             DEBUG(logdebug("Render Flags: %u %u",M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].flags,M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].blending));
             MeshBuffer->getMaterial().BackfaceCulling=(M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].flags & 0x04)?false:true;
             switch(M2MRenderFlags[M2MTextureUnit[j].renderFlagsIndex].blending)
@@ -549,9 +802,9 @@ for(u32 i=0; i < currentView.nSub;i++)//
         }
 
     }
-    
+
     MeshBuffer->recalculateBoundingBox();
-    if(header.nAnimations==0 && header.nGlobalSequences == 0)
+    if(header.Animations.num==0 && header.GlobalSequences.num == 0)
       MeshBuffer->setHardwareMappingHint(EHM_STATIC);
     else
       MeshBuffer->setHardwareMappingHint(EHM_STREAM);
@@ -559,7 +812,6 @@ for(u32 i=0; i < currentView.nSub;i++)//
 }
 Device->getSceneManager()->getMeshManipulator()->flipSurfaces(AnimatedMesh);
 
-// SkinFile->drop();
 M2MTriangles.clear();
 M2Vertices.clear();
 M2Indices.clear();

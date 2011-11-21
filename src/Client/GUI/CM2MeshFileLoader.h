@@ -10,87 +10,56 @@ namespace irr
 namespace scene
 {
 
+struct numofs {
+    u32 num;
+    u32 ofs;
+};
+
+
 struct ModelHeader {
-	c8 id[4];               //0x00
-	u32 version;            
-	u32 nameLength;
-	u32 nameOfs;            
-	u32 type;               //0x10
+    c8 id[4];               //0x00
+    u32 version;
+    numofs name;
+    u32 type;               //0x10
 
     //Anim Block @ 0x14
-	u32 nGlobalSequences;
-	u32 ofsGlobalSequences;
-	u32 nAnimations;
-	u32 ofsAnimations;      //0x20
-	u32 nAnimationLookup;
-	u32 ofsAnimationLookup;
-    u32 nD;
-    u32 ofsD;               //0x30
-	u32 nBones;
-	u32 ofsBones;
-	u32 nSkelBoneLookup;
-	u32 ofsSkelBoneLookup;  //0x40
-
-	u32 nVertices;          //0x44
-	u32 ofsVertices;
-	u32 nViews; // number of skins ?
-    u32 ofsViews;           //0x50
-
-	u32 nColors;
-	u32 ofsColors;
-
-	u32 nTextures;
-	u32 ofsTextures;        //0x60
-
-	u32 nTransparency;
-	u32 ofsTransparency;
-    u32 nI;
-    u32 ofsI;               //0x70
-	u32 nTexAnims;
-	u32 ofsTexAnims;
-	u32 nTexReplace;
-	u32 ofsTexReplace;      //0x80
-
-	u32 nTexFlags;
-	u32 ofsTexFlags;
-	u32 nBoneLookupTable;
-	u32 ofsBoneLookupTable; //0x90
-
-	u32 nTexLookup;
-	u32 ofsTexLookup;
-
-	u32 nTexUnitLookup;
-	u32 ofsTexUnitLookup;   //0xa0
-	u32 nTransparencyLookup;
-	u32 ofsTransparencyLookup;
-	u32 nTexAnimLookup;
-	u32 ofsTexAnimLookup;   //0xb0
+    numofs GlobalSequences;
+    numofs Animations;
+    numofs AnimationLookup;
+    numofs D;                   //Absent in WOTLK
+    numofs Bones;
+    numofs SkelBoneLookup;
+    numofs Vertices;
+    numofs Views;               //ofs Absent in WOTLK
+    numofs Colors;
+    numofs Textures;
+    numofs Transparency;
+    numofs I;                   //Absent in WoTLK
+    numofs TexAnims;
+    numofs TexReplace;
+    numofs TexFlags;
+    numofs BoneLookupTable;
+    numofs TexLookup;
+    numofs TexUnitLookup;
+    numofs TransparencyLookup;
+    numofs TexAnimLookup;
 
 	f32 floats[14];
 
-	u32 nBoundingTriangles; 
-	u32 ofsBoundingTriangles; //0xf0
-	u32 nBoundingVertices;
-	u32 ofsBoundingVertices;
-	u32 nBoundingNormals;
-	u32 ofsBoundingNormals; //0x100
+    numofs BoundingTriangles;
+    numofs BoundingVertices;
+    numofs BoundingNormals;
 
-	u32 nAttachments;
-	u32 ofsAttachments;
-	u32 nAttachLookup;
-	u32 ofsAttachLookup;    //0x110
-	u32 nAttachments_2;
-	u32 ofsAttachments_2;
-	u32 nLights;
-	u32 ofsLights;          //0x120
-	u32 nCameras;
-	u32 ofsCameras;
-	u32 nCameraLookup;
-	u32 ofsnCameraLookup;   //0x130
-	u32 nRibbonEmitters;
-	u32 ofsRibbonEmitters;
-	u32 nParticleEmitters;
-	u32 ofsParticleEmitters;//0x140
+    numofs Attachments;
+    numofs AttachLookup;
+    numofs Events;
+    numofs Lights;
+    numofs Cameras;
+    numofs CameraLookup;
+    numofs RibbonEmitters;
+    numofs ParticleEmitters;
+
+	//WOTLK has one more field which is only set under specific conditions.
 
 };
 
@@ -112,16 +81,15 @@ struct ModelVertex {
 };
 
 struct ModelView {
-//     c8 id[4]; // always "SKIN"
-    u32 nIndex, ofsIndex; // Vertices in this model (index into vertices[])
-    u32 nTris, ofsTris;	 // indices
-    u32 nProps, ofsProps; // additional vtx properties
-    u32 nSub, ofsSub;	 // materials/renderops/submeshes
-    u32 nTex, ofsTex;	 // material properties/textures
-	u32 lod;				 // LOD bias?
+    numofs Index;       // Vertices in this model (index into vertices[])
+    numofs Triangle;    // indices
+    numofs Properties;  // additional vtx properties (mostly 0?)
+    numofs Submesh;     // submeshes
+    numofs Tex;         // material properties/textures
+    u32 lod;            // LOD bias? unknown
 };
 
-struct ModelViewSubmesh {
+struct ModelViewSubmesh { //Curse you BLIZZ for not using numofs here
     u32 meshpartId;
     u16 ofsVertex;//Starting vertex number for this submesh
     u16 nVertex;
@@ -151,7 +119,7 @@ struct RenderFlags{
     u16 blending;
 };
 
-struct Animation{
+struct RawAnimation{
     u32 animationID;
     u32 start, end;
     float movespeed;
@@ -163,34 +131,52 @@ struct Animation{
     u16 unk3;
 };
 
+struct RawAnimationWOTLK{
+    u16 animationID, subanimationID;
+    u32 length;
+    float movespeed;
+    u32 flags;
+    u16 probability, unused;
+    u32 unk1, unk2, playbackspeed;
+    float bbox[6];
+    float radius;
+    s16 indexSameID;
+    u16 index;
+};
+
+struct Animation{
+  u32 animationID;
+  u32 subanimationID;
+  u32 start, end;
+  u32 flags;
+};
+
 struct AnimBlockHead{
     s16 interpolationType;
     s16 globalSequenceID;
-    u32 nInterpolationRange;
-    u32 ofsInterpolationRange;
-    u32 nTimeStamp;
-    u32 ofsTimeStamp;
-    u32 nValues;
-    u32 ofsValues;
+    numofs InterpolationRanges;    //Missing in WotLK
+    numofs TimeStamp;
+    numofs Values;
 };
 
-struct InterpolationRange{
-    u32 start, end;
-};
+// struct InterpolationRange{
+//     u32 start, end;
+// };
 
 struct AnimBlock{
     AnimBlockHead header;
-    core::array<InterpolationRange> keyframes;
+//     core::array<InterpolationRange> keyframes;  // We are not using this
     core::array<u32> timestamps;
     core::array<float> values;
 };
 
 struct Bone{
-    s32 indexF;
+    s32 SkelBoneIndex;
     u32 flags;
     s16 parentBone;
     u16 unk1;
-    u32 unk2;
+    u16 unk2;
+    u16 unk3;
     AnimBlock translation, rotation, scaling;
     core::vector3df PivotPoint;
 };
@@ -218,6 +204,8 @@ public:
 private:
 
 	bool load();
+    void ReadBones();
+    void ReadBonesWOTLK();
     void ReadVertices();
     void ReadTextureDefinitions();
     void ReadAnimationData();
@@ -249,6 +237,7 @@ private:
     core::array<RenderFlags> M2MRenderFlags;
     core::array<u32> M2MGlobalSequences;
     core::array<Animation> M2MAnimations;
+    core::array<s16> M2MAnimationLookup;
     core::array<Bone> M2MBones;
     core::array<u16> M2MBoneLookupTable;
     core::array<u16> M2MSkeleBoneLookupTable;
