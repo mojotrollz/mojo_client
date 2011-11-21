@@ -1155,8 +1155,8 @@ void FetchTexturesFromModel(ByteBuffer bb)
     M2MTextureDef.clear();
     irr::scene::TextureDefinition tempM2TexDef;
 
-    bb.rpos(header.ofsTextures);
-    for(irr::u32 i=0;i<header.nTextures;i++)
+    bb.rpos(header.Textures.ofs);
+    for(irr::u32 i=0;i<header.Textures.num;i++)
     {
         bb.read((uint8*)&tempM2TexDef,sizeof(irr::scene::TextureDefinition));
         M2MTextureDef.push_back(tempM2TexDef);
