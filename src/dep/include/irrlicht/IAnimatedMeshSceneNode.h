@@ -135,7 +135,10 @@ namespace scene
 		//! Deprecated command, please use getJointNode
 		virtual ISceneNode* getXJointNode(const c8* jointName) = 0;
 
-		//! Starts a default MD2 animation.
+        //! Starts a M2 animation.
+        virtual bool setM2Animation(u32 anim) = 0;
+        
+        //! Starts a default MD2 animation.
 		/** With this method it is easily possible to start a Run,
 		Attack, Die or whatever animation, if the mesh contained in
 		this scene node is an md2 mesh. Otherwise, nothing happens.

@@ -272,153 +272,126 @@ numofs tempBoneNumOfs;
 core::array<numofs> tempNumOfsList;
 float tempBoneValue;
 s16 tempBoneShort;
-for(u32 i=0; i<M2MBones.size(); i++)
+//Animations can now be stored in anim files. To read quickly we need to swap the order of things.
+//We are not loading stuff by bone but by animation - every bone has data for all the animations (I hope...)
+//Animations MUST BE LOADED FIRST!!!!!
+bool use_animfile;
+io::IReadFile* AnimFile;
+for(u32 i=0; i<M2MAnimations.size(); i++)
 {
-    if(M2MBones[i].translation.header.TimeStamp.num>0)
+  use_animfile = (M2MAnimations[i].flags & 0x20) == 0;
+  if(use_animfile)
+  {
+    std::string AnimName = MeshFile->getFileName();
+    c8 ext[13];
+    sprintf(ext,"%04d-%02d.anim",M2MAnimations[i].animationID,M2MAnimations[i].subanimationID);
+    AnimName = AnimName.substr(0, AnimName.length()-3) + ext;
+    AnimFile = io::IrrCreateIReadFileBasic(Device, AnimName.c_str());
+    if (!AnimFile)
     {
-        tempNumOfsList.clear();
-        MeshFile->seek(M2MBones[i].translation.header.TimeStamp.ofs);
-        for(u32 j=0; j<M2MBones[i].translation.header.TimeStamp.num;j++)
+        logerror("Error! Anim file not found: %s", AnimName.c_str());
+        if(M2MAnimations[i].flags & 0x40)
         {
-            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
-            tempNumOfsList.push_back(tempBoneNumOfs);
+          logerror("We actually expected this error - Where is the data for this animation???");
         }
-        for(u32 j=0; j<tempNumOfsList.size();j++)
-        {
-          numofs n = tempNumOfsList[j];
-          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
-          {
-            MeshFile->seek(n.ofs);
-            for(u32 k=0; k<n.num;k++)
-            {
-              MeshFile->read(&tempBoneTS, sizeof(u32));
-              M2MBones[i].translation.timestamps.push_back(tempBoneTS+M2MAnimations[j].start);//Bit of a HACK squash Multitimeline into single timeline.
-            }
-          }
-        }
+        continue;
     }
-    if(M2MBones[i].rotation.header.TimeStamp.num>0)
+  }
+  else
+  {
+    AnimFile = MeshFile;
+  }
+  for(u32 j=0; j<M2MBones.size(); j++)
+  {
+    if(M2MBones[j].translation.header.TimeStamp.num>0 && M2MBones[j].translation.header.Values.num>0)
     {
-        tempNumOfsList.clear();
-        MeshFile->seek(M2MBones[i].rotation.header.TimeStamp.ofs);
-        for(u32 j=0; j<M2MBones[i].rotation.header.TimeStamp.num;j++)
+      //Timestamps
+      MeshFile->seek(M2MBones[j].translation.header.TimeStamp.ofs+8*i);
+      MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+      if(tempBoneNumOfs.num > 0)
+      {
+        AnimFile->seek(tempBoneNumOfs.ofs);
+        for(u32 k=0; k<tempBoneNumOfs.num;k++)
         {
-            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
-            tempNumOfsList.push_back(tempBoneNumOfs);
+          AnimFile->read(&tempBoneTS, sizeof(u32));
+          M2MBones[j].translation.timestamps.push_back(tempBoneTS+M2MAnimations[i].start);//Bit of a HACK squash Multitimeline into single timeline.
         }
-        for(u32 j=0; j<tempNumOfsList.size();j++)
+      }
+      //Values
+      MeshFile->seek(M2MBones[j].translation.header.Values.ofs+8*i);
+      MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+      if(tempBoneNumOfs.num > 0)
+      {
+        AnimFile->seek(tempBoneNumOfs.ofs);
+        for(u32 k=0; k<tempBoneNumOfs.num*3;k++)
         {
-          numofs n = tempNumOfsList[j];
-          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
-          {
-            MeshFile->seek(n.ofs);
-            for(u32 k=0; k<n.num;k++)
-            {
-              MeshFile->read(&tempBoneTS, sizeof(u32));
-              M2MBones[i].rotation.timestamps.push_back(tempBoneTS+M2MAnimations[j].start);//Bit of a HACK squash Multitimeline into single timeline.
-            }
-          }
+          AnimFile->read(&tempBoneValue, sizeof(float));
+          M2MBones[j].translation.values.push_back(tempBoneValue);
         }
+      }
     }
-    if(M2MBones[i].scaling.header.TimeStamp.num>0)
+    if(M2MBones[j].rotation.header.TimeStamp.num>0 && M2MBones[j].rotation.header.Values.num>0)
     {
-        tempNumOfsList.clear();
-        MeshFile->seek(M2MBones[i].scaling.header.TimeStamp.ofs);
-        for(u32 j=0; j<M2MBones[i].scaling.header.TimeStamp.num;j++)
+      //Timestamps
+      MeshFile->seek(M2MBones[j].rotation.header.TimeStamp.ofs+8*i);
+      MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+      if(tempBoneNumOfs.num > 0)
+      {
+        AnimFile->seek(tempBoneNumOfs.ofs);
+        for(u32 k=0; k<tempBoneNumOfs.num;k++)
         {
-            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
-            tempNumOfsList.push_back(tempBoneNumOfs);
+          AnimFile->read(&tempBoneTS, sizeof(u32));
+          M2MBones[j].rotation.timestamps.push_back(tempBoneTS+M2MAnimations[i].start);//Bit of a HACK squash Multitimeline into single timeline.
         }
-        for(u32 j=0; j<tempNumOfsList.size();j++)
+      }
+      //Values
+      MeshFile->seek(M2MBones[j].rotation.header.Values.ofs+8*i);
+      MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+      if(tempBoneNumOfs.num > 0)
+      {
+        AnimFile->seek(tempBoneNumOfs.ofs);
+        for(u32 k=0; k<tempBoneNumOfs.num*4;k++)
         {
-          numofs n = tempNumOfsList[j];
-          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
-          {
-            MeshFile->seek(n.ofs);
-            for(u32 k=0; k<n.num;k++)
-            {
-              MeshFile->read(&tempBoneTS, sizeof(u32));
-              M2MBones[i].scaling.timestamps.push_back(tempBoneTS+M2MAnimations[j].start);//Bit of a HACK squash Multitimeline into single timeline.
-            }
-          }
+          AnimFile->read(&tempBoneShort, sizeof(s16));
+          tempBoneValue=(tempBoneShort>0?tempBoneShort-32767:tempBoneShort+32767)/32767.0f;
+          M2MBones[j].rotation.values.push_back(tempBoneValue);
         }
+      }
     }
-
-    if(M2MBones[i].translation.header.Values.num>0)
+    if(M2MBones[j].scaling.header.TimeStamp.num>0 && M2MBones[j].scaling.header.Values.num>0)
     {
-        tempNumOfsList.clear();
-        MeshFile->seek(M2MBones[i].translation.header.Values.ofs);
-        for(u32 j=0; j<M2MBones[i].translation.header.Values.num;j++)
+      //Timestamps
+      MeshFile->seek(M2MBones[j].scaling.header.TimeStamp.ofs+8*i);
+      MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+      if(tempBoneNumOfs.num > 0)
+      {
+        AnimFile->seek(tempBoneNumOfs.ofs);
+        for(u32 k=0; k<tempBoneNumOfs.num;k++)
         {
-            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
-            tempNumOfsList.push_back(tempBoneNumOfs);
+          AnimFile->read(&tempBoneTS, sizeof(u32));
+          M2MBones[j].scaling.timestamps.push_back(tempBoneTS+M2MAnimations[i].start);//Bit of a HACK squash Multitimeline into single timeline.
         }
-        for(u32 j=0; j<tempNumOfsList.size();j++)
+      }
+      //Values
+      MeshFile->seek(M2MBones[j].scaling.header.Values.ofs+8*i);
+      MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
+      if(tempBoneNumOfs.num > 0)
+      {
+        AnimFile->seek(tempBoneNumOfs.ofs);
+        for(u32 k=0; k<tempBoneNumOfs.num*3;k++)
         {
-          numofs n = tempNumOfsList[j];
-          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
-          {
-            MeshFile->seek(n.ofs);
-
-            for(u32 k=0; k<n.num*3;k++)
-            {
-              MeshFile->read(&tempBoneValue, sizeof(float));
-              M2MBones[i].translation.values.push_back(tempBoneValue);
-            }
-          }
+          AnimFile->read(&tempBoneValue, sizeof(float));
+          M2MBones[j].scaling.values.push_back(tempBoneValue);
         }
+      }
     }
-    if(M2MBones[i].rotation.header.Values.num>0)
-    {
-        tempNumOfsList.clear();
-        MeshFile->seek(M2MBones[i].rotation.header.Values.ofs);
-        for(u32 j=0; j<M2MBones[i].rotation.header.Values.num;j++)
-        {
-            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
-            tempNumOfsList.push_back(tempBoneNumOfs);
-        }
-        for(u32 j=0; j<tempNumOfsList.size();j++)
-        {
-          numofs n = tempNumOfsList[j];
-          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
-          {
-            MeshFile->seek(n.ofs);
-            for(u32 k=0; k<n.num*4;k++)
-            {
-              MeshFile->read(&tempBoneShort, sizeof(s16));
-              tempBoneValue=(tempBoneShort>0?tempBoneShort-32767:tempBoneShort+32767)/32767.0f;
-              M2MBones[i].rotation.values.push_back(tempBoneValue);
-            }
-          }
-        }
-    }
-
-    if(M2MBones[i].scaling.header.Values.num>0)
-    {
-        tempNumOfsList.clear();
-        MeshFile->seek(M2MBones[i].scaling.header.Values.ofs);
-        for(u32 j=0; j<M2MBones[i].scaling.header.Values.num;j++)
-        {
-            MeshFile->read(&tempBoneNumOfs, sizeof(numofs));
-            tempNumOfsList.push_back(tempBoneNumOfs);
-        }
-        for(u32 j=0; j<tempNumOfsList.size();j++)
-        {
-          numofs n = tempNumOfsList[j];
-          if(n.num > 0 && M2MAnimations[j].flags & 0x20)
-          {
-            MeshFile->seek(n.ofs);
-            for(u32 k=0; k<n.num*3;k++)
-            {
-              MeshFile->read(&tempBoneValue, sizeof(float));
-              M2MBones[i].scaling.values.push_back(tempBoneValue);
-            }
-          }
-        }
-    }
-
+  }
+  if(use_animfile)
+  {
+    AnimFile->drop();
+  }
+  AnimFile=0;
 }
-
 DEBUG(logdebug("Read %u Bones",M2MBones.size()));
 
 
@@ -427,7 +400,6 @@ DEBUG(logdebug("Read %u Bones",M2MBones.size()));
 
 void CM2MeshFileLoader::ReadAnimationData()
 {
-logdebug("Reading Animation Data");
     //Global Sequences. This is global data
     u32 tempGlobalSeq;
     if(!M2MGlobalSequences.empty())
@@ -487,8 +459,9 @@ logdebug("Reading Animation Data");
         {
           RawAnimation tempRaw;
           MeshFile->read(&tempRaw,sizeof(RawAnimation));
+
           tempAnimation.animationID = tempRaw.animationID;
-          tempAnimation.flags = tempRaw.flags;
+          tempAnimation.probability = tempRaw.probability / 32767.0f;
           tempAnimation.start = tempRaw.start;
           tempAnimation.end = tempRaw.end;
         }
@@ -499,6 +472,7 @@ logdebug("Reading Animation Data");
           tempAnimation.animationID = tempRaw.animationID;
           tempAnimation.subanimationID = tempRaw.subanimationID;
           tempAnimation.flags = tempRaw.flags;
+          tempAnimation.probability = tempRaw.probability / 32767.0f;
           tempAnimation.start = laststart;
           tempAnimation.end = laststart + tempRaw.length;
           laststart += tempRaw.length + 1000;
@@ -659,6 +633,11 @@ switch(header.version)
 ///////////////////////////////////////
 //      Animation related stuff      //
 ///////////////////////////////////////
+for(u32 i=0;i<M2MAnimations.size();i++)
+{
+  AnimatedMesh->newAnimation(M2MAnimations[i].animationID,M2MAnimations[i].start,M2MAnimations[i].end,M2MAnimations[i].probability);
+}
+
 
 scene::CM2Mesh::SJoint* Joint;
 for(u32 i=0;i<M2MBones.size();i++)

@@ -96,8 +96,11 @@ namespace scene
 		//! or to remove attached childs.
 		virtual bool removeChild(ISceneNode* child);
 
-		//! Starts a MD2 animation.
-		virtual bool setMD2Animation(EMD2_ANIMATION_TYPE anim);
+        //! Starts a M2 animation.
+        virtual bool setM2Animation(u32 anim);
+
+        //! Starts a MD2 animation.
+        virtual bool setMD2Animation(EMD2_ANIMATION_TYPE anim);
 
 		//! Starts a special MD2 animation.
 		virtual bool setMD2Animation(const c8* animationName);

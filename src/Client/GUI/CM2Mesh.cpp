@@ -454,7 +454,7 @@ void CM2Mesh::SkinJoint(SJoint *joint, SJoint *parentJoint)
 
 E_ANIMATED_MESH_TYPE CM2Mesh::getMeshType() const
 {
-    return EAMT_SKINNED;
+    return EAMT_M2;
 }
 
 
@@ -1374,9 +1374,55 @@ void CM2Mesh::calculateTangents(
 }
 
 
+void CM2Mesh::getFrameLoop(u32 id, s32 &start, s32 &end)
+{
+  core::map<u32, core::array<u32> >::Node* n =AnimationLookup.find(id);
+  if(n)
+  {
+    f32 r = (rand() % 32767)/32767.0f;
+    u8 x = 0;
+    bool found = false;
+    M2Animation a;
+    while(!found && x < n->getValue().size())
+    {
+      a = Animations[n->getValue()[x]];
+      if(r>a.probability)
+        x++;
+      else
+        found=true;
+    }
+    start = a.begin;
+    end = a.end;    
+  }
+  else
+    return;
+  
+}
 
+void CM2Mesh::newAnimation(u32 id, s32 start, s32 end, f32 probability)
+{
+  core::array<u32> temp;
+  f32 prev_prob;
+  if(AnimationLookup.find(id)==0)
+  {
+    prev_prob = 0.0f;
+  }
+  else
+  {
+    temp = AnimationLookup[id];
+    prev_prob = Animations[temp[temp.size()-1]].probability;
+  }
+  temp.push_back(Animations.size());
+  AnimationLookup[id] = temp;
 
+  M2Animation a;
+  a.begin = start;
+  a.end = end;
+  a.probability = probability + prev_prob;
+  Animations.push_back(a);
 
+  
+}
 
 
 

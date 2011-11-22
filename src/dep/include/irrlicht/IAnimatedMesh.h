@@ -47,6 +47,9 @@ namespace scene
 		can be loaded directly by Irrlicht */
 		EAMT_OCT,
 
+        //! WoW M2 files
+        EAMT_M2,
+
 		//! generic skinned mesh
 		EAMT_SKINNED
 	};

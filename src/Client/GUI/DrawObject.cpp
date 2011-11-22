@@ -145,6 +145,10 @@ void DrawObject::_Init(void)
         if(mesh)
         {
             node = _smgr->addAnimatedMeshSceneNode(mesh);
+            scene::IAnimatedMeshSceneNode* aninode = (scene::IAnimatedMeshSceneNode*)node;
+            
+            aninode->setAnimationSpeed(1000);
+            aninode->setM2Animation(0);
             //video::ITexture *tex = _device->getVideoDriver()->getTexture("data/misc/square.jpg");
             //node->setMaterialTexture(0, tex);
         }

@@ -22,6 +22,7 @@
 #include "IGUIFont.h"
 #include "ISceneCollisionManager.h"
 
+#include "../../../Client/GUI/CM2Mesh.h"
 
 namespace irr
 {
@@ -428,7 +429,7 @@ void CAnimatedMeshSceneNode::render()
 		// show skeleton
 		if ( DebugDataVisible & scene::EDS_SKELETON )
 		{
-			if (Mesh->getMeshType() == EAMT_SKINNED)
+			if (Mesh->getMeshType() == EAMT_SKINNED || Mesh->getMeshType() == EAMT_M2)
 			{
 				// draw skeleton
 				ISceneCollisionManager* Coll = SceneManager->getSceneCollisionManager();
@@ -712,6 +713,24 @@ bool CAnimatedMeshSceneNode::removeChild(ISceneNode* child)
 	}
 
 	return false;
+}
+
+//! Starts a M2 animation.
+bool CAnimatedMeshSceneNode::setM2Animation(u32 animID)
+{
+    if (!Mesh || Mesh->getMeshType() != EAMT_M2)
+        return false;
+
+    CM2Mesh* m = (CM2Mesh*)Mesh;
+
+    s32 begin = -1, end = -1;
+    m->getFrameLoop(animID, begin, end); //Eventually different speeds are necessary?
+    if(begin == -1 || end == -1)
+      return false;
+      
+//     setAnimationSpeed( f32(speed) );
+    setFrameLoop(begin, end);
+    return true;
 }
 
 

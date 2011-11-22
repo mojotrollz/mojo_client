@@ -123,7 +123,7 @@ struct RawAnimation{
     u32 animationID;
     u32 start, end;
     float movespeed;
-    u32 loop, flags, unk1, unk2;
+    u32 loop, probability, unk1, unk2;
     u32 playbackspeed;
     float bbox[6];
     float radius;
@@ -149,6 +149,7 @@ struct Animation{
   u32 subanimationID;
   u32 start, end;
   u32 flags;
+  f32 probability;
 };
 
 struct AnimBlockHead{

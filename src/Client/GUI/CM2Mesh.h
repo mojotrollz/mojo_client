@@ -8,6 +8,13 @@ namespace irr
 namespace scene
 {
 
+    struct M2Animation
+    {
+        f32 probability;
+        u32 begin;
+        u32 end;
+    };
+    
 	class IAnimatedMeshSceneNode;
 	class IBoneSceneNode;
 
@@ -135,7 +142,10 @@ namespace scene
 		virtual SScaleKey *createScaleKey(SJoint *joint);
 
 		virtual SWeight *createWeight(SJoint *joint);
-
+        
+        //Retrieve animation information
+        void getFrameLoop(u32 animId, s32 &start, s32 &end);
+        void newAnimation(u32 id, s32 start, s32 end, f32 probability);
 private:
 
 		void checkForAnimation();
@@ -185,6 +195,9 @@ private:
 		core::aabbox3d<f32> BoundingBox;
 
 		core::array< core::array<bool> > Vertices_Moved;
+        
+        core::array< M2Animation > Animations;
+        core::map<u32, core::array<u32> > AnimationLookup;
 	};
 
 } // end namespace scene
