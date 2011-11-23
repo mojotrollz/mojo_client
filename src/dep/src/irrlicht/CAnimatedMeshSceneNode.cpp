@@ -330,10 +330,12 @@ void CAnimatedMeshSceneNode::render()
 		{
 			video::IMaterialRenderer* rnd = driver->getMaterialRenderer(Materials[i].MaterialType);
 			bool transparent = (rnd && rnd->isTransparent());
-
+            bool renderSubmesh = true;
+            if(Mesh->getMeshType() == EAMT_M2)
+              renderSubmesh = ((CM2Mesh*)Mesh)->getGeoSetRender(i);
 			// only render transparent buffer if this is the transparent render pass
 			// and solid only in solid pass
-			if (transparent == isTransparentPass)
+			if (transparent == isTransparentPass && renderSubmesh)
 			{
 				scene::IMeshBuffer* mb = m->getMeshBuffer(i);
 

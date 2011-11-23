@@ -115,7 +115,7 @@ void CM2MeshFileLoader::ReadViewData(io::IReadFile* file)
     {
         file->read(&tempM2Submesh,sizeof(ModelViewSubmesh)-(header.version==0x100?16:0));
         M2MSubmeshes.push_back(tempM2Submesh);
-        DEBUG(logdebug("Submesh %u nBone: %u ofsBone: %u",i,tempM2Submesh.nBone, tempM2Submesh.ofsBone));
+        DEBUG(logdebug("Submesh %u MeshPartID %u",i,tempM2Submesh.meshpartId));
     //    std::cout<< "Submesh " <<i<<" ID "<<tempM2Submesh.meshpartId<<" starts at V/T "<<tempM2Submesh.ofsVertex<<"/"<<tempM2Submesh.ofsTris<<" and has "<<tempM2Submesh.nVertex<<"/"<<tempM2Submesh.nTris<<" V/T\n";
     }
     DEBUG(logdebug("Read %u/%u Submeshes",M2MSubmeshes.size(),currentView.Submesh.num));
@@ -716,7 +716,7 @@ for(u32 i=0;i<M2MVertices.size();i++)
 for(u32 i=0; i < currentView.Submesh.num;i++)//
 {
     //Now, M2MTriangles refers to M2MIndices and not to M2MVertices.
-    scene::SSkinMeshBuffer *MeshBuffer = AnimatedMesh->createBuffer();
+    scene::SSkinMeshBuffer *MeshBuffer = AnimatedMesh->createBuffer(M2MSubmeshes[i].meshpartId);
 
     //Put the Indices and Vertices of the Submesh into a mesh buffer
     //Each Submesh contains only the Indices and Vertices that belong to it.

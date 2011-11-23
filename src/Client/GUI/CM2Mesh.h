@@ -14,7 +14,6 @@ namespace scene
         u32 begin;
         u32 end;
     };
-    
 	class IAnimatedMeshSceneNode;
 	class IBoneSceneNode;
 
@@ -133,6 +132,12 @@ namespace scene
 		//! loaders should call this after populating the mesh
 		virtual void finalize();
 
+        SSkinMeshBuffer *createBuffer(u32 id)
+        {
+          GeoSetID.push_back(id);
+          GeoSetRender.push_back((id==0?true:false));//This may be changed later on when we know more about the submesh switching business
+          return createBuffer();
+        };
 		virtual SSkinMeshBuffer *createBuffer();
 
 		virtual SJoint *createJoint(SJoint *parent=0);
@@ -146,6 +151,9 @@ namespace scene
         //Retrieve animation information
         void getFrameLoop(u32 animId, s32 &start, s32 &end);
         void newAnimation(u32 id, s32 start, s32 end, f32 probability);
+        //Retrieve geoset rendering information
+        void setGeoSetRender(u32 id, bool render);
+        bool getGeoSetRender(u32 meshbufferNumber);
 private:
 
 		void checkForAnimation();
@@ -172,8 +180,10 @@ private:
 		core::array<SSkinMeshBuffer*> *SkinningBuffers; //Meshbuffer to skin, default is to skin localBuffers
 
 		core::array<SSkinMeshBuffer*> LocalBuffers;
+        core::array<u32> GeoSetID; //Array of Submesh Meshpart IDs used for switching Geosets on and off
+        core::array<bool> GeoSetRender;
 
-		core::array<SJoint*> AllJoints;
+        core::array<SJoint*> AllJoints;
 		core::array<SJoint*> RootJoints;
 
 		bool HasAnimation;

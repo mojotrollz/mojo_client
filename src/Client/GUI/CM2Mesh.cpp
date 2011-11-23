@@ -1420,10 +1420,30 @@ void CM2Mesh::newAnimation(u32 id, s32 start, s32 end, f32 probability)
   a.end = end;
   a.probability = probability + prev_prob;
   Animations.push_back(a);
-
-  
 }
 
+void CM2Mesh::setGeoSetRender(u32 id, bool render)//this sets the render status for a geoset ID
+{
+  for(u16 i = 0; i < GeoSetID.size(); i++)
+  {
+    if(GeoSetID[i]==id)
+    {
+      GeoSetRender[i]=render;
+    }
+  }
+};
+
+
+
+bool CM2Mesh::getGeoSetRender(u32 meshbufferNumber)//This gets the render status for a specific mesh buffer
+{
+  if(GeoSetRender.size()>meshbufferNumber)
+  {
+    return GeoSetRender[meshbufferNumber];
+  }
+  else 
+    return false;
+};
 
 
 } // end namespace scene
