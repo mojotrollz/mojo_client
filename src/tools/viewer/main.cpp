@@ -19,6 +19,7 @@ tutorial, we use a lot stuff from the gui namespace.
 #include "GUI/CM2MeshFileLoader.h"
 #include "GUI/CWMOMeshFileLoader.h"
 #include "GUI/CImageLoaderBLP.h"
+#include "GUI/MemoryInterface.h"
 #include "MemoryDataHolder.h"
 
 
@@ -51,7 +52,7 @@ enum
 	GUI_ID_X_SCALE,
 	GUI_ID_Y_SCALE,
 	GUI_ID_Z_SCALE,
-    
+
     GUI_ID_LIGHT_BOX,
     GUI_ID_LIGHT_X_SCALE,
     GUI_ID_LIGHT_Y_SCALE,
@@ -86,24 +87,29 @@ enum
 
 	GUI_ID_ABOUT,
 	GUI_ID_QUIT,
-    
+
     GUI_ID_TREE_VIEW,
-    
+
     GUI_ID_FRAME_START,
     GUI_ID_FRAME_END,
     GUI_ID_FRAME_SET,
-    
+    GUI_ID_FRAME_ANIM,
+    GUI_ID_FRAME_SET_ANIM,
+    GUI_ID_FRAME_SUBMESH,
+    GUI_ID_FRAME_SET_SUBMESH,
+
 	// And some magic numbers
 	MAX_FRAMERATE = 1000,
 	DEFAULT_FRAMERATE = 30,
-    
-    
-        
+
+    GUI_ID_LOAD_FILENAME,
+    GUI_ID_LOAD_BUTTON,
+
     LIGHT_ID_0,
     LIGHT_ID_1,
     LIGHT_ID_2,
     LIGHT_ID_3
-    
+
 };
 
 /*
@@ -173,8 +179,9 @@ void loadModel(const c8* fn)
 		Model->remove();
 
 	Model = 0;
+    io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(Device, filename.c_str());
 
-	scene::IAnimatedMesh* m = Device->getSceneManager()->getMesh( filename.c_str() );
+	scene::IAnimatedMesh* m = Device->getSceneManager()->getMesh( modelfile );
 
 	if (!m)
 	{
@@ -200,7 +207,7 @@ void loadModel(const c8* fn)
 	{
 		scene::IAnimatedMeshSceneNode* animModel = Device->getSceneManager()->addAnimatedMeshSceneNode(m);
 		animModel->setAnimationSpeed(1000);
-        animModel->setFrameLoop(3333,4333);
+        animModel->setM2Animation(0);
 		Model = animModel;
 	}
 	Model->setMaterialFlag(video::EMF_LIGHTING, true);
@@ -217,7 +224,7 @@ void loadModel(const c8* fn)
 		toolboxWnd->getElementFromId(GUI_ID_Y_SCALE, true)->setText(L"1.0");
 		toolboxWnd->getElementFromId(GUI_ID_Z_SCALE, true)->setText(L"1.0");
 	}
-    
+
     FILE* f = fopen("viewer_last.txt","w");
     fwrite(filename.c_str(),1,filename.size(),f);
     fclose(f);
@@ -240,40 +247,45 @@ void createToolBox()
 		e->remove();
 
 	// create the toolbox window
-	IGUIWindow* wnd = env->addWindow(core::rect<s32>(600,45,800,480),
+	IGUIWindow* wnd = env->addWindow(core::rect<s32>(600,45,800,580),
 		false, L"Toolset", 0, GUI_ID_DIALOG_ROOT_WINDOW);
 
 	// create tab control and tabs
 	IGUITabControl* tab = env->addTabControl(
-		core::rect<s32>(2,20,800-602,480-7), wnd, true, true);
+		core::rect<s32>(2,20,800-602,580-7), wnd, true, true);
 
 	IGUITab* t1 = tab->addTab(L"Config");
 
 	// add some edit boxes and a button to tab one
-	env->addStaticText(L"Scale:",
-			core::rect<s32>(10,20,150,45), false, false, t1);
-	env->addStaticText(L"X:", core::rect<s32>(22,48,40,66), false, false, t1);
-	env->addEditBox(L"1.0", core::rect<s32>(40,46,130,66), true, t1, GUI_ID_X_SCALE);
-	env->addStaticText(L"Y:", core::rect<s32>(22,82,40,96), false, false, t1);
-	env->addEditBox(L"1.0", core::rect<s32>(40,76,130,96), true, t1, GUI_ID_Y_SCALE);
-	env->addStaticText(L"Z:", core::rect<s32>(22,108,40,126), false, false, t1);
-	env->addEditBox(L"1.0", core::rect<s32>(40,106,130,126), true, t1, GUI_ID_Z_SCALE);
+    env->addStaticText(L"MPQ Filename:", core::rect<s32>(22,10,60,30), false, false, t1);
+    env->addEditBox(L"Creature\\Wolf\\Wolf.m2", core::rect<s32>(10,35,190,55), true, t1, GUI_ID_LOAD_FILENAME);
+    env->addButton(core::rect<s32>(10,65,155,85), t1, GUI_ID_LOAD_BUTTON, L"Load File from MPQ");
 
-	env->addButton(core::rect<s32>(10,134,85,165), t1, 1101, L"Set");
+
+    env->addStaticText(L"Scale:",
+			core::rect<s32>(10,90,150,110), false, false, t1);
+	env->addStaticText(L"X:", core::rect<s32>(22,115,40,135), false, false, t1);
+	env->addEditBox(L"1.0", core::rect<s32>(40,115,130,135), true, t1, GUI_ID_X_SCALE);
+	env->addStaticText(L"Y:", core::rect<s32>(22,140,40,160), false, false, t1);
+	env->addEditBox(L"1.0", core::rect<s32>(40,140,130,160), true, t1, GUI_ID_Y_SCALE);
+	env->addStaticText(L"Z:", core::rect<s32>(22,165,40,182), false, false, t1);
+	env->addEditBox(L"1.0", core::rect<s32>(40,165,130,185), true, t1, GUI_ID_Z_SCALE);
+
+	env->addButton(core::rect<s32>(10,190,85,210), t1, 1101, L"Set");
 
 	// add transparency control
 	env->addStaticText(L"GUI Transparency Control:",
-			core::rect<s32>(10,200,150,225), true, false, t1);
+			core::rect<s32>(10,215,150,235), true, false, t1);
 	IGUIScrollBar* scrollbar = env->addScrollBar(true,
-			core::rect<s32>(10,225,150,240), t1, 104);
+			core::rect<s32>(10,240,150,260), t1, 104);
 	scrollbar->setMax(255);
 	scrollbar->setPos(255);
 
 	// add framerate control
 	env->addStaticText(L"Framerate:",
-			core::rect<s32>(10,240,150,265), true, false, t1);
+			core::rect<s32>(10,265,150,285), true, false, t1);
 	scrollbar = env->addScrollBar(true,
-			core::rect<s32>(10,265,150,280), t1, 105);
+			core::rect<s32>(10,290,150,310), t1, 105);
 	scrollbar->setMax(MAX_FRAMERATE);
 	scrollbar->setPos(DEFAULT_FRAMERATE);
 
@@ -283,7 +295,7 @@ void createToolBox()
             core::rect<s32>(10,20,150,45), false, false, t2);
     env->addStaticText(L"",core::rect<s32>(10,48,150,280),true,true, t2, GUI_ID_TREE_VIEW);
 
-    
+
     IGUITab* t3 = tab->addTab(L"Lights");
     // add some edit boxes and a button to tab one
     IGUIComboBox* box =env->addComboBox(core::rect<s32>(10,20,150,45), t3, GUI_ID_LIGHT_BOX);
@@ -300,7 +312,7 @@ void createToolBox()
     env->addEditBox(L"0.0", core::rect<s32>(40,106,130,126), true, t3, GUI_ID_LIGHT_Z_SCALE);
     env->addCheckBox(true, core::rect<s32>(22,142,130,156),t3,GUI_ID_LIGHT_VISIBLE,L"Visible");
     env->addButton(core::rect<s32>(10,164,85,185), t3, GUI_ID_LIGHT_SET, L"Set");
-	
+
     IGUITab* t4 = tab->addTab(L"Debug");
     env->addCheckBox(false, core::rect<s32>(22,48,130,68),t4,GUI_ID_DEBUG_BOUNDING_BOX,L"BBox");
     env->addCheckBox(false, core::rect<s32>(22,78,130,98),t4,GUI_ID_DEBUG_BUFFERS_BOUNDING_BOXES,L"Buffers BBoxes");
@@ -308,12 +320,18 @@ void createToolBox()
     env->addCheckBox(false, core::rect<s32>(22,138,130,158),t4,GUI_ID_DEBUG_NORMALS,L"Normals");
     env->addCheckBox(false, core::rect<s32>(22,168,130,188),t4,GUI_ID_DEBUG_SKELETON,L"Skeleton");
     env->addCheckBox(false, core::rect<s32>(22,198,130,218),t4,GUI_ID_DEBUG_WIRE_OVERLAY,L"Wire Overlay");
-    env->addStaticText(L"Start:", core::rect<s32>(22,228,40,248), false, false, t4);
-    env->addEditBox(L"0", core::rect<s32>(40,248,130,268), true, t4, GUI_ID_FRAME_START);
-    env->addStaticText(L"End:", core::rect<s32>(22,268,40,288), false, false, t4);
-    env->addEditBox(L"0", core::rect<s32>(40,288,130,308), true, t4, GUI_ID_FRAME_END);
-    env->addButton(core::rect<s32>(10,318,85,338), t4, GUI_ID_FRAME_SET, L"Set");
-    
+    env->addStaticText(L"Start:", core::rect<s32>(22,228,60,248), false, false, t4);
+    env->addEditBox(L"0", core::rect<s32>(60,228,130,248), true, t4, GUI_ID_FRAME_START);
+    env->addStaticText(L"End:", core::rect<s32>(22,258,60,278), false, false, t4);
+    env->addEditBox(L"0", core::rect<s32>(60,258,130,278), true, t4, GUI_ID_FRAME_END);
+    env->addButton(core::rect<s32>(10,288,85,308), t4, GUI_ID_FRAME_SET, L"Set");
+    env->addStaticText(L"Animation:", core::rect<s32>(22,318,60,338), false, false, t4);
+    env->addEditBox(L"0", core::rect<s32>(60,318,130,338), true, t4, GUI_ID_FRAME_ANIM);
+    env->addButton(core::rect<s32>(10,348,85,368), t4, GUI_ID_FRAME_SET_ANIM, L"Set Anim");
+    env->addStaticText(L"Submesh:", core::rect<s32>(22,378,60,398), false, false, t4);
+    env->addEditBox(L"0", core::rect<s32>(60,378,130,398), true, t4, GUI_ID_FRAME_SUBMESH);
+    env->addButton(core::rect<s32>(10,408,85,428), t4, GUI_ID_FRAME_SET_SUBMESH, L"Set Submesh");
+
     // bring irrlicht engine logo to front, because it
 	// now may be below the newly created toolbox
 	root->bringToFront(root->getElementFromId(666, true));
@@ -448,16 +466,6 @@ public:
 				break;
 				}
 
-			case EGET_FILE_SELECTED:
-				{
-					// load the model file, selected in the file open dialog
-					IGUIFileOpenDialog* dialog =
-						(IGUIFileOpenDialog*)event.GUIEvent.Caller;
-					loadModel(core::stringc(dialog->getFileName()).c_str());
-                    StartUpModelFile=core::stringc(dialog->getFileName()).c_str();
-				}
-				break;
-
 			case EGET_SCROLL_BAR_CHANGED:
 
 				// control skin transparency
@@ -572,19 +580,14 @@ public:
 							Model->setScale(scale);
 					}
 					break;
-				case 1102:
-					env->addFileOpenDialog(L"Please select a model file to open");
-					break;
 				case 1104:
 					createToolBox();
 					break;
-				case 1105:
-					env->addFileOpenDialog(L"Please select your game archive/directory");
-					break;
+
                 case GUI_ID_LIGHT_SET:
                 {
                     scene::ISceneNode* light;
-                    
+
                     s32 pos=((IGUIComboBox*)env->getRootGUIElement()->getElementFromId(GUI_ID_LIGHT_BOX,true))->getSelected();
                     switch (pos)
                     {
@@ -614,7 +617,25 @@ public:
                       ((scene::IAnimatedMeshSceneNode*)Model)->setFrameLoop(atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_START,true)->getText()).c_str()),
                                             atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_END,true)->getText()).c_str()));
                 }
-                    break;                    
+                    break;
+                case GUI_ID_FRAME_SET_ANIM:
+                {
+                    if(Model)
+                      ((scene::IAnimatedMeshSceneNode*)Model)->setM2Animation(atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_ANIM,true)->getText()).c_str()));
+                }
+                    break;
+                case GUI_ID_FRAME_SET_SUBMESH:
+                {
+                    if(Model)
+                      ((scene::CM2Mesh*)((scene::IAnimatedMeshSceneNode*)Model)->getMesh())->setGeoSetRender(atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_SUBMESH,true)->getText()).c_str()),true);
+                }
+                    break;
+                case GUI_ID_LOAD_BUTTON:
+                {
+                    loadModel(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_LOAD_FILENAME,true)->getText()).c_str());
+                    StartUpModelFile=core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_LOAD_FILENAME,true)->getText()).c_str();
+                }
+                    break;
                 }
 
 				break;
@@ -656,6 +677,7 @@ int main(int argc, char* argv[])
     StartUpModelFile = buffer;
     fclose(f);
   }
+
   // ask user for driver
 	video::E_DRIVER_TYPE driverType = video::EDT_DIRECT3D8;
 
@@ -677,7 +699,7 @@ int main(int argc, char* argv[])
 		case 'f': driverType = video::EDT_NULL;     break;
 		default: return 1;
 	}
-    
+
 	// create device and exit if creation failed
 
 	MyEventReceiver receiver;
@@ -714,11 +736,11 @@ int main(int argc, char* argv[])
             video::SColorf(1.0f,1.0f,1.0f),100, LIGHT_ID_2);
     smgr->addLightSceneNode(0, core::vector3df(0,0,-50),
             video::SColorf(1.0f,1.0f,1.0f),100, LIGHT_ID_3);
-	
+
     smgr->getSceneNodeFromId(LIGHT_ID_1)->setVisible(false);
     smgr->getSceneNodeFromId(LIGHT_ID_2)->setVisible(false);
     smgr->getSceneNodeFromId(LIGHT_ID_3)->setVisible(false);
-            
+
 
 	// set a nicer font
 
@@ -735,10 +757,7 @@ int main(int argc, char* argv[])
 
 	gui::IGUIContextMenu* submenu;
 	submenu = menu->getSubMenu(0);
-	submenu->addItem(L"Open Model File & Texture...", GUI_ID_OPEN_MODEL);
-	submenu->addItem(L"Set Model Archive...", GUI_ID_SET_MODEL_ARCHIVE);
-	submenu->addItem(L"Load as Octree", GUI_ID_LOAD_AS_OCTREE);
-	submenu->addSeparator();
+
 	submenu->addItem(L"Quit", GUI_ID_QUIT);
 
 	submenu = menu->getSubMenu(1);
@@ -765,14 +784,11 @@ int main(int argc, char* argv[])
 
 	gui::IGUIToolBar* bar = env->addToolBar();
 
-	video::ITexture* image = driver->getTexture("./data/misc/open.png");
-	bar->addButton(1102, 0, L"Open a model",image, 0, false, true);
-
-	image = driver->getTexture("./data/misc/tools.png");
+	video::ITexture* image = driver->getTexture("./data/misc/tools.png");
 	bar->addButton(1104, 0, L"Open Toolset",image, 0, false, true);
 
-	image = driver->getTexture("./data/misc/zip.png");
-	bar->addButton(1105, 0, L"Set Model Archive",image, 0, false, true);
+// 	image = driver->getTexture("./data/misc/zip.png");
+// 	bar->addButton(1105, 0, L"Set Model Archive",image, 0, false, true);
 
 	// create a combobox with some senseless texts
 
@@ -875,7 +891,7 @@ int main(int argc, char* argv[])
 			driver->beginScene(true, true, video::SColor(150,50,50,50));
 
             smgr->drawAll();
-            
+
             video::SMaterial m;
             m.Lighting = false;
             driver->setMaterial(m);
@@ -884,7 +900,7 @@ int main(int argc, char* argv[])
             driver->draw3DLine(core::vector3df(-1,-1,-1),core::vector3df(-1,10,-1),video::SColor(255,0,255,0));
             driver->draw3DLine(core::vector3df(-1,-1,-1),core::vector3df(-1,-1,10),video::SColor(255,0,0,255));
             driver->draw3DLine(core::vector3df(-1,-1,-1),core::vector3df(0,0,0),video::SColor(255,255,0,255));
-            
+
             env->drawAll();
 
 			driver->endScene();
@@ -897,7 +913,7 @@ int main(int argc, char* argv[])
             if(Model)
               str.append(core::stringw(((scene::IAnimatedMeshSceneNode*)Model)->getFrameNr()));
 			fpstext->setText(str.c_str());
-        
+
 			scene::ICameraSceneNode* cam = Device->getSceneManager()->getActiveCamera();
 			str = L"Pos: ";
 			str.append(core::stringw(cam->getPosition().X));
@@ -912,13 +928,13 @@ int main(int argc, char* argv[])
 			str += L" ";
 			str.append(core::stringw(cam->getTarget().Z));
 			postext->setText(str.c_str());
-		
+
         }
 		else
 			Device->yield();
 	}
-	
-    
+
+
 	Device->drop();
 	return 0;
 }
