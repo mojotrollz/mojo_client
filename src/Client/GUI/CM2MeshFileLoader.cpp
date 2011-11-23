@@ -303,7 +303,7 @@ for(u32 i=0; i<M2MAnimations.size(); i++)
   }
   for(u32 j=0; j<M2MBones.size(); j++)
   {
-    if(M2MBones[j].translation.header.TimeStamp.num>0 && M2MBones[j].translation.header.Values.num>0)
+    if(M2MBones[j].translation.header.TimeStamp.num>i && M2MBones[j].translation.header.Values.num>i)
     {
       //Timestamps
       MeshFile->seek(M2MBones[j].translation.header.TimeStamp.ofs+8*i);
@@ -330,7 +330,7 @@ for(u32 i=0; i<M2MAnimations.size(); i++)
         }
       }
     }
-    if(M2MBones[j].rotation.header.TimeStamp.num>0 && M2MBones[j].rotation.header.Values.num>0)
+    if(M2MBones[j].rotation.header.TimeStamp.num>i && M2MBones[j].rotation.header.Values.num>i)
     {
       //Timestamps
       MeshFile->seek(M2MBones[j].rotation.header.TimeStamp.ofs+8*i);
@@ -358,7 +358,7 @@ for(u32 i=0; i<M2MAnimations.size(); i++)
         }
       }
     }
-    if(M2MBones[j].scaling.header.TimeStamp.num>0 && M2MBones[j].scaling.header.Values.num>0)
+    if(M2MBones[j].scaling.header.TimeStamp.num>i && M2MBones[j].scaling.header.Values.num>i)
     {
       //Timestamps
       MeshFile->seek(M2MBones[j].scaling.header.TimeStamp.ofs+8*i);
@@ -400,50 +400,50 @@ DEBUG(logdebug("Read %u Bones",M2MBones.size()));
 
 void CM2MeshFileLoader::ReadAnimationData()
 {
-    //Global Sequences. This is global data
-    u32 tempGlobalSeq;
-    if(!M2MGlobalSequences.empty())
-    {
-        M2MGlobalSequences.clear();
-    }
-    MeshFile->seek(header.GlobalSequences.ofs);
-    for(u32 i=0;i<header.GlobalSequences.num;i++)
-    {
-        MeshFile->read(&tempGlobalSeq,sizeof(u32));
-        M2MGlobalSequences.push_back(tempGlobalSeq);
-        DEBUG(logdebug("Global Sequence %u End %u",i,tempGlobalSeq));
-    }
-    DEBUG(logdebug("Read %u Global Sequence entries",M2MGlobalSequences.size()));
-
-    //BoneLookupTable. This is global data
-    u16 tempBoneLookup;
-    if(!M2MBoneLookupTable.empty())
-    {
-        M2MBoneLookupTable.clear();
-    }
-    MeshFile->seek(header.BoneLookupTable.ofs);
-    for(u32 i=0;i<header.BoneLookupTable.num;i++)
-    {
-        MeshFile->read(&tempBoneLookup,sizeof(u16));
-        M2MBoneLookupTable.push_back(tempBoneLookup);
-        DEBUG(logdebug("BoneLookupTable %u Value %u",i,tempBoneLookup));
-    }
-    DEBUG(logdebug("Read %u BoneLookupTable entries",M2MBoneLookupTable.size()));
-
-    //SkeleBoneLookupTable. This is global data
-    u16 tempSkeleBoneLookup;
-    if(!M2MSkeleBoneLookupTable.empty())
-    {
-        M2MSkeleBoneLookupTable.clear();
-    }
-    MeshFile->seek(header.SkelBoneLookup.ofs);
-    for(u32 i=0;i<header.SkelBoneLookup.num;i++)
-    {
-        MeshFile->read(&tempSkeleBoneLookup,sizeof(u16));
-        M2MSkeleBoneLookupTable.push_back(tempSkeleBoneLookup);
-        DEBUG(logdebug("SkeleBoneLookupTable %u Value %u",i,tempSkeleBoneLookup));
-    }
-    DEBUG(logdebug("Read %u SkeleBoneLookupTable entries",M2MSkeleBoneLookupTable.size()));
+//     //Global Sequences. This is global data
+//     u32 tempGlobalSeq;
+//     if(!M2MGlobalSequences.empty())
+//     {
+//         M2MGlobalSequences.clear();
+//     }
+//     MeshFile->seek(header.GlobalSequences.ofs);
+//     for(u32 i=0;i<header.GlobalSequences.num;i++)
+//     {
+//         MeshFile->read(&tempGlobalSeq,sizeof(u32));
+//         M2MGlobalSequences.push_back(tempGlobalSeq);
+//         DEBUG(logdebug("Global Sequence %u End %u",i,tempGlobalSeq));
+//     }
+//     DEBUG(logdebug("Read %u Global Sequence entries",M2MGlobalSequences.size()));
+// 
+//     //BoneLookupTable. This is global data
+//     u16 tempBoneLookup;
+//     if(!M2MBoneLookupTable.empty())
+//     {
+//         M2MBoneLookupTable.clear();
+//     }
+//     MeshFile->seek(header.BoneLookupTable.ofs);
+//     for(u32 i=0;i<header.BoneLookupTable.num;i++)
+//     {
+//         MeshFile->read(&tempBoneLookup,sizeof(u16));
+//         M2MBoneLookupTable.push_back(tempBoneLookup);
+//         DEBUG(logdebug("BoneLookupTable %u Value %u",i,tempBoneLookup));
+//     }
+//     DEBUG(logdebug("Read %u BoneLookupTable entries",M2MBoneLookupTable.size()));
+// 
+//     //SkeleBoneLookupTable. This is global data
+//     u16 tempSkeleBoneLookup;
+//     if(!M2MSkeleBoneLookupTable.empty())
+//     {
+//         M2MSkeleBoneLookupTable.clear();
+//     }
+//     MeshFile->seek(header.SkelBoneLookup.ofs);
+//     for(u32 i=0;i<header.SkelBoneLookup.num;i++)
+//     {
+//         MeshFile->read(&tempSkeleBoneLookup,sizeof(u16));
+//         M2MSkeleBoneLookupTable.push_back(tempSkeleBoneLookup);
+//         DEBUG(logdebug("SkeleBoneLookupTable %u Value %u",i,tempSkeleBoneLookup));
+//     }
+//     DEBUG(logdebug("Read %u SkeleBoneLookupTable entries",M2MSkeleBoneLookupTable.size()));
 
     //Animations. This is global data
     u32 laststart = 0;
@@ -481,20 +481,20 @@ void CM2MeshFileLoader::ReadAnimationData()
         DEBUG(logdebug("Animation %u Id %u Start %u End %u",i,tempAnimation.animationID,tempAnimation.start,tempAnimation.end));
     }
     DEBUG(logdebug("Read %u Animations",M2MAnimations.size()));
-    //Animation Lookup. This is global data
-    s16 tempAniLookup;
-    if(!M2MAnimationLookup.empty())
-    {
-        M2MAnimationLookup.clear();
-    }
-    MeshFile->seek(header.AnimationLookup.ofs);
-    for(u32 i=0;i<header.AnimationLookup.num;i++)
-    {
-        MeshFile->read(&tempAniLookup,sizeof(s16));
-        M2MAnimationLookup.push_back(tempAniLookup);
-        DEBUG(logdebug("Animation Lookup %u Id %u",i,tempAniLookup));
-    }
-    DEBUG(logdebug("Read %u AnimationLookup",M2MAnimationLookup.size()));
+//     //Animation Lookup. This is global data
+//     s16 tempAniLookup;
+//     if(!M2MAnimationLookup.empty())
+//     {
+//         M2MAnimationLookup.clear();
+//     }
+//     MeshFile->seek(header.AnimationLookup.ofs);
+//     for(u32 i=0;i<header.AnimationLookup.num;i++)
+//     {
+//         MeshFile->read(&tempAniLookup,sizeof(s16));
+//         M2MAnimationLookup.push_back(tempAniLookup);
+//         DEBUG(logdebug("Animation Lookup %u Id %u",i,tempAniLookup));
+//     }
+//     DEBUG(logdebug("Read %u AnimationLookup",M2MAnimationLookup.size()));
 }
 
 void CM2MeshFileLoader::ReadTextureDefinitions()
