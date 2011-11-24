@@ -1049,14 +1049,26 @@ void WorldSession::_HandleNotificationOpcode(WorldPacket& recvPacket)
 void WorldSession::_HandleNameQueryResponseOpcode(WorldPacket& recvPacket)
 {
     uint64 pguid;
-    uint8 realm;
-    std::string pname;
+    uint8 unk, declined, crace, cgender, cclass ;
+    std::string pname,realm;
     uint32 prace, pgender, pclass;
-    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
       pguid = recvPacket.readPackGUID();
     else
       recvPacket >> pguid;
-    recvPacket >> pname >> realm >> prace >> pgender >> pclass;
+
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
+      recvPacket >> unk;
+    
+    recvPacket >> pname >> realm;
+    if(GetInstance()->GetConf()->client > CLIENT_TBC)
+    {
+      recvPacket >> crace >> cgender >> cclass; //Not used yet...
+    }
+    else
+      recvPacket >> prace >> pgender >> pclass; //Not used yet...
+    if(GetInstance()->GetConf()->client > CLIENT_CLASSIC_WOW)
+      recvPacket >> declined;
     if(pname.length()>MAX_PLAYERNAME_LENGTH || pname.length()<MIN_PLAYERNAME_LENGTH)
     {
         logerror("Playername Length outside bounds: %u",pname.length());
