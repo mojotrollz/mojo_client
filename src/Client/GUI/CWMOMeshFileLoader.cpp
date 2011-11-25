@@ -137,7 +137,7 @@ DEBUG(logdev("Reading Chunk: %s size %u", (char*)fourcc,size));
 
         for(u32 i =0;i<WMOMTexDefinition.size();i++)
         {
-        texNameSize = WMOMTexDefinition[i].endNameIndex-WMOMTexDefinition[i].startNameIndex; tempTexName.resize(texNameSize); 
+        texNameSize = WMOMTexDefinition[i].endNameIndex-WMOMTexDefinition[i].startNameIndex; tempTexName.resize(texNameSize);
         MeshFile->seek(textureOffset+WMOMTexDefinition[i].startNameIndex);
         MeshFile->read((void*)tempTexName.c_str(),WMOMTexDefinition[i].endNameIndex-WMOMTexDefinition[i].startNameIndex);
         DEBUG(logdev("Texture %u: %s",i,tempTexName.c_str()));
@@ -274,7 +274,7 @@ for(u32 i=0;i<submeshes.size();i++)//The mesh has to be split into submeshes bec
     {
     if(WMOMTexData[lastindex].textureID!=255)
     {
-        scene::SSkinMeshBuffer *MeshBuffer = Mesh->createBuffer();
+        scene::SSkinMeshBuffer *MeshBuffer = Mesh->createBuffer(0);
 
         //Put the Indices and Vertices of the Submesh into a mesh buffer
         for(u32 j=lastindex;j<submeshes[i];j++)
