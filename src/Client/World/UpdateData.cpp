@@ -187,7 +187,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                     Set.defaultarg = toString(uguid);
                     Set.arg[0] = toString(objtypeid);
                     GetInstance()->GetScripts()->RunScript("_onobjectcreate", &Set);
-                    
+
                 }
 
                 // if our own character got finally created, we have successfully entered the world,
@@ -198,23 +198,23 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
             case UPDATETYPE_OUT_OF_RANGE_OBJECTS:
             {
                 recvPacket >> usize;
-                for(uint16 i=0;i<usize;i++)
+                for(uint32 i=0;i<usize;i++)
                 {
                     uguid = recvPacket.readPackGUID(); // not 100% sure if this is correct
                     logdebug("GUID "I64FMT" out of range",uguid);
 
-                    // call script just before object removal
-                    if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))
-                    {
-                        Object *del_obj = objmgr.GetObj(uguid);
-                        CmdSet Set;
-                        Set.defaultarg = toString(uguid);
-                        Set.arg[0] = del_obj ? toString(del_obj->GetTypeId()) : "";
-                        Set.arg[1] = "true"; // out of range = true
-                        GetInstance()->GetScripts()->RunScript("_onobjectdelete", &Set);
-                    }
-
-                    objmgr.Remove(uguid, false);
+//                     // call script just before object removal
+//                     if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))
+//                     {
+//                         Object *del_obj = objmgr.GetObj(uguid);
+//                         CmdSet Set;
+//                         Set.defaultarg = toString(uguid);
+//                         Set.arg[0] = del_obj ? toString(del_obj->GetTypeId()) : "";
+//                         Set.arg[1] = "true"; // out of range = true
+//                         GetInstance()->GetScripts()->RunScript("_onobjectdelete", &Set);
+//                     }
+//
+//                     objmgr.Remove(uguid, false);
                 }
             }
             break;
@@ -252,7 +252,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     uint32 unk32;
 
     uint16 client = GetInstance()->GetConf()->client;
-    
+
     Object *obj = (Object*)objmgr.GetObj(uguid, true); // also depleted objects
     Unit *u = NULL;
     if(obj)
@@ -278,7 +278,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     if(flags & UPDATEFLAG_LIVING)
     {
         recvPacket >> mi;
-        
+
         logdev("MovementUpdate: TypeID=%u GUID="I64FMT" pObj=%X flags=%x mi.flags=%x",objtypeid,uguid,obj,flags,mi.flags);
         logdev("FLOATS: x=%f y=%f z=%f o=%f",mi.pos.x, mi.pos.y, mi.pos.z ,mi.pos.o);
         if(obj && obj->IsWorldObject())
@@ -289,11 +289,11 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
             logdev("TRANSPORT @ mi.flags: guid="I64FMT" x=%f y=%f z=%f o=%f", mi.t_guid, mi.t_pos.x, mi.t_pos.y, mi.t_pos.z, mi.t_pos.o);
         }
 
-        if((mi.flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (mi.flags2 & MOVEMENTFLAG2_ALLOW_PITCHING)) 
+        if((mi.flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (mi.flags2 & MOVEMENTFLAG2_ALLOW_PITCHING))
         {
             logdev("MovementUpdate: MOVEMENTFLAG_SWIMMING or FLYING is set, angle = %f!", mi.s_angle);
         }
-        
+
         logdev("MovementUpdate: FallTime = %u", mi.fallTime);
 
         if(mi.flags & MOVEMENTFLAG_FALLING)
@@ -330,8 +330,27 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         // TODO: correct this one as soon as its meaning is known OR if it appears often and needs to be fixed
         if(mi.flags & MOVEMENTFLAG_SPLINE_ENABLED)
         {
-            logerror("MovementUpdate: MOVEMENTFLAG_SPLINE2 is set, if you see this message please report it!");
-            return;
+            logdev("MovementUpdate: MOVEMENTFLAG_SPLINE_ENABLED!");
+            //checked for 3.3.5
+            //We do not do anything with the spline stuff so far, it just needs to be read to be skipped correctly
+            uint32 splineflags, timepassed, duration, id, effect_start_time, path_nodes;
+            uint8 spline_mode;
+            float facing_angle,facing_x,facing_y,facing_z, duration_mod, duration_next, vertical_acceleration;
+            float x,y,z;
+            uint64 facing_target;
+            recvPacket >> splineflags;
+            if(splineflags & SF_Final_Angle)
+              recvPacket >> facing_angle;
+            if(splineflags & SF_Final_Point)
+              recvPacket >> facing_x >> facing_y >> facing_z;
+            recvPacket >> timepassed >> duration >> id >> duration_mod >> duration_next >> vertical_acceleration >> effect_start_time;
+            recvPacket >> path_nodes;
+            for(uint32 i = 0;i<path_nodes;i++)
+            {
+              recvPacket >> x >> y >> z;
+            }
+            recvPacket >> spline_mode;
+            recvPacket >> x >> y >> z; // FinalDestination
         }
     }
     else // !UPDATEFLAG_LIVING
@@ -346,7 +365,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
 
             if (obj && obj->IsWorldObject())
                 ((WorldObject*)obj)->SetPosition(x, y, z, o);
-        } 
+        }
         else
         {
             if(flags & UPDATEFLAG_HAS_POSITION)
@@ -356,7 +375,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
                 {
                     recvPacket >> x >> y >> z >> o;
                     // only zeroes here
-                } 
+                }
                 else
                 {
                     recvPacket >> x >> y >> z >> o;
@@ -382,7 +401,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     }
     if(client == CLIENT_CLASSIC_WOW && flags & UPDATEFLAG_ALL_6005)
     {
-        recvPacket >> unk32;            
+        recvPacket >> unk32;
         // MaNGOS sends 1 always.
         logdev("MovementUpdate: UPDATEFLAG_ALL is set, got %X", unk32);
     }
@@ -402,7 +421,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
 
     if(flags & UPDATEFLAG_VEHICLE)                          // unused for now
     {
-        uint32 vehicleId; 
+        uint32 vehicleId;
         float facingAdj;
 
         recvPacket >> vehicleId >> facingAdj;
@@ -462,7 +481,7 @@ void WorldSession::_ValuesUpdate(uint64 uguid, WorldPacket& recvPacket)
             else
             {
                 recvPacket >> value; // drop the value, since object doesnt exist (always 4 bytes)
-            }            
+            }
         }
     }
 }

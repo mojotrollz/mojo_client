@@ -58,6 +58,37 @@ enum MovementFlags2
     MOVEMENTFLAG2_UNK10             = 0x8000,
     MOVEMENTFLAG2_INTERP_MASK       = MOVEMENTFLAG2_INTERP_MOVEMENT | MOVEMENTFLAG2_INTERP_TURNING | MOVEMENTFLAG2_INTERP_PITCHING
 };
+
+enum SplineFlags{
+    SF_None         = 0x00000000,
+                                          // x00-xFF(first byte) used as animation Ids storage in pair with Animation flag
+    SF_Done         = 0x00000100,
+    SF_Falling      = 0x00000200,           // Affects elevation computation, can't be combined with Parabolic flag
+    SF_No_Spline    = 0x00000400,
+    SF_Parabolic    = 0x00000800,           // Affects elevation computation, can't be combined with Falling flag
+    SF_Walkmode     = 0x00001000,
+    SF_Flying       = 0x00002000,           // Smooth movement(Catmullrom interpolation mode), flying animation
+    SF_OrientationFixed = 0x00004000,       // Model orientation fixed
+    SF_Final_Point  = 0x00008000,
+    SF_Final_Target = 0x00010000,
+    SF_Final_Angle  = 0x00020000,
+    SF_Catmullrom   = 0x00040000,           // Used Catmullrom interpolation mode
+    SF_Cyclic       = 0x00080000,           // Movement by cycled spline
+    SF_Enter_Cycle  = 0x00100000,           // Everytimes appears with cyclic flag in monster move packet, erases first spline vertex after first cycle done
+    SF_Animation    = 0x00200000,           // Plays animation after some time passed
+    SF_Frozen       = 0x00400000,           // Will never arrive
+    SF_Unknown5     = 0x00800000,
+    SF_Unknown6     = 0x01000000,
+    SF_Unknown7     = 0x02000000,
+    SF_Unknown8     = 0x04000000,
+    SF_OrientationInversed = 0x08000000,
+    SF_Unknown10    = 0x10000000,
+    SF_Unknown11    = 0x20000000,
+    SF_Unknown12    = 0x40000000,
+    SF_Unknown13    = 0x80000000,
+};
+
+
 struct MovementInfo
 {
     static uint8 _c; //Version switch helper
