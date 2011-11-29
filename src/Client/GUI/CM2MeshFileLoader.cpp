@@ -414,7 +414,7 @@ void CM2MeshFileLoader::ReadAnimationData()
 //         DEBUG(logdebug("Global Sequence %u End %u",i,tempGlobalSeq));
 //     }
 //     DEBUG(logdebug("Read %u Global Sequence entries",M2MGlobalSequences.size()));
-// 
+//
 //     //BoneLookupTable. This is global data
 //     u16 tempBoneLookup;
 //     if(!M2MBoneLookupTable.empty())
@@ -429,7 +429,7 @@ void CM2MeshFileLoader::ReadAnimationData()
 //         DEBUG(logdebug("BoneLookupTable %u Value %u",i,tempBoneLookup));
 //     }
 //     DEBUG(logdebug("Read %u BoneLookupTable entries",M2MBoneLookupTable.size()));
-// 
+//
 //     //SkeleBoneLookupTable. This is global data
 //     u16 tempSkeleBoneLookup;
 //     if(!M2MSkeleBoneLookupTable.empty())
@@ -564,7 +564,6 @@ void CM2MeshFileLoader::ReadTextureDefinitions()
 bool CM2MeshFileLoader::load()
 {
 DEBUG(logdebug("Trying to open file %s",MeshFile->getFileName()));
-logdebug("Trying to open file %s",MeshFile->getFileName());
 
 MeshFile->read(&header,20);
 DEBUG(logdebug("M2 Version %X",header.version));
@@ -724,6 +723,8 @@ for(u32 i=0; i < currentView.Submesh.num;i++)//
     for(u32 j=M2MSubmeshes[i].ofsTris;j<M2MSubmeshes[i].ofsTris+M2MSubmeshes[i].nTris;j++)
     {
         MeshBuffer->Indices.push_back(M2MIndices[M2MTriangles[j]]-M2MSubmeshes[i].ofsVertex);
+        if(M2MIndices[M2MTriangles[j]]<M2MSubmeshes[i].ofsVertex)
+          logerror("Index %u < ofsVertex %u",M2MIndices[M2MTriangles[j]],M2MSubmeshes[i].ofsVertex);
     }
 
     for(u32 j=M2MSubmeshes[i].ofsVertex;j<M2MSubmeshes[i].ofsVertex+M2MSubmeshes[i].nVertex;j++)
