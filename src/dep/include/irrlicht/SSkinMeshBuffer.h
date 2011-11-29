@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -20,8 +20,9 @@ struct SSkinMeshBuffer : public IMeshBuffer
 {
 	//! Default constructor
 	SSkinMeshBuffer(video::E_VERTEX_TYPE vt=video::EVT_STANDARD) :
-		ChangedID_Vertex(1),ChangedID_Index(1),MappingHint_Vertex(EHM_NEVER),
-		MappingHint_Index(EHM_NEVER),VertexType(vt),BoundingBoxNeedsRecalculated(true)
+		ChangedID_Vertex(1), ChangedID_Index(1), VertexType(vt),
+		MappingHint_Vertex(EHM_NEVER), MappingHint_Index(EHM_NEVER),
+		BoundingBoxNeedsRecalculated(true)
 	{
 		#ifdef _DEBUG
 		setDebugName("SSkinMeshBuffer");
@@ -186,7 +187,7 @@ struct SSkinMeshBuffer : public IMeshBuffer
 	}
 
 	//! Convert to 2tcoords vertex type
-	virtual void MoveTo_2TCoords()
+	virtual void convertTo2TCoords()
 	{
 		if (VertexType==video::EVT_STANDARD)
 		{
@@ -205,7 +206,7 @@ struct SSkinMeshBuffer : public IMeshBuffer
 	}
 
 	//! Convert to tangents vertex type
-	virtual void MoveTo_Tangents()
+	virtual void convertToTangents()
 	{
 		if (VertexType==video::EVT_STANDARD)
 		{
@@ -369,24 +370,27 @@ struct SSkinMeshBuffer : public IMeshBuffer
 	//! Call this after changing the positions of any vertex.
 	void boundingBoxNeedsRecalculated(void) { BoundingBoxNeedsRecalculated = true; }
 
+	core::array<video::S3DVertexTangents> Vertices_Tangents;
+	core::array<video::S3DVertex2TCoords> Vertices_2TCoords;
+	core::array<video::S3DVertex> Vertices_Standard;
+	core::array<u16> Indices;
+
 	u32 ChangedID_Vertex;
 	u32 ChangedID_Index;
-
-	// hardware mapping hint
-	E_HARDWARE_MAPPING MappingHint_Vertex;
-	E_HARDWARE_MAPPING MappingHint_Index;
 
 	//ISkinnedMesh::SJoint *AttachedJoint;
 	core::matrix4 Transformation;
 
 	video::SMaterial Material;
 	video::E_VERTEX_TYPE VertexType;
-	core::array<video::S3DVertexTangents> Vertices_Tangents;
-	core::array<video::S3DVertex2TCoords> Vertices_2TCoords;
-	core::array<video::S3DVertex> Vertices_Standard;
-	core::array<u16> Indices;
+
 	core::aabbox3d<f32> BoundingBox;
-	bool BoundingBoxNeedsRecalculated;
+
+	// hardware mapping hint
+	E_HARDWARE_MAPPING MappingHint_Vertex:3;
+	E_HARDWARE_MAPPING MappingHint_Index:3;
+
+	bool BoundingBoxNeedsRecalculated:1;
 };
 
 

@@ -69,7 +69,7 @@ namespace scene
 
         //! updates the bounding box
         virtual void updateBoundingBox(void);
-		
+
         //! Returns the type of the animated mesh.
 		virtual E_ANIMATED_MESH_TYPE getMeshType() const;
 
@@ -132,22 +132,22 @@ namespace scene
 		//! loaders should call this after populating the mesh
 		virtual void finalize();
 
-        SSkinMeshBuffer *createBuffer(u32 id)
+        SSkinMeshBuffer *addMeshBuffer(u32 id)
         {
           GeoSetID.push_back(id);
           GeoSetRender.push_back((id==0?true:false));//This may be changed later on when we know more about the submesh switching business
-          return createBuffer();
+          return addMeshBuffer();
         };
-		virtual SSkinMeshBuffer *createBuffer();
+		virtual SSkinMeshBuffer *addMeshBuffer();
 
-		virtual SJoint *createJoint(SJoint *parent=0);
+		virtual SJoint *addJoint(SJoint *parent=0);
 
-		virtual SPositionKey *createPositionKey(SJoint *joint);
-		virtual SRotationKey *createRotationKey(SJoint *joint);
-		virtual SScaleKey *createScaleKey(SJoint *joint);
+		virtual SPositionKey *addPositionKey(SJoint *joint);
+		virtual SRotationKey *addRotationKey(SJoint *joint);
+		virtual SScaleKey *addScaleKey(SJoint *joint);
 
-		virtual SWeight *createWeight(SJoint *joint);
-        
+		virtual SWeight *addWeight(SJoint *joint);
+
         //Retrieve animation information
         void getFrameLoop(u32 animId, s32 &start, s32 &end);
         void newAnimation(u32 id, s32 start, s32 end, f32 probability);
@@ -205,7 +205,7 @@ private:
 		core::aabbox3d<f32> BoundingBox;
 
 		core::array< core::array<bool> > Vertices_Moved;
-        
+
         core::array< M2Animation > Animations;
         core::map<u32, core::array<u32> > AnimationLookup;
 	};

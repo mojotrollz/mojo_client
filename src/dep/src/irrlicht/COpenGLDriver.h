@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in Irrlicht.h
 
@@ -7,68 +7,26 @@
 
 #include "IrrCompileConfig.h"
 
-#if defined(_IRR_WINDOWS_API_)
-	// include windows headers for HWND
-	#define WIN32_LEAN_AND_MEAN
-	#include <windows.h>
-#elif defined(_IRR_USE_OSX_DEVICE_)
-	#include "CIrrDeviceMacOSX.h"
-#endif
-
 #include "SIrrCreationParameters.h"
+
+namespace irr
+{
+	class CIrrDeviceWin32;
+	class CIrrDeviceLinux;
+	class CIrrDeviceSDL;
+	class CIrrDeviceMacOSX;
+}
 
 #ifdef _IRR_COMPILE_WITH_OPENGL_
 
 #include "CNullDriver.h"
 #include "IMaterialRendererServices.h"
+// also includes the OpenGL stuff
 #include "COpenGLExtensionHandler.h"
-
-#if defined(_IRR_WINDOWS_API_)
-	#include <GL/gl.h>
-	#include "glext.h"
-	#include "wglext.h"
-#ifdef _MSC_VER
-	#pragma comment(lib, "OpenGL32.lib")
-	#pragma comment(lib, "GLu32.lib")
-#endif
-#elif defined(_IRR_USE_OSX_DEVICE_)
-	#if defined(_IRR_OPENGL_USE_EXTPOINTER_)
-		#define GL_GLEXT_LEGACY 1
-	#endif
-	#include <OpenGL/gl.h>
-	#if defined(_IRR_OPENGL_USE_EXTPOINTER_)
-		#include "glext.h"
-	#endif
-#elif defined(_IRR_USE_SDL_DEVICE_)
-	#if defined(_IRR_OPENGL_USE_EXTPOINTER_)
-		#define GL_GLEXT_LEGACY 1
-		#define GLX_GLXEXT_LEGACY 1
-	#else
-		#define GL_GLEXT_PROTOTYPES 1
-		#define GLX_GLXEXT_PROTOTYPES 1
-	#endif
-	#define NO_SDL_GLEXT
-	#include <SDL/SDL_opengl.h>
-	#include "glext.h"
-#else
-	#if defined(_IRR_OPENGL_USE_EXTPOINTER_)
-		#define GL_GLEXT_LEGACY 1
-		#define GLX_GLXEXT_LEGACY 1
-	#else
-		#define GL_GLEXT_PROTOTYPES 1
-		#define GLX_GLXEXT_PROTOTYPES 1
-	#endif
-	#include <GL/gl.h>
-	#include <GL/glx.h>
-	#if defined(_IRR_OPENGL_USE_EXTPOINTER_)
-	#include "glext.h"
-	#undef GLX_ARB_get_proc_address // avoid problems with local glxext.h
-	#include "glxext.h"
-	#endif
-#endif
 
 namespace irr
 {
+
 namespace video
 {
 	class COpenGLTexture;
@@ -77,19 +35,30 @@ namespace video
 	{
 	public:
 
-		#if defined(_IRR_WINDOWS_API_) || defined(_IRR_USE_LINUX_DEVICE_) || defined(_IRR_USE_SDL_DEVICE_)
-		COpenGLDriver(const SIrrlichtCreationParameters& params, io::IFileSystem* io);
-		#endif
-
-		#ifdef _IRR_USE_OSX_DEVICE_
-		COpenGLDriver(const SIrrlichtCreationParameters& params,
-				io::IFileSystem* io, CIrrDeviceMacOSX *device);
-		#endif
-
-		#ifdef _IRR_WINDOWS_API_
+		#ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
+		COpenGLDriver(const SIrrlichtCreationParameters& params, io::IFileSystem* io, CIrrDeviceWin32* device);
 		//! inits the windows specific parts of the open gl driver
-		bool initDriver(SIrrlichtCreationParameters params);
+		bool initDriver(SIrrlichtCreationParameters params, CIrrDeviceWin32* device);
+		bool changeRenderContext(const SExposedVideoData& videoData, CIrrDeviceWin32* device);
 		#endif
+
+		#ifdef _IRR_COMPILE_WITH_X11_DEVICE_
+		COpenGLDriver(const SIrrlichtCreationParameters& params, io::IFileSystem* io, CIrrDeviceLinux* device);
+		//! inits the GLX specific parts of the open gl driver
+		bool initDriver(SIrrlichtCreationParameters params, CIrrDeviceLinux* device);
+		bool changeRenderContext(const SExposedVideoData& videoData, CIrrDeviceLinux* device);
+		#endif
+
+		#ifdef _IRR_COMPILE_WITH_SDL_DEVICE_
+		COpenGLDriver(const SIrrlichtCreationParameters& params, io::IFileSystem* io, CIrrDeviceSDL* device);
+		#endif
+
+		#ifdef _IRR_COMPILE_WITH_OSX_DEVICE_
+		COpenGLDriver(const SIrrlichtCreationParameters& params, io::IFileSystem* io, CIrrDeviceMacOSX *device);
+		#endif
+
+		//! generic version which overloads the unimplemented versions
+		bool changeRenderContext(const SExposedVideoData& videoData, void* device) {return false;}
 
 		//! destructor
 		virtual ~COpenGLDriver();
@@ -97,7 +66,7 @@ namespace video
 		//! clears the zbuffer
 		virtual bool beginScene(bool backBuffer=true, bool zBuffer=true,
 				SColor color=SColor(255,0,0,0),
-				void* windowId=0,
+				const SExposedVideoData& videoData=SExposedVideoData(),
 				core::rect<s32>* sourceRect=0);
 
 		//! presents the rendered scene on the screen, returns false if failed
@@ -116,11 +85,7 @@ namespace video
 
 			GLuint vbo_verticesSize; //tmp
 			GLuint vbo_indicesSize; //tmp
-
 		};
-
-		bool updateVertexHardwareBuffer(SHWBufferLink_opengl *HWBuffer);
-		bool updateIndexHardwareBuffer(SHWBufferLink_opengl *HWBuffer);
 
 		//! updates hardware buffer if needed
 		virtual bool updateHardwareBuffer(SHWBufferLink *HWBuffer);
@@ -139,6 +104,11 @@ namespace video
 				const void* indexList, u32 primitiveCount,
 				E_VERTEX_TYPE vType, scene::E_PRIMITIVE_TYPE pType, E_INDEX_TYPE iType);
 
+		//! draws a vertex primitive list in 2d
+		virtual void draw2DVertexPrimitiveList(const void* vertices, u32 vertexCount,
+				const void* indexList, u32 primitiveCount,
+				E_VERTEX_TYPE vType, scene::E_PRIMITIVE_TYPE pType, E_INDEX_TYPE iType);
+
 		//! queries the features of the driver, returns true if feature is available
 		virtual bool queryFeature(E_VIDEO_DRIVER_FEATURE feature) const
 		{
@@ -149,6 +119,15 @@ namespace video
 		//! using this material.
 		//! \param material: Material to be used from now on.
 		virtual void setMaterial(const SMaterial& material);
+
+		//! draws a set of 2d images, using a color and the alpha channel of the
+		//! texture if desired.
+		void draw2DImageBatch(const video::ITexture* texture,
+				const core::array<core::position2d<s32> >& positions,
+				const core::array<core::rect<s32> >& sourceRects,
+				const core::rect<s32>* clipRect,
+				SColor color,
+				bool useAlphaChannelOfTexture);
 
 		//! draws an 2d image, using a color (if color is other then Color(255,255,255,255)) and the alpha channel of the texture if wanted.
 		virtual void draw2DImage(const video::ITexture* texture, const core::position2d<s32>& destPos,
@@ -213,8 +192,15 @@ namespace video
 		//! deletes all dynamic lights there are
 		virtual void deleteAllDynamicLights();
 
-		//! adds a dynamic light
-		virtual void addDynamicLight(const SLight& light);
+		//! adds a dynamic light, returning an index to the light
+		//! \param light: the light data to use to create the light
+		//! \return An index to the light, or -1 if an error occurs
+		virtual s32 addDynamicLight(const SLight& light);
+
+		//! Turns a dynamic light on or off
+		//! \param lightIndex: the index returned by addDynamicLight
+		//! \param turnOn: true to turn the light on, false to turn it off
+		virtual void turnLightOn(s32 lightIndex, bool turnOn);
 
 		//! returns the maximal amount of dynamic lights the device can handle
 		virtual u32 getMaximalDynamicLightAmount() const;
@@ -242,12 +228,12 @@ namespace video
 		virtual void setViewPort(const core::rect<s32>& area);
 
 		//! Sets the fog mode.
-		virtual void setFog(SColor color, bool linearFog, f32 start,
+		virtual void setFog(SColor color, E_FOG_TYPE fogType, f32 start,
 			f32 end, f32 density, bool pixelFog, bool rangeFog);
 
 		//! Only used by the internal engine. Used to notify the driver that
 		//! the window was resized.
-		virtual void OnResize(const core::dimension2d<s32>& size);
+		virtual void OnResize(const core::dimension2d<u32>& size);
 
 		//! Returns type of video driver
 		virtual E_DRIVER_TYPE getDriverType() const;
@@ -276,7 +262,7 @@ namespace video
 
 		//! sets the current Texture
 		//! Returns whether setting was a success or not.
-		bool setTexture(u32 stage, const video::ITexture* texture);
+		bool setActiveTexture(u32 stage, const video::ITexture* texture);
 
 		//! disables all textures beginning with the optional fromStage parameter. Otherwise all texture stages are disabled.
 		//! Returns whether disabling was successful or not.
@@ -289,13 +275,22 @@ namespace video
 			IShaderConstantSetCallBack* callback, E_MATERIAL_TYPE baseMaterial, s32 userData);
 
 		//! Adds a new material renderer to the VideoDriver, using GLSL to render geometry.
-		virtual s32 addHighLevelShaderMaterial(const c8* vertexShaderProgram, const c8* vertexShaderEntryPointName,
-			E_VERTEX_SHADER_TYPE vsCompileTarget, const c8* pixelShaderProgram, const c8* pixelShaderEntryPointName,
-			E_PIXEL_SHADER_TYPE psCompileTarget, IShaderConstantSetCallBack* callback, E_MATERIAL_TYPE baseMaterial,
-			s32 userData);
-
-		//! Returns pointer to the IGPUProgrammingServices interface.
-		virtual IGPUProgrammingServices* getGPUProgrammingServices();
+		virtual s32 addHighLevelShaderMaterial(
+				const c8* vertexShaderProgram,
+				const c8* vertexShaderEntryPointName,
+				E_VERTEX_SHADER_TYPE vsCompileTarget,
+				const c8* pixelShaderProgram,
+				const c8* pixelShaderEntryPointName,
+				E_PIXEL_SHADER_TYPE psCompileTarget,
+				const c8* geometryShaderProgram,
+				const c8* geometryShaderEntryPointName = "main",
+				E_GEOMETRY_SHADER_TYPE gsCompileTarget = EGST_GS_4_0,
+				scene::E_PRIMITIVE_TYPE inType = scene::EPT_TRIANGLES,
+				scene::E_PRIMITIVE_TYPE outType = scene::EPT_TRIANGLE_STRIP,
+				u32 verticesOut = 0,
+				IShaderConstantSetCallBack* callback = 0,
+				E_MATERIAL_TYPE baseMaterial = video::EMT_SOLID,
+				s32 userData = 0);
 
 		//! Returns a pointer to the IVideoDriver interface. (Implementation for
 		//! IMaterialRendererServices)
@@ -306,11 +301,20 @@ namespace video
 		//! call.
 		virtual u32 getMaximalPrimitiveCount() const;
 
-		virtual ITexture* addRenderTargetTexture(const core::dimension2d<s32>& size,
-				const c8* name);
+		virtual ITexture* addRenderTargetTexture(const core::dimension2d<u32>& size,
+				const io::path& name, const ECOLOR_FORMAT format = ECF_UNKNOWN);
 
+		//! set or reset render target
+		virtual bool setRenderTarget(video::E_RENDER_TARGET target, bool clearTarget,
+					bool clearZBuffer, SColor color);
+
+		//! set or reset render target texture
 		virtual bool setRenderTarget(video::ITexture* texture, bool clearBackBuffer,
 					bool clearZBuffer, SColor color);
+
+		//! Sets multiple render targets
+		virtual bool setRenderTarget(const core::array<video::IRenderTarget>& texture,
+			bool clearBackBuffer=true, bool clearZBuffer=true, SColor color=SColor(0,0,0,0));
 
 		//! Clears the ZBuffer.
 		virtual void clearZBuffer();
@@ -335,20 +339,35 @@ namespace video
 		//! \param enable: If true, enable the clipping plane else disable it.
 		virtual void enableClipPlane(u32 index, bool enable);
 
+		//! Enable the 2d override material
+		virtual void enableMaterial2D(bool enable=true);
+
 		//! Returns the graphics card vendor name.
-		virtual core::stringc getVendorInfo() {return vendorName;}
+		virtual core::stringc getVendorInfo() {return VendorName;}
+
+		//! Returns the maximum texture size supported.
+		virtual core::dimension2du getMaxTextureSize() const;
 
 		ITexture* createDepthTexture(ITexture* texture, bool shared=true);
 		void removeDepthTexture(ITexture* texture);
 
+		//! Convert E_PRIMITIVE_TYPE to OpenGL equivalent
+		GLenum primitiveTypeToGL(scene::E_PRIMITIVE_TYPE type) const;
+
 	private:
+
+		//! clears the zbuffer and color buffer
+		void clearBuffers(bool backBuffer, bool zBuffer, bool stencilBuffer, SColor color);
+
+		bool updateVertexHardwareBuffer(SHWBufferLink_opengl *HWBuffer);
+		bool updateIndexHardwareBuffer(SHWBufferLink_opengl *HWBuffer);
 
 		void uploadClipPlane(u32 index);
 
 		//! inits the parts of the open gl driver used on all platforms
-		bool genericDriverInit(const core::dimension2d<s32>& screenSize, bool stencilBuffer);
+		bool genericDriverInit(const core::dimension2d<u32>& screenSize, bool stencilBuffer);
 		//! returns a device dependent texture from a software surface (IImage)
-		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const char* name);
+		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name, void* mipmapData);
 
 		//! creates a transposed matrix in supplied GLfloat array to pass to OpenGL
 		inline void createGLMatrix(GLfloat gl_matrix[16], const core::matrix4& m);
@@ -357,6 +376,9 @@ namespace video
 		//! Set GL pipeline to desired texture wrap modes of the material
 		void setWrapMode(const SMaterial& material);
 
+		//! get native wrap mode value
+		GLint getTextureWrapMode(const u8 clamp);
+
 		//! sets the needed renderstates
 		void setRenderStates3DMode();
 
@@ -364,10 +386,21 @@ namespace video
 		void setRenderStates2DMode(bool alpha, bool texture, bool alphaChannel);
 
 		// returns the current size of the screen or rendertarget
-		virtual const core::dimension2d<s32>& getCurrentRenderTargetSize() const;
+		virtual const core::dimension2d<u32>& getCurrentRenderTargetSize() const;
 
 		void createMaterialRenderers();
 
+		//! Assign a hardware light to the specified requested light, if any
+		//! free hardware lights exist.
+		//! \param[in] lightIndex: the index of the requesting light
+		void assignHardwareLight(u32 lightIndex);
+
+		//! helper function for render setup.
+		void createColorBuffer(const void* vertices, u32 vertexCount, E_VERTEX_TYPE vType);
+
+		//! helper function doing the actual rendering.
+		void renderArray(const void* indexList, u32 primitiveCount,
+				scene::E_PRIMITIVE_TYPE pType, E_INDEX_TYPE iType);
 
 		core::stringw Name;
 		core::matrix4 Matrices[ETS_COUNT];
@@ -385,34 +418,68 @@ namespace video
 		//! bool to make all renderstates reset if set to true.
 		bool ResetRenderStates;
 		bool Transformation3DChanged;
-		bool AntiAlias;
+		u8 AntiAlias;
 
 		SMaterial Material, LastMaterial;
 		COpenGLTexture* RenderTargetTexture;
 		const ITexture* CurrentTexture[MATERIAL_MAX_TEXTURES];
 		core::array<ITexture*> DepthTextures;
-		s32 LastSetLight;
-		core::array<core::plane3df> UserClipPlane;
-		core::array<bool> UserClipPlaneEnabled;
+		struct SUserClipPlane
+		{
+			SUserClipPlane() : Enabled(false) {}
+			core::plane3df Plane;
+			bool Enabled;
+		};
+		core::array<SUserClipPlane> UserClipPlanes;
 
-		core::dimension2d<s32> CurrentRendertargetSize;
+		core::dimension2d<u32> CurrentRendertargetSize;
 
-		core::stringc vendorName;
+		core::stringc VendorName;
 
 		core::matrix4 TextureFlipMatrix;
 
 		//! Color buffer format
 		ECOLOR_FORMAT ColorFormat;
 
+		//! Render target type for render operations
+		E_RENDER_TARGET CurrentTarget;
+
+		bool Doublebuffer;
+		bool Stereo;
+
+		//! All the lights that have been requested; a hardware limited
+		//! number of them will be used at once.
+		struct RequestedLight
+		{
+			RequestedLight(SLight const & lightData)
+				: LightData(lightData), HardwareLightIndex(-1), DesireToBeOn(true) { }
+
+			SLight	LightData;
+			s32	HardwareLightIndex; // GL_LIGHT0 - GL_LIGHT7
+			bool	DesireToBeOn;
+		};
+		core::array<RequestedLight> RequestedLights;
+
 		#ifdef _IRR_WINDOWS_API_
 			HDC HDc; // Private GDI Device Context
 			HWND Window;
-			HGLRC HRc; // Permanent Rendering Context
-		#elif defined(_IRR_USE_LINUX_DEVICE_)
-			GLXDrawable Drawable;
-		#elif defined(_IRR_USE_OSX_DEVICE_)
-			CIrrDeviceMacOSX *_device;
+		#ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
+			CIrrDeviceWin32 *Device;
 		#endif
+		#endif
+		#ifdef _IRR_COMPILE_WITH_X11_DEVICE_
+			GLXDrawable Drawable;
+			Display* X11Display;
+			CIrrDeviceLinux *Device;
+		#endif
+		#ifdef _IRR_COMPILE_WITH_OSX_DEVICE_
+			CIrrDeviceMacOSX *Device;
+		#endif
+		#ifdef _IRR_COMPILE_WITH_SDL_DEVICE_
+			CIrrDeviceSDL *Device;
+		#endif
+
+		E_DEVICE_TYPE DeviceType;
 	};
 
 } // end namespace video

@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -6,13 +6,14 @@
 #define __I_WRITE_FILE_H_INCLUDED__
 
 #include "IReferenceCounted.h"
+#include "path.h"
 
 namespace irr
 {
 namespace io
 {
 
-	//! Interface providing write acess to a file.
+	//! Interface providing write access to a file.
 	class IWriteFile : public virtual IReferenceCounted
 	{
 	public:
@@ -36,11 +37,11 @@ namespace io
 
 		//! Get name of file.
 		/** \return File name as zero terminated character string. */
-		virtual const c8* getFileName() const = 0;
+		virtual const path& getFileName() const = 0;
 	};
 
 	//! Internal function, please do not use.
-	IWriteFile* createWriteFile(const c8* fileName, bool append);
+	IWriteFile* createWriteFile(const io::path& fileName, bool append);
 
 } // end namespace io
 } // end namespace irr

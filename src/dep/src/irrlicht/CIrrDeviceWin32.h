@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -6,17 +6,18 @@
 #define __C_IRR_DEVICE_WIN32_H_INCLUDED__
 
 #include "IrrCompileConfig.h"
-#ifdef _IRR_USE_WINDOWS_DEVICE_
+#ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
 
 #include "CIrrDeviceStub.h"
 #include "IrrlichtDevice.h"
 #include "IImagePresenter.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-#include <mmsystem.h> // For JOYCAPS
-
+#if !defined(_IRR_XBOX_PLATFORM_)
+	#include <windows.h>
+	#include <mmsystem.h> // For JOYCAPS
+	#include <Windowsx.h>
+#endif
 
 namespace irr
 {
@@ -65,20 +66,60 @@ namespace irr
 		//! Notifies the device, that it has been resized
 		void OnResized();
 
-		//! Sets if the window should be resizeable in windowed mode.
-		virtual void setResizeAble(bool resize=false);
+		//! Sets if the window should be resizable in windowed mode.
+		virtual void setResizable(bool resize=false);
+
+		//! Minimizes the window.
+		virtual void minimizeWindow();
+
+		//! Maximizes the window.
+		virtual void maximizeWindow();
+
+		//! Restores the window size.
+		virtual void restoreWindow();
 
 		//! Activate any joysticks, and generate events for them.
 		virtual bool activateJoysticks(core::array<SJoystickInfo> & joystickInfo);
+
+		//! Set the current Gamma Value for the Display
+		virtual bool setGammaRamp( f32 red, f32 green, f32 blue, f32 brightness, f32 contrast );
+
+		//! Get the current Gamma Value for the Display
+		virtual bool getGammaRamp( f32 &red, f32 &green, f32 &blue, f32 &brightness, f32 &contrast );
+
+		//! Remove all messages pending in the system message loop
+		virtual void clearSystemMessages();
+
+		//! Get the device type
+		virtual E_DEVICE_TYPE getType() const
+		{
+				return EIDT_WIN32;
+		}
+
+		//! Compares to the last call of this function to return double and triple clicks.
+		//! \return Returns only 1,2 or 3. A 4th click will start with 1 again.
+		virtual u32 checkSuccessiveClicks(s32 mouseX, s32 mouseY, EMOUSE_INPUT_EVENT inputEvent )
+		{
+			// we just have to make it public
+			return CIrrDeviceStub::checkSuccessiveClicks(mouseX, mouseY, inputEvent );
+		}
+
+		//! switchs to fullscreen
+		bool switchToFullScreen(bool reset=false);
+
+		//! Check for and show last Windows API error to help internal debugging.
+		//! Does call GetLastError and on errors formats the errortext and displays it in a messagebox.
+		static void ReportLastWinApiError();
 
 		//! Implementation of the win32 cursor control
 		class CCursorControl : public gui::ICursorControl
 		{
 		public:
 
-			CCursorControl(const core::dimension2d<s32>& wsize, HWND hwnd, bool fullscreen)
-				: WindowSize(wsize), InvWindowSize(0.0f, 0.0f), IsVisible(true),
-					HWnd(hwnd), BorderX(0), BorderY(0), UseReferenceRect(false)
+			CCursorControl(const core::dimension2d<u32>& wsize, HWND hwnd, bool fullscreen)
+				: WindowSize(wsize), InvWindowSize(0.0f, 0.0f),
+					HWnd(hwnd), BorderX(0), BorderY(0),
+					UseReferenceRect(false), IsVisible(true)
 			{
 				if (WindowSize.Width!=0)
 					InvWindowSize.Width = 1.0f / WindowSize.Width;
@@ -86,19 +127,31 @@ namespace irr
 				if (WindowSize.Height!=0)
 					InvWindowSize.Height = 1.0f / WindowSize.Height;
 
-				if (!fullscreen)
-				{
-					BorderX = GetSystemMetrics(SM_CXDLGFRAME);
-					BorderY = GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYDLGFRAME);
-				}
+				updateBorderSize(fullscreen, false);
 			}
 
 			//! Changes the visible state of the mouse cursor.
 			virtual void setVisible(bool visible)
 			{
+				CURSORINFO info;
+				info.cbSize = sizeof(CURSORINFO);
+				BOOL gotCursorInfo = GetCursorInfo(&info);
+				while ( gotCursorInfo )
+				{
+					if ( (visible && info.flags == CURSOR_SHOWING) 	// visible
+						|| (!visible && info.flags == 0 ) )			// hidden
+					{
+						break;
+					}
+					int showResult = ShowCursor(visible);   // this only increases an internal display counter in windows, so it might have to be called some more
+					if ( showResult < 0 )
+					{
+						break;
+					}
+					info.cbSize = sizeof(CURSORINFO);	// yes, it really must be set each time
+					gotCursorInfo = GetCursorInfo(&info);
+				}
 				IsVisible = visible;
-				updateInternalCursorPosition();
-				setPosition(CursorPos.X, CursorPos.Y);
 			}
 
 			//! Returns if the cursor is currently visible.
@@ -118,9 +171,9 @@ namespace irr
 			virtual void setPosition(f32 x, f32 y)
 			{
 				if (!UseReferenceRect)
-					setPosition((s32)(x*WindowSize.Width), (s32)(y*WindowSize.Height));
+					setPosition(core::round32(x*WindowSize.Width), core::round32(y*WindowSize.Height));
 				else
-					setPosition((s32)(x*ReferenceRect.getWidth()), (s32)(y*ReferenceRect.getHeight()));
+					setPosition(core::round32(x*ReferenceRect.getWidth()), core::round32(y*ReferenceRect.getHeight()));
 			}
 
 			//! Sets the new position of the cursor.
@@ -132,15 +185,14 @@ namespace irr
 			//! Sets the new position of the cursor.
 			virtual void setPosition(s32 x, s32 y)
 			{
-				RECT rect;
-
 				if (UseReferenceRect)
 				{
-					SetCursorPos(ReferenceRect.UpperLeftCorner.X + x, 
+					SetCursorPos(ReferenceRect.UpperLeftCorner.X + x,
 								 ReferenceRect.UpperLeftCorner.Y + y);
 				}
 				else
 				{
+					RECT rect;
 					if (GetWindowRect(HWnd, &rect))
 						SetCursorPos(x + rect.left + BorderX, y + rect.top + BorderY);
 				}
@@ -150,7 +202,7 @@ namespace irr
 			}
 
 			//! Returns the current position of the mouse cursor.
-			virtual core::position2d<s32> getPosition()
+			virtual const core::position2d<s32>& getPosition()
 			{
 				updateInternalCursorPosition();
 				return CursorPos;
@@ -191,14 +243,55 @@ namespace irr
 					UseReferenceRect = false;
 			}
 
+			/** Used to notify the cursor that the window was resized. */
+			virtual void OnResize(const core::dimension2d<u32>& size)
+			{
+				WindowSize = size;
+				if (size.Width!=0)
+					InvWindowSize.Width = 1.0f / size.Width;
+				else
+					InvWindowSize.Width = 0.f;
+
+				if (size.Height!=0)
+					InvWindowSize.Height = 1.0f / size.Height;
+				else
+					InvWindowSize.Height = 0.f;
+			}
+
+			/** Used to notify the cursor that the window resizable settings changed. */
+			void updateBorderSize(bool fullscreen, bool resizable)
+			{
+			   if (!fullscreen)
+			   {
+				  if (resizable)
+				  {
+					 BorderX = GetSystemMetrics(SM_CXSIZEFRAME);
+					 BorderY = GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYSIZEFRAME);
+				  }
+				  else
+				  {
+					 BorderX = GetSystemMetrics(SM_CXDLGFRAME);
+					 BorderY = GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYDLGFRAME);
+				  }
+			   }
+			   else
+			   {
+				  BorderX = BorderY = 0;
+			   }
+			}
+
 		private:
 
 			//! Updates the internal cursor position
 			void updateInternalCursorPosition()
 			{
 				POINT p;
-				GetCursorPos(&p);
-				RECT rect;
+				if (!GetCursorPos(&p))
+				{
+					DWORD xy = GetMessagePos();
+					p.x = GET_X_LPARAM(xy);
+					p.y = GET_Y_LPARAM(xy);
+				}
 
 				if (UseReferenceRect)
 				{
@@ -207,6 +300,7 @@ namespace irr
 				}
 				else
 				{
+					RECT rect;
 					if (GetWindowRect(HWnd, &rect))
 					{
 						CursorPos.X = p.x-rect.left-BorderX;
@@ -223,14 +317,14 @@ namespace irr
 			}
 
 			core::position2d<s32> CursorPos;
-			core::dimension2d<s32> WindowSize;
+			core::dimension2d<u32> WindowSize;
 			core::dimension2d<f32> InvWindowSize;
-			bool IsVisible;
 			HWND HWnd;
 
 			s32 BorderX, BorderY;
-			bool UseReferenceRect;
 			core::rect<s32> ReferenceRect;
+			bool UseReferenceRect;
+			bool IsVisible;
 		};
 
 		//! returns the win32 cursor control
@@ -241,14 +335,11 @@ namespace irr
 		//! create the driver
 		void createDriver();
 
-		//! switchs to fullscreen
-		bool switchToFullScreen(s32 width, s32 height, s32 bits);
-
 		void getWindowsVersion(core::stringc& version);
 
 		void resizeIfNecessary();
 
-		void pollJoysticks(); 
+		void pollJoysticks();
 
 		HWND HWnd;
 
@@ -258,16 +349,17 @@ namespace irr
 		bool ExternalWindow;
 		CCursorControl* Win32CursorControl;
 
+#if defined(_IRR_COMPILE_WITH_JOYSTICK_EVENTS_)
 		struct JoystickInfo
 		{
 			u32		Index;
 			JOYCAPS Caps;
 		};
 		core::array<JoystickInfo> ActiveJoysticks;
+#endif
 	};
 
 } // end namespace irr
 
-#endif
-#endif
-
+#endif // _IRR_COMPILE_WITH_WINDOWS_DEVICE_
+#endif // __C_IRR_DEVICE_WIN32_H_INCLUDED__

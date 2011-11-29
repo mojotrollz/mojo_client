@@ -73,7 +73,7 @@ void CM2Mesh::animateMesh(f32 frame, f32 blend)
 
     LastAnimatedFrame=frame;
     SkinnedLastFrame=false;
-    
+
     if (blend<=0.f)
         return; //No need to animate
 
@@ -118,7 +118,7 @@ void CM2Mesh::animateMesh(f32 frame, f32 blend)
 
 void CM2Mesh::buildAllAnimatedMatrices(SJoint *joint, SJoint *parentJoint)
 {
-    
+
     if (!joint)
     {
         for (u32 i=0; i<RootJoints.size(); ++i)
@@ -138,13 +138,13 @@ void CM2Mesh::buildAllAnimatedMatrices(SJoint *joint, SJoint *parentJoint)
         {
             joint->GlobalAnimatedMatrix= core::matrix4();
             joint->GlobalAnimatedMatrix.setTranslation(joint->LocalMatrix.getTranslation());
-            
+
             core::matrix4 tm;
             tm.setTranslation(joint->Animatedposition);
             joint->GlobalAnimatedMatrix*=tm;
-            
+
             joint->GlobalAnimatedMatrix*=joint->Animatedrotation.getMatrix();
-        
+
             core::matrix4 ts;
             ts.setScale(joint->Animatedscale);
             joint->GlobalAnimatedMatrix*=ts;
@@ -369,7 +369,7 @@ void CM2Mesh::skinMesh()
 {
     if ( !HasAnimation || SkinnedLastFrame )
         return;
-    
+
     SkinnedLastFrame=true;
     if (!HardwareSkinning)
     {
@@ -544,8 +544,8 @@ void CM2Mesh::setHardwareMappingHint(E_HARDWARE_MAPPING newMappingHint,
         for (u32 i=0; i<LocalBuffers.size(); ++i)
                 LocalBuffers[i]->setHardwareMappingHint(newMappingHint, buffer);
 }
- 
- 
+
+
 //! flags the meshbuffer as changed, reloads hardware buffers
 void CM2Mesh::setDirty(E_BUFFER_TYPE buffer)
 {
@@ -1008,7 +1008,7 @@ if (HasAnimation)
             Buffer->Transformation=AllJoints[i]->GlobalAnimatedMatrix;
         }
     }
-    
+
     //calculate bounding box
     if (LocalBuffers.empty())
         BoundingBox.reset(0,0,0);
@@ -1050,7 +1050,7 @@ void CM2Mesh::updateBoundingBox(void)
 
 
 
-scene::SSkinMeshBuffer *CM2Mesh::createBuffer()
+scene::SSkinMeshBuffer *CM2Mesh::addMeshBuffer()
 {
     scene::SSkinMeshBuffer *buffer=new scene::SSkinMeshBuffer();
     LocalBuffers.push_back(buffer);
@@ -1058,7 +1058,7 @@ scene::SSkinMeshBuffer *CM2Mesh::createBuffer()
 }
 
 
-CM2Mesh::SJoint *CM2Mesh::createJoint(SJoint *parent)
+CM2Mesh::SJoint *CM2Mesh::addJoint(SJoint *parent)
 {
     SJoint *joint=new SJoint;
 
@@ -1077,7 +1077,7 @@ CM2Mesh::SJoint *CM2Mesh::createJoint(SJoint *parent)
 }
 
 
-CM2Mesh::SPositionKey *CM2Mesh::createPositionKey(SJoint *joint)
+CM2Mesh::SPositionKey *CM2Mesh::addPositionKey(SJoint *joint)
 {
     if (!joint)
         return 0;
@@ -1087,7 +1087,7 @@ CM2Mesh::SPositionKey *CM2Mesh::createPositionKey(SJoint *joint)
 }
 
 
-CM2Mesh::SScaleKey *CM2Mesh::createScaleKey(SJoint *joint)
+CM2Mesh::SScaleKey *CM2Mesh::addScaleKey(SJoint *joint)
 {
     if (!joint)
         return 0;
@@ -1097,7 +1097,7 @@ CM2Mesh::SScaleKey *CM2Mesh::createScaleKey(SJoint *joint)
 }
 
 
-CM2Mesh::SRotationKey *CM2Mesh::createRotationKey(SJoint *joint)
+CM2Mesh::SRotationKey *CM2Mesh::addRotationKey(SJoint *joint)
 {
     if (!joint)
         return 0;
@@ -1107,7 +1107,7 @@ CM2Mesh::SRotationKey *CM2Mesh::createRotationKey(SJoint *joint)
 }
 
 
-CM2Mesh::SWeight *CM2Mesh::createWeight(SJoint *joint)
+CM2Mesh::SWeight *CM2Mesh::addWeight(SJoint *joint)
 {
     if (!joint)
         return 0;
@@ -1289,7 +1289,7 @@ void CM2Mesh::convertMeshToTangents()
     {
         if (LocalBuffers[b])
         {
-            LocalBuffers[b]->MoveTo_Tangents();
+            LocalBuffers[b]->convertToTangents();
 
             const s32 idxCnt = LocalBuffers[b]->getIndexCount();
 
@@ -1392,11 +1392,11 @@ void CM2Mesh::getFrameLoop(u32 id, s32 &start, s32 &end)
         found=true;
     }
     start = a.begin;
-    end = a.end;    
+    end = a.end;
   }
   else
     return;
-  
+
 }
 
 void CM2Mesh::newAnimation(u32 id, s32 start, s32 end, f32 probability)
@@ -1441,7 +1441,7 @@ bool CM2Mesh::getGeoSetRender(u32 meshbufferNumber)//This gets the render status
   {
     return GeoSetRender[meshbufferNumber];
   }
-  else 
+  else
     return false;
 };
 

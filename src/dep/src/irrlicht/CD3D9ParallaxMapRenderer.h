@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -9,7 +9,10 @@
 #ifdef _IRR_WINDOWS_
 
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
-#include "d3d9.h"
+#if defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#include "irrMath.h"    // needed by borland for sqrtf define
+#endif
+#include <d3d9.h>
 
 #include "CD3D9ShaderMaterialRenderer.h"
 #include "IShaderConstantSetCallBack.h"
@@ -40,6 +43,7 @@ public:
 	//! Returns the render capability of the material.
 	virtual s32 getRenderCapability() const;
 
+	virtual void OnSetMaterial(const SMaterial& material) { }
 	virtual void OnSetMaterial(const video::SMaterial& material,
 		const video::SMaterial& lastMaterial,
 		bool resetAllRenderstates, video::IMaterialRendererServices* services);

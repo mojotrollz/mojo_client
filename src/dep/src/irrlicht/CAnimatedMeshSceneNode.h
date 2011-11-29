@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -57,8 +57,11 @@ namespace scene
 		//! playback has ended. Set this to 0 to disable the callback again.
 		virtual void setAnimationEndCallback(IAnimationEndCallBack* callback=0);
 
-		//! sets the speed with witch the animation is played
+		//! sets the speed with which the animation is played
 		virtual void setAnimationSpeed(f32 framesPerSecond);
+
+		//! gets the speed with which the animation is played
+		virtual f32 getAnimationSpeed() const;
 
 		//! returns the material based on the zero based index i. To get the amount
 		//! of materials used by this scene node, use getMaterialCount().
@@ -96,8 +99,10 @@ namespace scene
 		//! or to remove attached childs.
 		virtual bool removeChild(ISceneNode* child);
 
+        //PSEUWOW
         //! Starts a M2 animation.
         virtual bool setM2Animation(u32 anim);
+        //PSEUWOW
 
         //! Starts a MD2 animation.
         virtual bool setMD2Animation(EMD2_ANIMATION_TYPE anim);
@@ -137,7 +142,7 @@ namespace scene
 
 		// returns the absolute transformation for a special MD3 Tag if the mesh is a md3 mesh,
 		// or the absolutetransformation if it's a normal scenenode
-		const SMD3QuaterionTag& getMD3TagTransformation( const core::stringc & tagname);
+		const SMD3QuaternionTag* getMD3TagTransformation( const core::stringc & tagname);
 
 		//! updates the absolute position based on the relative and the parents position
 		virtual void updateAbsolutePosition();
@@ -165,31 +170,29 @@ namespace scene
 	private:
 
 		//! Get a static mesh for the current frame of this animated mesh
-		IMesh* getMeshForCurrentFrame(void);
+		IMesh* getMeshForCurrentFrame();
 
-		f32 buildFrameNr( u32 timeMs);
+		void buildFrameNr(u32 timeMs);
 		void checkJoints();
 		void beginTransition();
 
 		core::array<video::SMaterial> Materials;
 		core::aabbox3d<f32> Box;
 		IAnimatedMesh* Mesh;
-		IMesh* MeshForCurrentFrame;
 
-		u32 BeginFrameTime;
 		s32 StartFrame;
 		s32 EndFrame;
 		f32 FramesPerSecond;
 		f32 CurrentFrameNr;
-		f32 FrameWhenCurrentMeshWasGenerated;
+
+		u32 LastTimeMs;
+		u32 TransitionTime; //Transition time in millisecs
+		f32 Transiting; //is mesh transiting (plus cache of TransitionTime)
+		f32 TransitingBlend; //0-1, calculated on buildFrameNr
 
 		//0-unused, 1-get joints only, 2-set joints only, 3-move and set
 		E_JOINT_UPDATE_ON_RENDER JointMode;
 		bool JointsUsed;
-
-		u32 TransitionTime; //Transition time in millisecs
-		f32 Transiting; //is mesh transiting (plus cache of TransitionTime)
-		f32 TransitingBlend; //0-1, calculated on buildFrameNr
 
 		bool Looping;
 		bool ReadOnlyMaterials;
@@ -203,10 +206,11 @@ namespace scene
 		core::array<IBoneSceneNode* > JointChildSceneNodes;
 		core::array<core::matrix4> PretransitingSave;
 
-		struct SMD3Special
+		// Quake3 Model
+		struct SMD3Special : public virtual IReferenceCounted
 		{
 			core::stringc Tagname;
-			SMD3QuaterionTagList AbsoluteTagList;
+			SMD3QuaternionTagList AbsoluteTagList;
 
 			SMD3Special & operator = (const SMD3Special & copyMe)
 			{
@@ -215,7 +219,7 @@ namespace scene
 				return *this;
 			}
 		};
-		SMD3Special MD3Special;
+		SMD3Special *MD3Special;
 	};
 
 } // end namespace scene

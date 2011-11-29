@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -181,13 +181,13 @@ core::stringw CAttributes::getAttributeAsStringW(s32 index)
 
 
 //! Adds an attribute as an array of wide strings
-void CAttributes::addArray(const c8* attributeName, core::array<core::stringw> value)
+void CAttributes::addArray(const c8* attributeName, const core::array<core::stringw>& value)
 {
 	Attributes.push_back(new CStringWArrayAttribute(attributeName, value));
 }
 
 //! Sets an attribute value as an array of wide strings.
-void CAttributes::setAttribute(const c8* attributeName, const core::array<core::stringw> value)
+void CAttributes::setAttribute(const c8* attributeName, const core::array<core::stringw>& value)
 {
 	IAttribute* att = getAttributeP(attributeName);
 	if (att)
@@ -220,7 +220,7 @@ core::array<core::stringw> CAttributes::getAttributeAsArray(s32 index)
 }
 
 //! Sets an attribute as an array of wide strings
-void CAttributes::setAttribute(s32 index, core::array<core::stringw> value)
+void CAttributes::setAttribute(s32 index, const core::array<core::stringw>& value)
 {
 	if (index >= 0 && index < (s32)Attributes.size() )
 		Attributes[index]->setArray(value);
@@ -1366,6 +1366,12 @@ void CAttributes::readAttributeFromXML(io::IXMLReader* reader)
 		Attributes.getLast()->setString(reader->getAttributeValue(L"value"));
 	}
 	else
+	if (element == L"binary")
+	{
+		addBinary(name.c_str(), 0, 0);
+		Attributes.getLast()->setString(reader->getAttributeValue(L"value"));
+	}
+	else
 	if (element == L"color")
 	{
 		addColor(name.c_str(), video::SColor());
@@ -1398,7 +1404,7 @@ void CAttributes::readAttributeFromXML(io::IXMLReader* reader)
 	else
 	if (element == L"string")
 	{
-		addString(name.c_str(), "");
+		addString(name.c_str(), L"");
 		Attributes.getLast()->setString(reader->getAttributeValue(L"value"));
 	}
 	else
@@ -1480,6 +1486,12 @@ void CAttributes::readAttributeFromXML(io::IXMLReader* reader)
 			tmpArray.push_back(reader->getAttributeValue((tmpName+core::stringw(n)).c_str()));
 		}
 		addArray(name.c_str(),tmpArray);
+	}
+	else
+	if (element == L"userPointer")
+	{
+		// It's debatable if a pointer should be set or not, but it's more likely that adding it now would wreck user-applications.
+		// Also it probably doesn't makes sense setting this to a value when it comes from file.
 	}
 }
 

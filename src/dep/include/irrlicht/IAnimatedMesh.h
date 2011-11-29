@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -47,8 +47,10 @@ namespace scene
 		can be loaded directly by Irrlicht */
 		EAMT_OCT,
 
+        //PSEUWOW
         //! WoW M2 files
         EAMT_M2,
+        //PSEUWOW END
 
 		//! generic skinned mesh
 		EAMT_SKINNED

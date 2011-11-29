@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -101,7 +101,7 @@ struct SColladaImage
 {
 	core::stringc Id;
 	core::stringc Source;
-	core::dimension2di Dimension;
+	core::dimension2du Dimension;
 	bool SourceIsFilename;
 };
 
@@ -121,7 +121,7 @@ struct SColladaMaterial
 	core::stringc Id;
 	core::stringc InstanceEffectId;
 	f32 Transparency;
-	
+
 	inline bool operator< (const SColladaMaterial & other) const
 	{
 		return Id < other.Id;
@@ -134,7 +134,7 @@ struct SColladaEffect
 	video::SMaterial Mat;
 	core::stringc Id;
 	f32 Transparency;
-	
+
 	inline bool operator< (const SColladaEffect & other) const
 	{
 		return Id < other.Id;
@@ -184,7 +184,7 @@ public:
 
 	//! returns true if the file maybe is able to be loaded by this class
 	//! based on the file extension (e.g. ".cob")
-	virtual bool isALoadableFileExtension(const c8* fileName) const;
+	virtual bool isALoadableFileExtension(const io::path& filename) const;
 
 	//! creates/loads an animated mesh from the file.
 	//! \return Pointer to the created mesh. Returns 0 if loading failed.
@@ -246,9 +246,13 @@ private:
 	//! reads a <float> element
 	f32 readFloatNode(io::IXMLReaderUTF8* reader);
 
-	//! reads a <instance> node and creates a scene node from it
+	//! reads a <instance> node
 	void readInstanceNode(io::IXMLReaderUTF8* reader, scene::ISceneNode* parent,
 		scene::ISceneNode** outNode, CScenePrefab* p=0);
+
+	//! creates a scene node from Prefabs (with name given in 'url')
+	void instantiateNode(scene::ISceneNode* parent, scene::ISceneNode** outNode=0,
+			CScenePrefab* p=0, const core::stringc& url="");
 
 	//! reads a <light> element and stores it as prefab
 	void readLightPrefab(io::IXMLReaderUTF8* reader);
@@ -317,10 +321,10 @@ private:
 	void readPolygonSection(io::IXMLReaderUTF8* reader,
 		const core::stringc& vertexPositionSource, core::array<SSource>& sources,
 		scene::SMesh* mesh, const core::stringc& geometryId);
-	
+
 	//! finds a material, possible instancing it
 	const SColladaMaterial * findMaterial(const core::stringc & materialName);
-	
+
 	//! reads and bind materials as given by the symbol->target bind mapping
 	void readBindMaterialSection(io::IXMLReaderUTF8* reader, const core::stringc & id);
 
@@ -337,7 +341,7 @@ private:
 	core::stringc CurrentlyLoadingMesh;
 
 	scene::IAnimatedMesh* FirstLoadedMesh;
-	core::stringc FirstLoadedMeshName;
+	io::path FirstLoadedMeshName;
 	s32 LoadedMeshCount;
 	u32 Version;
 	bool FlipAxis;

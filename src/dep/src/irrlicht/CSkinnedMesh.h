@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -134,20 +134,25 @@ namespace scene
 		//! loaders should call this after populating the mesh
 		virtual void finalize();
 
-		virtual SSkinMeshBuffer *createBuffer();
+		//! Adds a new meshbuffer to the mesh, access it as last one
+		virtual SSkinMeshBuffer *addMeshBuffer();
 
-		virtual SJoint *createJoint(SJoint *parent=0);
+		//! Adds a new joint to the mesh, access it as last one
+		virtual SJoint *addJoint(SJoint *parent=0);
 
-		virtual SPositionKey *createPositionKey(SJoint *joint);
-		virtual SRotationKey *createRotationKey(SJoint *joint);
-		virtual SScaleKey *createScaleKey(SJoint *joint);
+		//! Adds a new position key to the mesh, access it as last one
+		virtual SPositionKey *addPositionKey(SJoint *joint);
+		//! Adds a new rotation key to the mesh, access it as last one
+		virtual SRotationKey *addRotationKey(SJoint *joint);
+		//! Adds a new scale key to the mesh, access it as last one
+		virtual SScaleKey *addScaleKey(SJoint *joint);
 
-		virtual SWeight *createWeight(SJoint *joint);
+		//! Adds a new weight to the mesh, access it as last one
+		virtual SWeight *addWeight(SJoint *joint);
 
 		virtual void updateBoundingBox(void);
 
 private:
-
 		void checkForAnimation();
 
 		void normalizeWeights();
@@ -177,32 +182,26 @@ private:
 		core::array<SJoint*> AllJoints;
 		core::array<SJoint*> RootJoints;
 
-		bool HasAnimation;
+		core::aabbox3d<f32> BoundingBox;
 
-		bool PreparedForSkinning;
+		core::array< core::array<bool> > Vertices_Moved;
 
 		f32 AnimationFrames;
 
 		f32 LastAnimatedFrame;
 		f32 LastSkinnedFrame;
-		bool BoneControlUsed;
-
-		bool AnimateNormals;
-
-		bool HardwareSkinning;
-
 
 		E_INTERPOLATION_MODE InterpolationMode;
 
-		core::aabbox3d<f32> BoundingBox;
-
-		core::array< core::array<bool> > Vertices_Moved;
+		bool HasAnimation;
+		bool PreparedForSkinning;
+		bool BoneControlUsed;
+		bool AnimateNormals;
+		bool HardwareSkinning;
 	};
 
 } // end namespace scene
 } // end namespace irr
 
 #endif
-
-
 

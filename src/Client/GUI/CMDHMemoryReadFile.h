@@ -39,7 +39,7 @@ public:
 	virtual long getPos() const;
 
 	//! returns name of file
-	virtual const c8* getFileName() const;
+	virtual const path& getFileName() const;
 
 private:
 

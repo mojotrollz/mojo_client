@@ -66,11 +66,11 @@ void CCursorController::render()
 void CCursorController::addMouseCursorTexture(c8* Cursor_file, bool top_left)
 {
    m_pMouseCursor = videoDriver->getTexture(Cursor_file);
-   
+
    bool isAlreadyLoaded = false;
    for(u32 i = 0; i < m_aMouseCursors.size() && !isAlreadyLoaded; i++)
    {
-      if(m_aMouseCursors[i].tex->getName() == m_pMouseCursor->getName())
+      if(m_aMouseCursors[i].tex->getName().getInternalName() == m_pMouseCursor->getName().getInternalName())
       {
          isAlreadyLoaded = !isAlreadyLoaded;
          break;

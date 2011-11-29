@@ -24,7 +24,7 @@ SceneCharSelection::SceneCharSelection(PseuGUI *gui) : Scene(gui)
 {
     realmwin = NULL;
     newcharwin = NULL;
-    
+
     textdb = instance->dbmgr.GetDB("gui_charselect_text");
     racedb = instance->dbmgr.GetDB("race");
     classdb = instance->dbmgr.GetDB("class");
@@ -35,8 +35,8 @@ SceneCharSelection::SceneCharSelection(PseuGUI *gui) : Scene(gui)
     eventrecv->customHandledEvents.insert(EGET_LISTBOX_SELECTED_AGAIN);
     eventrecv->store_mouse = false; // do not queue mouse input
 
-    dimension2d<s32> scrn = driver->getScreenSize();
-    
+    dimension2d<u32> scrn = driver->getScreenSize();
+
     guienv->addButton(CalcRelativeScreenPos(driver, 0.45f ,0.9f, 0.15f, 0.05f), NULL, BUTTON_ENTER_WORLD,
         GetStringFromDB(ISCENE_CHARSEL_BUTTONS, DSCENE_CHARSEL_BUTTON_ENTERWORLD).c_str());
     guienv->addButton(CalcRelativeScreenPos(driver, 0.9f, 0.92f, 0.08f, 0.03f), NULL, BUTTON_BACK,
@@ -150,7 +150,7 @@ void SceneCharSelection::OnUpdate(s32 timepassed)
                     }
                 }
 
-                
+
             }
         }
     }
@@ -189,7 +189,7 @@ void SceneCharSelection::OnUpdate(s32 timepassed)
     }
     if(eventrecv->buttons & BUTTON_NEW_CHARACTER && !newcharwin)
     {
-        dimension2d<s32> dim;
+        dimension2d<u32> dim;
         rect<s32> pos;
         msgbox_textid = 0;
         newcharwin = guienv->addWindow(CalcRelativeScreenPos(driver, 0.2f, 0.2f, 0.6f, 0.6f), true,
@@ -227,7 +227,7 @@ void SceneCharSelection::OnUpdate(s32 timepassed)
         scenedata[ISCENE_CHARSEL_REALMFIRST] = 0;
         if(instance->GetRSession())
         {
-            dimension2d<s32> dim;
+            dimension2d<u32> dim;
             rect<s32> pos;
             realmwin = guienv->addWindow(CalcRelativeScreenPos(driver, 0.2f, 0.2f, 0.6f, 0.6f), true,
                 GetStringFromDB(ISCENE_CHARSEL_LABELS, DSCENE_CHARSEL_LABEL_REALMWIN).c_str());
@@ -286,7 +286,7 @@ void SceneCharSelection::OnUpdate(s32 timepassed)
         {
             guienv->addMessageBox(L"Not yet implemented!", L"This action is not yet supported.\nYou can change the realm only while still connected to the realm server.");
         }
-    }    
+    }
     if(eventrecv->buttons & BUTTON_REALMWIN_OK && realmwin)
     {
         RealmSession *rs = instance->GetRSession();
@@ -341,7 +341,7 @@ void SceneCharSelection::OnUpdate(s32 timepassed)
         newcharwin->remove();
         newcharwin = NULL;
     }
-    
+
     if(newcharwin && msgbox_textid != scenedata[ISCENE_CHARSEL_ERRMSG])
     {
         msgbox_textid = scenedata[ISCENE_CHARSEL_ERRMSG];

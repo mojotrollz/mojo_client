@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -35,8 +35,14 @@ namespace gui
 		//! returns string of an item. the idx may be a value from 0 to itemCount-1
 		virtual const wchar_t* getItem(u32 idx) const;
 
+		//! Returns item data of an item. the idx may be a value from 0 to itemCount-1
+		virtual u32 getItemData(u32 idx) const;
+
+		//! Returns index based on item data
+		virtual s32 getIndexForItemData( u32 data ) const;
+
 		//! adds an item and returns the index of it
-		virtual u32 addItem(const wchar_t* text);
+		virtual u32 addItem(const wchar_t* text, u32 data);
 
 		//! Removes an item from the combo box.
 		virtual void removeItem(u32 id);
@@ -76,11 +82,22 @@ namespace gui
 		IGUIButton* ListButton;
 		IGUIStaticText* SelectedText;
 		IGUIListBox* ListBox;
-		core::array< core::stringw > Items;
-		s32 Selected;
-		bool HasFocus;
 		IGUIElement *LastFocus;
+
+
+		struct SComboData
+		{
+			SComboData ( const wchar_t * text, u32 data )
+				: Name (text), Data ( data ) {}
+
+			core::stringw Name;
+			u32 Data;
+		};
+		core::array< SComboData > Items;
+
+		s32 Selected;
 		EGUI_ALIGNMENT HAlign, VAlign;
+		bool HasFocus;
 	};
 
 

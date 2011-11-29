@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -18,10 +18,11 @@ namespace gui
 
 //! constructor
 CGUIButton::CGUIButton(IGUIEnvironment* environment, IGUIElement* parent,
-			   s32 id, core::rect<s32> rectangle, bool noclip)
-: IGUIButton(environment, parent, id, rectangle), Pressed(false),
-	IsPushButton(false), UseAlphaChannel(false), Border(true),
-	ClickTime(0), SpriteBank(0), OverrideFont(0), Image(0), PressedImage(0)
+			s32 id, core::rect<s32> rectangle, bool noclip)
+: IGUIButton(environment, parent, id, rectangle),
+	SpriteBank(0), OverrideFont(0), Image(0), PressedImage(0),
+	ClickTime(0), IsPushButton(false), Pressed(false),
+	UseAlphaChannel(false), DrawBorder(true), ScaleImage(false)
 {
 	#ifdef _DEBUG
 	setDebugName("CGUIButton");
@@ -55,10 +56,25 @@ CGUIButton::~CGUIButton()
 }
 
 
+//! Sets if the images should be scaled to fit the button
+void CGUIButton::setScaleImage(bool scaleImage)
+{
+	ScaleImage = scaleImage;
+}
+
+
+//! Returns whether the button scale the used images
+bool CGUIButton::isScalingImage() const
+{
+	_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+	return ScaleImage;
+}
+
+
 //! Sets if the button should use the skin to draw its border
 void CGUIButton::setDrawBorder(bool border)
 {
-	Border = border;
+	DrawBorder = border;
 }
 
 
@@ -99,8 +115,7 @@ bool CGUIButton::OnEvent(const SEvent& event)
 	{
 	case EET_KEY_INPUT_EVENT:
 		if (event.KeyInput.PressedDown &&
-			(event.KeyInput.Key == KEY_RETURN || 
-			 event.KeyInput.Key == KEY_SPACE))
+			(event.KeyInput.Key == KEY_RETURN || event.KeyInput.Key == KEY_SPACE))
 		{
 			if (!IsPushButton)
 				setPressed(true);
@@ -116,14 +131,13 @@ bool CGUIButton::OnEvent(const SEvent& event)
 		}
 		else
 		if (!event.KeyInput.PressedDown && Pressed &&
-			(event.KeyInput.Key == KEY_RETURN || 
-			 event.KeyInput.Key == KEY_SPACE))
+			(event.KeyInput.Key == KEY_RETURN || event.KeyInput.Key == KEY_SPACE))
 		{
 			//Environment->removeFocus(this);
 
 			if (!IsPushButton)
 				setPressed(false);
-			
+
 			if (Parent)
 			{
 				SEvent newEvent;
@@ -147,7 +161,7 @@ bool CGUIButton::OnEvent(const SEvent& event)
 		if (event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
 		{
 			if (Environment->hasFocus(this) &&
-			    !AbsoluteClippingRect.isPointInside(core::position2d<s32>(event.MouseInput.X, event.MouseInput.Y)))
+				!AbsoluteClippingRect.isPointInside(core::position2d<s32>(event.MouseInput.X, event.MouseInput.Y)))
 			{
 					Environment->removeFocus(this);
 					return false;
@@ -155,7 +169,7 @@ bool CGUIButton::OnEvent(const SEvent& event)
 
 			if (!IsPushButton)
 				setPressed(true);
-			
+
 			Environment->setFocus(this);
 			return true;
 		}
@@ -178,7 +192,7 @@ bool CGUIButton::OnEvent(const SEvent& event)
 			{
 				setPressed(!Pressed);
 			}
-			
+
 			if ((!IsPushButton && wasPressed && Parent) ||
 				(IsPushButton && wasPressed != Pressed))
 			{
@@ -210,46 +224,43 @@ void CGUIButton::draw()
 	IGUISkin* skin = Environment->getSkin();
 	video::IVideoDriver* driver = Environment->getVideoDriver();
 
-	IGUIFont* font = OverrideFont;
-	if (!OverrideFont)
-		font = skin->getFont(EGDF_BUTTON);
-
-	core::rect<s32> rect = AbsoluteRect;
-
 	// todo:	move sprite up and text down if the pressed state has a sprite
-	//			draw sprites for focused and mouse-over 
-	core::position2di spritePos = AbsoluteRect.getCenter();
+	//			draw sprites for focused and mouse-over
+	const core::position2di spritePos = AbsoluteRect.getCenter();
 
 	if (!Pressed)
 	{
-		if (Border)
-			skin->draw3DButtonPaneStandard(this, rect, &AbsoluteClippingRect);
+		if (DrawBorder)
+			skin->draw3DButtonPaneStandard(this, AbsoluteRect, &AbsoluteClippingRect);
 
 		if (Image)
 		{
-			core::position2d<s32> pos = AbsoluteRect.getCenter();
+			core::position2d<s32> pos = spritePos;
 			pos.X -= ImageRect.getWidth() / 2;
 			pos.Y -= ImageRect.getHeight() / 2;
 
-			driver->draw2DImage(Image, pos, ImageRect, &AbsoluteClippingRect, 
-				video::SColor(255,255,255,255), UseAlphaChannel);
+			driver->draw2DImage(Image,
+					ScaleImage? AbsoluteRect :
+						core::recti(pos, ImageRect.getSize()),
+					ImageRect, &AbsoluteClippingRect,
+					0, UseAlphaChannel);
 		}
 		if (SpriteBank && ButtonSprites[EGBS_BUTTON_UP].Index != -1)
 		{
 			// draw pressed sprite
-			SpriteBank->draw2DSprite(ButtonSprites[EGBS_BUTTON_UP].Index, spritePos, 
-				&AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_UP].Color, ClickTime, os::Timer::getTime(), 
+			SpriteBank->draw2DSprite(ButtonSprites[EGBS_BUTTON_UP].Index, spritePos,
+				&AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_UP].Color, ClickTime, os::Timer::getTime(),
 				ButtonSprites[EGBS_BUTTON_UP].Loop, true);
 		}
 	}
 	else
 	{
-		if (Border)
-			skin->draw3DButtonPanePressed(this, rect, &AbsoluteClippingRect);
+		if (DrawBorder)
+			skin->draw3DButtonPanePressed(this, AbsoluteRect, &AbsoluteClippingRect);
 
 		if (PressedImage)
 		{
-			core::position2d<s32> pos = AbsoluteRect.getCenter();
+			core::position2d<s32> pos = spritePos;
 			pos.X -= PressedImageRect.getWidth() / 2;
 			pos.Y -= PressedImageRect.getHeight() / 2;
 			// patch by Alan Tyndall/Jonas Petersen
@@ -258,30 +269,36 @@ void CGUIButton::draw()
 				pos.X += 1;
 				pos.Y += 1;
 			}
-			driver->draw2DImage(PressedImage, pos, PressedImageRect, &AbsoluteClippingRect,
-				video::SColor(255,255,255,255), UseAlphaChannel);
+			driver->draw2DImage(PressedImage,
+					ScaleImage? AbsoluteRect :
+						core::recti(pos, PressedImageRect.getSize()),
+					PressedImageRect, &AbsoluteClippingRect,
+					0, UseAlphaChannel);
 		}
 
 		if (SpriteBank && ButtonSprites[EGBS_BUTTON_DOWN].Index != -1)
 		{
 			// draw sprite
-			SpriteBank->draw2DSprite(ButtonSprites[EGBS_BUTTON_DOWN].Index, spritePos, 
-				&AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_DOWN].Color, ClickTime, os::Timer::getTime(), 
+			SpriteBank->draw2DSprite(ButtonSprites[EGBS_BUTTON_DOWN].Index, spritePos,
+				&AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_DOWN].Color, ClickTime, os::Timer::getTime(),
 				ButtonSprites[EGBS_BUTTON_DOWN].Loop, true);
 		}
-
 	}
 
 	if (Text.size())
 	{
-		rect = AbsoluteRect;
-        if (Pressed)
+		IGUIFont* font = OverrideFont;
+		if (!OverrideFont)
+			font = skin->getFont(EGDF_BUTTON);
+
+		core::rect<s32> rect = AbsoluteRect;
+		if (Pressed)
 			rect.UpperLeftCorner.Y += 2;
 
 		if (font)
 			font->draw(Text.c_str(), rect,
-				skin->getColor(IsEnabled ? EGDC_BUTTON_TEXT : EGDC_GRAY_TEXT), true, true, 
-					&AbsoluteClippingRect);
+				skin->getColor(IsEnabled ? EGDC_BUTTON_TEXT : EGDC_GRAY_TEXT),
+				true, true, &AbsoluteClippingRect);
 	}
 
 	IGUIElement::draw();
@@ -291,6 +308,9 @@ void CGUIButton::draw()
 //! sets another skin independent font. if this is set to zero, the button uses the font of the skin.
 void CGUIButton::setOverrideFont(IGUIFont* font)
 {
+	if (OverrideFont == font)
+		return;
+
 	if (OverrideFont)
 		OverrideFont->drop();
 
@@ -301,18 +321,17 @@ void CGUIButton::setOverrideFont(IGUIFont* font)
 }
 
 
-//! Sets an image which should be displayed on the button when it is in normal state. 
+//! Sets an image which should be displayed on the button when it is in normal state.
 void CGUIButton::setImage(video::ITexture* image)
 {
+	if (image)
+		image->grab();
 	if (Image)
 		Image->drop();
 
 	Image = image;
 	if (image)
 		ImageRect = core::rect<s32>(core::position2d<s32>(0,0), image->getOriginalSize());
-
-	if (Image)
-		Image->grab();
 
 	if (!PressedImage)
 		setPressedImage(Image);
@@ -322,46 +341,31 @@ void CGUIButton::setImage(video::ITexture* image)
 //! Sets the image which should be displayed on the button when it is in its normal state.
 void CGUIButton::setImage(video::ITexture* image, const core::rect<s32>& pos)
 {
-	if (Image)
-		Image->drop();
-
-	Image = image;
+	setImage(image);
 	ImageRect = pos;
-
-	if (Image)
-		Image->grab();
-
-	if (!PressedImage)
-		setPressedImage(Image, pos);
 }
 
 
-//! Sets an image which should be displayed on the button when it is in pressed state. 
+//! Sets an image which should be displayed on the button when it is in pressed state.
 void CGUIButton::setPressedImage(video::ITexture* image)
 {
+	if (image)
+		image->grab();
+
 	if (PressedImage)
 		PressedImage->drop();
 
 	PressedImage = image;
 	if (image)
 		PressedImageRect = core::rect<s32>(core::position2d<s32>(0,0), image->getOriginalSize());
-
-	if (PressedImage)
-		PressedImage->grab();
 }
 
 
 //! Sets the image which should be displayed on the button when it is in its pressed state.
 void CGUIButton::setPressedImage(video::ITexture* image, const core::rect<s32>& pos)
 {
-	if (PressedImage)
-		PressedImage->drop();
-
-	PressedImage = image;
+	setPressedImage(image);
 	PressedImageRect = pos;
-
-	if (PressedImage)
-		PressedImage->grab();
 }
 
 
@@ -419,7 +423,7 @@ bool CGUIButton::isAlphaChannelUsed() const
 bool CGUIButton::isDrawingBorder() const
 {
 	_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
-	return Border;
+	return DrawBorder;
 }
 
 
@@ -437,8 +441,9 @@ void CGUIButton::serializeAttributes(io::IAttributes* out, io::SAttributeReadWri
 	out->addTexture	("PressedImage",	PressedImage);
 	out->addRect	("PressedImageRect",	PressedImageRect);
 
-	out->addBool	("Border",		Border);
-	out->addBool	("UseAlphaChannel",	UseAlphaChannel);
+	out->addBool	("UseAlphaChannel",	isAlphaChannelUsed());
+	out->addBool	("Border",		isDrawingBorder());
+	out->addBool	("ScaleImage",		isScalingImage());
 
 	//   out->addString  ("OverrideFont",	OverrideFont);
 }
@@ -465,7 +470,8 @@ void CGUIButton::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWr
 		setPressedImage( in->getAttributeAsTexture("PressedImage") );
 
 	setDrawBorder(in->getAttributeAsBool("Border"));
-	UseAlphaChannel = in->getAttributeAsBool("UseAlphaChannel");
+	setUseAlphaChannel(in->getAttributeAsBool("UseAlphaChannel"));
+	setScaleImage(in->getAttributeAsBool("ScaleImage"));
 
 	//   setOverrideFont(in->getAttributeAsString("OverrideFont"));
 

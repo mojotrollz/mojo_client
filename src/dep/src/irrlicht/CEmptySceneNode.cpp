@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -49,16 +49,19 @@ const core::aabbox3d<f32>& CEmptySceneNode::getBoundingBox() const
 //! Creates a clone of this scene node and its children.
 ISceneNode* CEmptySceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
 {
-	if (!newParent) newParent = Parent;
-	if (!newManager) newManager = SceneManager;
+	if (!newParent)
+		newParent = Parent;
+	if (!newManager)
+		newManager = SceneManager;
 
-	CEmptySceneNode* nb = new CEmptySceneNode(newParent, 
+	CEmptySceneNode* nb = new CEmptySceneNode(newParent,
 		newManager, ID);
 
 	nb->cloneMembers(this, newManager);
 	nb->Box = Box;
 
-	nb->drop();
+	if ( newParent )
+		nb->drop();
 	return nb;
 }
 

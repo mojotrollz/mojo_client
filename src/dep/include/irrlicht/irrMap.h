@@ -1,4 +1,4 @@
-// Copyright 2006-2008 by Kat'Oun
+// Copyright (C) 2006-2010 by Kat'Oun
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -6,6 +6,7 @@
 #define __IRR_MAP_H_INCLUDED__
 
 #include "irrTypes.h"
+#include "irrMath.h"
 
 namespace irr
 {
@@ -49,7 +50,7 @@ class map
 
 		RBTree* getLeftChild() const	{ return LeftChild; }
 		RBTree* getRightChild() const	{ return RightChild; }
-		RBTree* getParent() const	{ return Parent; }
+		RBTree* getParent() const		{ return Parent; }
 
 		ValueTypeRB getValue() const
 		{
@@ -186,8 +187,7 @@ class map
 
 		Node& operator* ()
 		{
-			if (atEnd())
-				throw "Iterator at end";
+			_IRR_DEBUG_BREAK_IF(atEnd()) // access violation
 
 			return *Cur;
 		}
@@ -336,8 +336,8 @@ class map
 
 	Node& operator* ()
 	{
-		if (atEnd())
-			throw "ParentFirstIterator at end";
+		_IRR_DEBUG_BREAK_IF(atEnd()) // access violation
+
 		return *getNode();
 	}
 
@@ -436,8 +436,8 @@ class map
 
 		Node& operator* ()
 		{
-			if (atEnd())
-				throw "ParentLastIterator at end";
+			_IRR_DEBUG_BREAK_IF(atEnd()) // access violation
+
 			return *getNode();
 		}
 	private:
@@ -483,7 +483,7 @@ class map
 	// myTree["Foo"] = 32;
 	// If "Foo" already exists update its value else insert a new element.
 	// int i = myTree["Foo"]
-	// If "Foo" exists return its value, else throw an exception.
+	// If "Foo" exists return its value.
 	class AccessClass
 	{
 		// Let map be the only one who can instantiate this class.
@@ -504,8 +504,7 @@ class map
 			Node* node = Tree.find(Key);
 
 			// Not found
-			if (node==0)
-				throw "Item not found";
+			_IRR_DEBUG_BREAK_IF(node==0) // access violation
 
 			_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
 			return node->getValue();
@@ -732,10 +731,16 @@ class map
 
 	//! Is the tree empty?
 	//! \return Returns true if empty, false if not
-	bool isEmpty() const
+	bool empty() const
 	{
 		_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
 		return Root == 0;
+	}
+
+	//! \deprecated Use empty() instead.
+	_IRR_DEPRECATED_ bool isEmpty() const
+	{
+		return empty();
 	}
 
 	//! Search for a node with the specified key.
@@ -772,6 +777,17 @@ class map
 	u32 size() const
 	{
 		return Size;
+	}
+
+	//! Swap the content of this map container with the content of another map
+	/** Afterwards this object will contain the content of the other object and the other
+	object will contain the content of this object. Iterators will afterwards be valid for
+	the swapped object.
+	\param other Swap content with this object	*/
+	void swap(map<KeyType, ValueType>& other)
+	{
+		core::swap(Root, other.Root);
+		core::swap(Size, other.Size);
 	}
 
 	//------------------------------

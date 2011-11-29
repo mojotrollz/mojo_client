@@ -27,7 +27,7 @@ SceneLogin::SceneLogin(PseuGUI *gui) : Scene(gui)
     eventrecv->keyToButtonMap[KEY_ESCAPE] = BUTTON_QUIT;
     device->setEventReceiver(eventrecv);
 
-    dimension2d<s32> scrn = driver->getScreenSize();
+    dimension2d<u32> scrn = driver->getScreenSize();
 
     irrlogo = guienv->addImage(driver->getTexture("data/misc/irrlichtlogo.png"), core::position2d<s32>(5,5),true,rootgui);
     background = guienv->addImage(driver->getTexture("data/misc/sky.jpg"), core::position2d<s32>(5,5),true,rootgui);

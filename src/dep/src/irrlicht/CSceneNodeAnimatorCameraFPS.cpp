@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -18,9 +18,10 @@ namespace scene
 //! constructor
 CSceneNodeAnimatorCameraFPS::CSceneNodeAnimatorCameraFPS(gui::ICursorControl* cursorControl,
 		f32 rotateSpeed, f32 moveSpeed, f32 jumpSpeed,
-		SKeyMap* keyMapArray, u32 keyMapSize, bool noVerticalMovement)
+		SKeyMap* keyMapArray, u32 keyMapSize, bool noVerticalMovement, bool invertY)
 : CursorControl(cursorControl), MaxVerticalAngle(88.0f),
 	MoveSpeed(moveSpeed), RotateSpeed(rotateSpeed), JumpSpeed(jumpSpeed),
+	MouseYDirection(invertY ? -1.0f : 1.0f),
 	LastAnimationTime(0), firstUpdate(true), NoVerticalMovement(noVerticalMovement)
 {
 	#ifdef _DEBUG
@@ -96,7 +97,7 @@ bool CSceneNodeAnimatorCameraFPS::OnEvent(const SEvent& evt)
 
 void CSceneNodeAnimatorCameraFPS::animateNode(ISceneNode* node, u32 timeMs)
 {
-	if (node->getType() != ESNT_CAMERA)
+	if (!node || node->getType() != ESNT_CAMERA)
 		return;
 
 	ICameraSceneNode* camera = static_cast<ICameraSceneNode*>(node);
@@ -115,6 +116,14 @@ void CSceneNodeAnimatorCameraFPS::animateNode(ISceneNode* node, u32 timeMs)
 		firstUpdate = false;
 	}
 
+	// If the camera isn't the active camera, and receiving input, then don't process it.
+	if(!camera->isInputReceiverEnabled())
+		return;
+
+	scene::ISceneManager * smgr = camera->getSceneManager();
+	if(smgr && smgr->getActiveCamera() != camera)
+		return;
+
 	// get time
 	f32 timeDiff = (f32) ( timeMs - LastAnimationTime );
 	LastAnimationTime = timeMs;
@@ -131,7 +140,7 @@ void CSceneNodeAnimatorCameraFPS::animateNode(ISceneNode* node, u32 timeMs)
 		if (CursorPos != CenterCursor)
 		{
 			relativeRotation.Y -= (0.5f - CursorPos.X) * RotateSpeed;
-			relativeRotation.X -= (0.5f - CursorPos.Y) * RotateSpeed;
+			relativeRotation.X -= (0.5f - CursorPos.Y) * RotateSpeed * MouseYDirection;
 
 			// X < MaxVerticalAngle or X > 360-MaxVerticalAngle
 
@@ -147,13 +156,30 @@ void CSceneNodeAnimatorCameraFPS::animateNode(ISceneNode* node, u32 timeMs)
 				relativeRotation.X = MaxVerticalAngle;
 			}
 
-			// reset cursor position
+			// Do the fix as normal, special case below
+			// reset cursor position to the centre of the window.
 			CursorControl->setPosition(0.5f, 0.5f);
 			CenterCursor = CursorControl->getRelativePosition();
-			// needed to avoid problems when the ecent receiver is
-			// disabled
+
+			// needed to avoid problems when the event receiver is disabled
 			CursorPos = CenterCursor;
 		}
+
+		// Special case, mouse is whipped outside of window before it can update.
+		video::IVideoDriver* driver = smgr->getVideoDriver();
+		core::vector2d<u32> mousepos(u32(CursorControl->getPosition().X), u32(CursorControl->getPosition().Y));
+		core::rect<u32> screenRect(0, 0, driver->getScreenSize().Width, driver->getScreenSize().Height);
+
+		// Only if we are moving outside quickly.
+		bool reset = !screenRect.isPointInside(mousepos);
+
+		if(reset)
+		{
+			// Force a reset.
+			CursorControl->setPosition(0.5f, 0.5f);
+			CenterCursor = CursorControl->getRelativePosition();
+			CursorPos = CenterCursor;
+ 		}
 	}
 
 	// set target
@@ -203,8 +229,8 @@ void CSceneNodeAnimatorCameraFPS::animateNode(ISceneNode* node, u32 timeMs)
 	// and if it's not falling, we tell it to jump.
 	if (CursorKeys[EKA_JUMP_UP])
 	{
-		const core::list<ISceneNodeAnimator*> & animators = camera->getAnimators();
-		core::list<ISceneNodeAnimator*>::ConstIterator it = animators.begin();
+		const ISceneNodeAnimatorList& animators = camera->getAnimators();
+		ISceneNodeAnimatorList::ConstIterator it = animators.begin();
 		while(it != animators.end())
 		{
 			if(ESNAT_COLLISION_RESPONSE == (*it)->getType())
@@ -224,8 +250,6 @@ void CSceneNodeAnimatorCameraFPS::animateNode(ISceneNode* node, u32 timeMs)
 	camera->setPosition(pos);
 
 	// write right target
-
-	TargetVector = target;
 	target += pos;
 	camera->setTarget(target);
 }
@@ -298,6 +322,16 @@ void CSceneNodeAnimatorCameraFPS::setKeyMap(SKeyMap *map, u32 count)
 void CSceneNodeAnimatorCameraFPS::setVerticalMovement(bool allow)
 {
 	NoVerticalMovement = !allow;
+}
+
+
+//! Sets whether the Y axis of the mouse should be inverted.
+void CSceneNodeAnimatorCameraFPS::setInvertMouse(bool invert)
+{
+	if (invert)
+		MouseYDirection = -1.0f;
+	else
+		MouseYDirection = 1.0f;
 }
 
 

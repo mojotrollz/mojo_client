@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -18,9 +18,11 @@ namespace scene
 
 //! constructor
 CSkinnedMesh::CSkinnedMesh()
-: SkinningBuffers(0), HasAnimation(0), PreparedForSkinning(0),
-	AnimationFrames(0.f), LastAnimatedFrame(0.f), LastSkinnedFrame(0.f),
-	BoneControlUsed(false), AnimateNormals(true), HardwareSkinning(0), InterpolationMode(EIM_LINEAR)
+: SkinningBuffers(0), AnimationFrames(0.f),
+	LastAnimatedFrame(0.f), LastSkinnedFrame(0.f),
+	InterpolationMode(EIM_LINEAR),
+	HasAnimation(false), PreparedForSkinning(false),
+	BoneControlUsed(false), AnimateNormals(true), HardwareSkinning(false)
 {
 	#ifdef _DEBUG
 	setDebugName("CSkinnedMesh");
@@ -60,7 +62,6 @@ IMesh* CSkinnedMesh::getMesh(s32 frame, s32 detailLevel, s32 startFrameLoop, s32
 		return this;
 
 	animateMesh((f32)frame, 1.0f);
-	buildAll_LocalAnimatedMatrices();
 	skinMesh();
 	return this;
 }
@@ -115,17 +116,17 @@ void CSkinnedMesh::animateMesh(f32 frame, f32 blend)
 			joint->Animatedscale = core::lerp(oldScale, scale, blend);
 			joint->Animatedrotation.slerp(oldRotation, rotation, blend);
 		}
-
-		//Note:
-		//_LocalAnimatedMatrix needs to be built at some point, but this function may be called lots of times for
-		//one render (to play two animations at the same time) _LocalAnimatedMatrix only needs to be built once.
-		//a call to buildAllLocalAnimatedMatrices is needed before skinning the mesh, and before the user gets the joints to move
-
-		//----------------
-		// Temp!
-		buildAll_LocalAnimatedMatrices();
-		//-----------------
 	}
+
+	//Note:
+	//_LocalAnimatedMatrix needs to be built at some point, but this function may be called lots of times for
+	//one render (to play two animations at the same time) _LocalAnimatedMatrix only needs to be built once.
+	//a call to buildAllLocalAnimatedMatrices is needed before skinning the mesh, and before the user gets the joints to move
+
+	//----------------
+	// Temp!
+	buildAll_LocalAnimatedMatrices();
+	//-----------------
 
 	updateBoundingBox();
 }
@@ -459,8 +460,8 @@ void CSkinnedMesh::skinMesh()
 
 		for (i=0; i<SkinningBuffers->size(); ++i)
 			(*SkinningBuffers)[i]->setDirty(EBT_VERTEX);
-
 	}
+	updateBoundingBox();
 }
 
 
@@ -710,8 +711,6 @@ bool CSkinnedMesh::setHardwareSkinning(bool on)
 					LocalBuffers[buffer_id]->boundingBoxNeedsRecalculated();
 				}
 			}
-
-
 		}
 
 		HardwareSkinning=on;
@@ -1125,7 +1124,7 @@ void CSkinnedMesh::updateBoundingBox(void)
 }
 
 
-scene::SSkinMeshBuffer *CSkinnedMesh::createBuffer()
+scene::SSkinMeshBuffer *CSkinnedMesh::addMeshBuffer()
 {
 	scene::SSkinMeshBuffer *buffer=new scene::SSkinMeshBuffer();
 	LocalBuffers.push_back(buffer);
@@ -1133,7 +1132,7 @@ scene::SSkinMeshBuffer *CSkinnedMesh::createBuffer()
 }
 
 
-CSkinnedMesh::SJoint *CSkinnedMesh::createJoint(SJoint *parent)
+CSkinnedMesh::SJoint *CSkinnedMesh::addJoint(SJoint *parent)
 {
 	SJoint *joint=new SJoint;
 
@@ -1152,7 +1151,7 @@ CSkinnedMesh::SJoint *CSkinnedMesh::createJoint(SJoint *parent)
 }
 
 
-CSkinnedMesh::SPositionKey *CSkinnedMesh::createPositionKey(SJoint *joint)
+CSkinnedMesh::SPositionKey *CSkinnedMesh::addPositionKey(SJoint *joint)
 {
 	if (!joint)
 		return 0;
@@ -1162,7 +1161,7 @@ CSkinnedMesh::SPositionKey *CSkinnedMesh::createPositionKey(SJoint *joint)
 }
 
 
-CSkinnedMesh::SScaleKey *CSkinnedMesh::createScaleKey(SJoint *joint)
+CSkinnedMesh::SScaleKey *CSkinnedMesh::addScaleKey(SJoint *joint)
 {
 	if (!joint)
 		return 0;
@@ -1172,7 +1171,7 @@ CSkinnedMesh::SScaleKey *CSkinnedMesh::createScaleKey(SJoint *joint)
 }
 
 
-CSkinnedMesh::SRotationKey *CSkinnedMesh::createRotationKey(SJoint *joint)
+CSkinnedMesh::SRotationKey *CSkinnedMesh::addRotationKey(SJoint *joint)
 {
 	if (!joint)
 		return 0;
@@ -1182,7 +1181,7 @@ CSkinnedMesh::SRotationKey *CSkinnedMesh::createRotationKey(SJoint *joint)
 }
 
 
-CSkinnedMesh::SWeight *CSkinnedMesh::createWeight(SJoint *joint)
+CSkinnedMesh::SWeight *CSkinnedMesh::addWeight(SJoint *joint)
 {
 	if (!joint)
 		return 0;
@@ -1255,17 +1254,13 @@ void CSkinnedMesh::recoverJointsFromMesh(core::array<IBoneSceneNode*> &JointChil
 		SJoint *joint=AllJoints[i];
 		node->setPosition( joint->LocalAnimatedMatrix.getTranslation() );
 		node->setRotation( joint->LocalAnimatedMatrix.getRotationDegrees() );
-
-		//node->setScale( joint->LocalAnimatedMatrix.getScale() );
+		node->setScale( joint->LocalAnimatedMatrix.getScale() );
 
 		node->positionHint=joint->positionHint;
 		node->scaleHint=joint->scaleHint;
 		node->rotationHint=joint->rotationHint;
 
-		//node->setAbsoluteTransformation(joint->GlobalMatrix); //not going to work
-
-		//Note: This updateAbsolutePosition will not work well if joints are not nested like b3d
-		//node->updateAbsolutePosition();
+		node->updateAbsolutePosition();
 	}
 }
 
@@ -1277,19 +1272,15 @@ void CSkinnedMesh::transferJointsToMesh(const core::array<IBoneSceneNode*> &Join
 		const IBoneSceneNode* const node=JointChildSceneNodes[i];
 		SJoint *joint=AllJoints[i];
 
-		joint->LocalAnimatedMatrix.setTranslation(node->getPosition());
 		joint->LocalAnimatedMatrix.setRotationDegrees(node->getRotation());
-
-		//joint->LocalAnimatedMatrix.setScale( node->getScale() );
+		joint->LocalAnimatedMatrix.setTranslation(node->getPosition());
+		joint->LocalAnimatedMatrix *= core::matrix4().setScale(node->getScale());
 
 		joint->positionHint=node->positionHint;
 		joint->scaleHint=node->scaleHint;
 		joint->rotationHint=node->rotationHint;
 
-		if (node->getSkinningSpace()==EBSS_GLOBAL)
-			joint->GlobalSkinningSpace=true;
-		else
-			joint->GlobalSkinningSpace=false;
+		joint->GlobalSkinningSpace=(node->getSkinningSpace()==EBSS_GLOBAL);
 	}
 	//Remove cache, temp...
 	LastAnimatedFrame=-1;
@@ -1364,7 +1355,7 @@ void CSkinnedMesh::convertMeshToTangents()
 	{
 		if (LocalBuffers[b])
 		{
-			LocalBuffers[b]->MoveTo_Tangents();
+			LocalBuffers[b]->convertToTangents();
 
 			const s32 idxCnt = LocalBuffers[b]->getIndexCount();
 
@@ -1447,12 +1438,6 @@ void CSkinnedMesh::calculateTangents(
 		binormal *= -1.0f;
 	}
 }
-
-
-
-
-
-
 
 
 } // end namespace scene

@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -72,6 +72,8 @@ IParticleEmitter* CParticleSystemSceneNode::getEmitter()
 //! Sets the particle emitter, which creates the particles.
 void CParticleSystemSceneNode::setEmitter(IParticleEmitter* emitter)
 {
+    if (emitter == Emitter)
+        return;
 	if (Emitter)
 		Emitter->drop();
 
@@ -161,7 +163,7 @@ IParticleCylinderEmitter* CParticleSystemSceneNode::createCylinderEmitter(
 	bool outlineOnly, const core::vector3df& direction,
 	u32 minParticlesPerSecond, u32 maxParticlesPerSecond,
 	const video::SColor& minStartColor, const video::SColor& maxStartColor,
-	u32 lifeTimeMin, u32 lifeTimeMax, s32 maxAngleDegrees, 
+	u32 lifeTimeMin, u32 lifeTimeMax, s32 maxAngleDegrees,
 	const core::dimension2df& minStartSize,
 	const core::dimension2df& maxStartSize )
 {
@@ -315,7 +317,7 @@ void CParticleSystemSceneNode::render()
 
 #else
 
-	const core::matrix4 &m = camera->getViewFrustum()->Matrices [ video::ETS_VIEW ];
+	const core::matrix4 &m = camera->getViewFrustum()->getTransform( video::ETS_VIEW );
 
 	const core::vector3df view ( -m[2], -m[6] , -m[10] );
 
@@ -448,6 +450,7 @@ void CParticleSystemSceneNode::doParticleSystem(u32 time)
 
 	for (u32 i=0; i<Particles.size();)
 	{
+		// erase is pretty expensive!
 		if (now > Particles[i].endTime)
 			Particles.erase(i);
 		else
@@ -604,8 +607,23 @@ void CParticleSystemSceneNode::deserializeAttributes(io::IAttributes* in, io::SA
 	case EPET_POINT:
 		Emitter = createPointEmitter();
 		break;
+	case EPET_ANIMATED_MESH:
+		Emitter = createAnimatedMeshSceneNodeEmitter(NULL); // we can't set the node - the user will have to do this
+		break;
 	case EPET_BOX:
 		Emitter = createBoxEmitter();
+		break;
+	case EPET_CYLINDER:
+		Emitter = createCylinderEmitter(core::vector3df(0,0,0), 10.f, core::vector3df(0,1,0), 10.f);	// (values here don't matter)
+		break;
+	case EPET_MESH:
+		Emitter = createMeshEmitter(NULL);	// we can't set the mesh - the user will have to do this
+		break;
+	case EPET_RING:
+		Emitter = createRingEmitter(core::vector3df(0,0,0), 10.f, 10.f);	// (values here don't matter)
+		break;
+	case EPET_SPHERE:
+		Emitter = createSphereEmitter(core::vector3df(0,0,0), 10.f);	// (values here don't matter)
 		break;
 	default:
 		break;
@@ -613,10 +631,15 @@ void CParticleSystemSceneNode::deserializeAttributes(io::IAttributes* in, io::SA
 
 	u32 idx = 0;
 
+#if 0
 	if (Emitter)
 		idx = Emitter->deserializeAttributes(idx, in);
 
 	++idx;
+#else
+	if (Emitter)
+		Emitter->deserializeAttributes(in);
+#endif
 
 	// read affectors
 
@@ -637,11 +660,17 @@ void CParticleSystemSceneNode::deserializeAttributes(io::IAttributes* in, io::SA
 
 		switch(atype)
 		{
+		case EPAT_ATTRACT:
+			aff = createAttractionAffector(core::vector3df(0,0,0));
+			break;
 		case EPAT_FADE_OUT:
 			aff = createFadeOutParticleAffector();
 			break;
 		case EPAT_GRAVITY:
 			aff = createGravityAffector();
+			break;
+		case EPAT_ROTATE:
+			aff = createRotationAffector();
 			break;
 		case EPAT_SCALE:
 			aff = createScaleParticleAffector();
@@ -655,8 +684,13 @@ void CParticleSystemSceneNode::deserializeAttributes(io::IAttributes* in, io::SA
 
 		if (aff)
 		{
+#if 0
 			idx = aff->deserializeAttributes(idx, in, options);
 			++idx;
+#else
+			aff->deserializeAttributes(in, options);
+#endif
+
 			addAffector(aff);
 			aff->drop();
 		}

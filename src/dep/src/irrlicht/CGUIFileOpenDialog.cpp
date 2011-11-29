@@ -1,9 +1,11 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
 #include "CGUIFileOpenDialog.h"
 #ifdef _IRR_COMPILE_WITH_GUI_
+
+#include <locale.h>
 
 #include "IGUISkin.h"
 #include "IGUIEnvironment.h"
@@ -32,7 +34,7 @@ CGUIFileOpenDialog::CGUIFileOpenDialog(const wchar_t* title,
 					(parent->getAbsolutePosition().getHeight()-FOD_HEIGHT)/2,
 					(parent->getAbsolutePosition().getWidth()-FOD_WIDTH)/2+FOD_WIDTH,
 					(parent->getAbsolutePosition().getHeight()-FOD_HEIGHT)/2+FOD_HEIGHT)),
-	Dragging(false), FileNameText(0), FileList(0)
+	FileNameText(0), FileList(0), Dragging(false)
 {
 	#ifdef _DEBUG
 	IGUIElement::setDebugName("CGUIFileOpenDialog");
@@ -49,8 +51,8 @@ CGUIFileOpenDialog::CGUIFileOpenDialog(const wchar_t* title,
 		color = skin->getColor(EGDC_WINDOW_SYMBOL);
 	}
 
-	s32 buttonw = environment->getSkin()->getSize(EGDS_WINDOW_BUTTON_WIDTH);
-	s32 posx = RelativeRect.getWidth() - buttonw - 4;
+	const s32 buttonw = environment->getSkin()->getSize(EGDS_WINDOW_BUTTON_WIDTH);
+	const s32 posx = RelativeRect.getWidth() - buttonw - 4;
 
 	CloseButton = Environment->addButton(core::rect<s32>(posx, 3, posx + buttonw, 3 + buttonw), this, -1,
 		L"", skin ? skin->getDefaultText(EGDT_WINDOW_CLOSE) : L"Close");
@@ -84,7 +86,7 @@ CGUIFileOpenDialog::CGUIFileOpenDialog(const wchar_t* title,
 	FileBox->setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT);
 	FileBox->grab();
 
-	FileNameText = Environment->addStaticText(0, core::rect<s32>(10, 30, RelativeRect.getWidth()-90, 50), true, false, this);
+	FileNameText = Environment->addEditBox(0, core::rect<s32>(10, 30, RelativeRect.getWidth()-90, 50), true, this);
 	FileNameText->setSubElement(true);
 	FileNameText->setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
 	FileNameText->grab();
@@ -132,6 +134,13 @@ const wchar_t* CGUIFileOpenDialog::getFileName() const
 	return FileName.c_str();
 }
 
+//! Returns the directory of the selected file. Returns NULL, if no directory was selected.
+const io::path& CGUIFileOpenDialog::getDirectoryName()
+{
+	FileSystem->flattenFilename ( FileDirectory );
+	return FileDirectory;
+}
+
 
 //! called if an event happened.
 bool CGUIFileOpenDialog::OnEvent(const SEvent& event)
@@ -155,11 +164,18 @@ bool CGUIFileOpenDialog::OnEvent(const SEvent& event)
 					return true;
 				}
 				else
-				if (event.GUIEvent.Caller == OKButton && FileName != L"")
+				if (event.GUIEvent.Caller == OKButton )
 				{
-					sendSelectedEvent();
-					remove();
-					return true;
+					if ( FileDirectory != L"" )
+					{
+						sendSelectedEvent( EGET_DIRECTORY_SELECTED );
+					}
+					if ( FileName != L"" )
+					{
+						sendSelectedEvent( EGET_FILE_SELECTED );
+						remove();
+						return true;
+					}
 				}
 				break;
 
@@ -169,9 +185,16 @@ bool CGUIFileOpenDialog::OnEvent(const SEvent& event)
 					if (FileList && FileSystem)
 					{
 						if (FileList->isDirectory(selected))
+						{
 							FileName = L"";
+							FileDirectory = FileList->getFullFileName(selected);
+						}
 						else
+						{
+							FileDirectory = L"";
 							FileName = FileList->getFullFileName(selected);
+						}
+						return true;
 					}
 				}
 				break;
@@ -183,18 +206,31 @@ bool CGUIFileOpenDialog::OnEvent(const SEvent& event)
 					{
 						if (FileList->isDirectory(selected))
 						{
+							FileDirectory = FileList->getFullFileName(selected);
 							FileSystem->changeWorkingDirectoryTo(FileList->getFileName(selected));
 							fillListBox();
-							FileName = L"";
+							FileName = "";
 						}
 						else
 						{
 							FileName = FileList->getFullFileName(selected);
-							return true;
 						}
+						return true;
 					}
 				}
 				break;
+			case EGET_EDITBOX_ENTER:
+				if (event.GUIEvent.Caller == FileNameText)
+				{
+					io::path dir( FileNameText->getText () );
+					if ( FileSystem->changeWorkingDirectoryTo( dir ) )
+					{
+						fillListBox();
+						FileName = L"";
+					}
+					return true;
+				}
+			break;
 			default:
 				break;
 			}
@@ -214,6 +250,10 @@ bool CGUIFileOpenDialog::OnEvent(const SEvent& event)
 				Dragging = false;
 				return true;
 			case EMIE_MOUSE_MOVED:
+
+				if ( !event.MouseInput.isLeftPressed () )
+					Dragging = false;
+
 				if (Dragging)
 				{
 					// gui window should not be dragged outside its parent
@@ -288,28 +328,55 @@ void CGUIFileOpenDialog::fillListBox()
 	FileList = FileSystem->createFileList();
 	core::stringw s;
 
-	for (u32 i=0; i<FileList->getFileCount(); ++i)
+#if !defined(_IRR_WINDOWS_CE_PLATFORM_)
+	setlocale(LC_ALL,"");
+#endif
+
+	if (FileList)
 	{
-		s = FileList->getFileName(i);
-		FileBox->addItem(s.c_str(), skin->getIcon(FileList->isDirectory(i) ? EGDI_DIRECTORY : EGDI_FILE));
+		for (u32 i=0; i < FileList->getFileCount(); ++i)
+		{
+			#ifndef _IRR_WCHAR_FILESYSTEM
+			const c8 *cs = (const c8 *)FileList->getFileName(i).c_str();
+			wchar_t *ws = new wchar_t[strlen(cs) + 1];
+			int len = mbstowcs(ws,cs,strlen(cs));
+			ws[len] = 0;
+			s = ws;
+			delete [] ws;
+			#else
+			s = FileList->getFileName(i).c_str();
+			#endif
+			FileBox->addItem(s.c_str(), skin->getIcon(FileList->isDirectory(i) ? EGDI_DIRECTORY : EGDI_FILE));
+		}
 	}
 
 	if (FileNameText)
 	{
+		#ifndef _IRR_WCHAR_FILESYSTEM
+		const c8 *cs = (const c8 *)FileSystem->getWorkingDirectory().c_str();
+		wchar_t *ws = new wchar_t[strlen(cs) + 1];
+		int len = mbstowcs(ws,cs,strlen(cs));
+		ws[len] = 0;
+		s = ws;
+		delete [] ws;
+		#else
 		s = FileSystem->getWorkingDirectory();
+		#endif
+
+		FileDirectory = s;
 		FileNameText->setText(s.c_str());
 	}
 }
 
 
 //! sends the event that the file has been selected.
-void CGUIFileOpenDialog::sendSelectedEvent()
+void CGUIFileOpenDialog::sendSelectedEvent( EGUI_EVENT_TYPE type)
 {
 	SEvent event;
 	event.EventType = EET_GUI_EVENT;
 	event.GUIEvent.Caller = this;
 	event.GUIEvent.Element = 0;
-	event.GUIEvent.EventType = EGET_FILE_SELECTED;
+	event.GUIEvent.EventType = type;
 	Parent->OnEvent(event);
 }
 

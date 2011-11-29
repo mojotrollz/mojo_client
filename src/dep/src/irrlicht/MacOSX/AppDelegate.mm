@@ -1,8 +1,10 @@
-// Copyright (C) 2005-2008 Etienne Petitjean
+// Copyright (C) 2005-2010 Etienne Petitjean
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in Irrlicht.h
 
 #import "AppDelegate.h"
+
+#ifdef _IRR_COMPILE_WITH_OSX_DEVICE_
 
 @implementation AppDelegate
 
@@ -48,6 +50,14 @@
 	_quit = TRUE;
 }
 
+- (NSSize)windowWillResize:(NSWindow *)window toSize:(NSSize)proposedFrameSize
+{
+	if (_device->isResizable())
+		return proposedFrameSize;
+	else
+		return [window frame].size;
+}
+
 - (void)windowDidResize:(NSNotification *)aNotification
 {
 	NSWindow	*window;
@@ -64,3 +74,5 @@
 }
 
 @end
+
+#endif // _IRR_COMPILE_WITH_OSX_DEVICE_

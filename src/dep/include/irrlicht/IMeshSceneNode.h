@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -24,9 +24,9 @@ public:
 	/** Use setMesh() to set the mesh to display.
 	*/
 	IMeshSceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
-			const core::vector3df& position,
-			const core::vector3df& rotation,
-			const core::vector3df& scale)
+			const core::vector3df& position = core::vector3df(0,0,0),
+			const core::vector3df& rotation = core::vector3df(0,0,0),
+			const core::vector3df& scale = core::vector3df(1,1,1))
 		: ISceneNode(parent, mgr, id, position, rotation, scale) {}
 
 	//! Sets a new mesh to display

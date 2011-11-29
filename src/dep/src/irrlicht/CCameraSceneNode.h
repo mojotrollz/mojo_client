@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -39,6 +39,13 @@ namespace scene
 		//! Gets the current view matrix of the camera
 		//! \return Returns the current view matrix of the camera.
 		virtual const core::matrix4& getViewMatrix() const;
+
+		//! Sets a custom view matrix affector.
+		/** \param affector: The affector matrix. */
+		virtual void setViewMatrixAffector(const core::matrix4& affector);
+
+		//! Gets the custom view matrix affector.
+		virtual const core::matrix4& getViewMatrixAffector() const;
 
 		//! It is possible to send mouse and key events to the camera. Most cameras
 		//! may ignore this input, but camera scene nodes which are created for 
@@ -135,6 +142,9 @@ namespace scene
 		//! Queries if the camera scene node's rotation and its target position are bound together.
 		virtual bool getTargetAndRotationBinding(void) const;
 
+		//! Creates a clone of this scene node and its children.
+		virtual ISceneNode* clone(ISceneNode* newParent=0, ISceneManager* newManager=0);
+
 	protected:
 
 		void recalculateProjectionMatrix();
@@ -149,9 +159,9 @@ namespace scene
 		f32 ZFar;	// Z-value of the far view-plane.
 
 		SViewFrustum ViewArea;
+		core::matrix4 Affector;
 
 		bool InputReceiverEnabled;
-
 		bool TargetAndRotationAreBound;
 	};
 

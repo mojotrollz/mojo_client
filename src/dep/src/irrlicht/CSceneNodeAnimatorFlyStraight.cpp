@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -13,33 +13,25 @@ namespace scene
 //! constructor
 CSceneNodeAnimatorFlyStraight::CSceneNodeAnimatorFlyStraight(const core::vector3df& startPoint,
 				const core::vector3df& endPoint, u32 timeForWay,
-				bool loop, u32 now)
-: Start(startPoint), End(endPoint), WayLength(0.0f), TimeFactor(0.0f), StartTime(now), TimeForWay(timeForWay), Loop(loop)
+				bool loop, u32 now, bool pingpong)
+: ISceneNodeAnimatorFinishing(now + timeForWay),
+	Start(startPoint), End(endPoint), TimeFactor(0.0f), StartTime(now),
+	TimeForWay(timeForWay), Loop(loop), PingPong(pingpong)
 {
 	#ifdef _DEBUG
 	setDebugName("CSceneNodeAnimatorFlyStraight");
 	#endif
 
-	recalculateImidiateValues();
+	recalculateIntermediateValues();
 }
 
 
-void CSceneNodeAnimatorFlyStraight::recalculateImidiateValues()
+void CSceneNodeAnimatorFlyStraight::recalculateIntermediateValues()
 {
 	Vector = End - Start;
-	WayLength = (f32)Vector.getLength();
+	TimeFactor = (f32)Vector.getLength() / TimeForWay;
 	Vector.normalize();
-
-	TimeFactor = WayLength / TimeForWay;
 }
-
-
-
-//! destructor
-CSceneNodeAnimatorFlyStraight::~CSceneNodeAnimatorFlyStraight()
-{
-}
-
 
 
 //! animates a scene node
@@ -50,12 +42,34 @@ void CSceneNodeAnimatorFlyStraight::animateNode(ISceneNode* node, u32 timeMs)
 
 	u32 t = (timeMs-StartTime);
 
-	core::vector3df pos = Start;
+	core::vector3df pos;
 
-	if (!Loop && t >= TimeForWay)
+	if (!Loop && !PingPong && t >= TimeForWay)
+	{
 		pos = End;
+		HasFinished = true;
+	}
+	else if (!Loop && PingPong && t >= TimeForWay * 2.f )
+	{
+		pos = Start;
+		HasFinished = true;
+	}
 	else
-		pos += Vector * (f32)fmod((f32)t, (f32)TimeForWay) * TimeFactor;
+	{
+		f32 phase = fmodf( (f32) t, (f32) TimeForWay );
+		core::vector3df rel = Vector * phase * TimeFactor;
+		const bool pong = PingPong && fmodf( (f32) t, (f32) TimeForWay*2.f ) >= TimeForWay;
+
+		if ( !pong )
+		{
+			pos += Start + rel;
+		}
+		else
+		{
+			pos = End - rel;
+		}
+	}
+
 	node->setPosition(pos);
 }
 
@@ -67,6 +81,7 @@ void CSceneNodeAnimatorFlyStraight::serializeAttributes(io::IAttributes* out, io
 	out->addVector3d("End", End);
 	out->addInt("TimeForWay", TimeForWay);
 	out->addBool("Loop", Loop);
+	out->addBool("PingPong", PingPong);
 }
 
 
@@ -77,17 +92,20 @@ void CSceneNodeAnimatorFlyStraight::deserializeAttributes(io::IAttributes* in, i
 	End = in->getAttributeAsVector3d("End");
 	TimeForWay = in->getAttributeAsInt("TimeForWay");
 	Loop = in->getAttributeAsBool("Loop");
+	PingPong = in->getAttributeAsBool("PingPong");
 
-	recalculateImidiateValues();
+	recalculateIntermediateValues();
 }
+
 
 ISceneNodeAnimator* CSceneNodeAnimatorFlyStraight::createClone(ISceneNode* node, ISceneManager* newManager)
 {
-	CSceneNodeAnimatorFlyStraight * newAnimator = 
-		new CSceneNodeAnimatorFlyStraight(Start, End, TimeForWay, Loop, StartTime);
+	CSceneNodeAnimatorFlyStraight * newAnimator =
+		new CSceneNodeAnimatorFlyStraight(Start, End, TimeForWay, Loop, StartTime, PingPong);
 
 	return newAnimator;
 }
+
 
 } // end namespace scene
 } // end namespace irr

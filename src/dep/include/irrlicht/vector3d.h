@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -13,7 +13,7 @@ namespace core
 {
 
 	//! 3d vector template class with lots of operators and methods.
-	/** The vector3d class is used in Irrlicht for three main purposes: 
+	/** The vector3d class is used in Irrlicht for three main purposes:
 		1) As a direction vector (most of the methods assume this).
 		2) As a position in 3d space (which is synonymous with a direction vector from the origin to this position).
 		3) To hold three Euler rotations, where X is pitch, Y is yaw and Z is roll.
@@ -57,10 +57,37 @@ namespace core
 		vector3d<T> operator/(const T v) const { T i=(T)1.0/v; return vector3d<T>(X * i, Y * i, Z * i); }
 		vector3d<T>& operator/=(const T v) { T i=(T)1.0/v; X*=i; Y*=i; Z*=i; return *this; }
 
-		bool operator<=(const vector3d<T>&other) const { return X<=other.X && Y<=other.Y && Z<=other.Z;}
-		bool operator>=(const vector3d<T>&other) const { return X>=other.X && Y>=other.Y && Z>=other.Z;}
-		bool operator<(const vector3d<T>&other) const { return X<other.X && Y<other.Y && Z<other.Z;}
-		bool operator>(const vector3d<T>&other) const { return X>other.X && Y>other.Y && Z>other.Z;}
+		//! sort in order X, Y, Z. Equality with rounding tolerance.
+		bool operator<=(const vector3d<T>&other) const
+		{
+			return 	(X<other.X || core::equals(X, other.X)) ||
+					(core::equals(X, other.X) && (Y<other.Y || core::equals(Y, other.Y))) ||
+					(core::equals(X, other.X) && core::equals(Y, other.Y) && (Z<other.Z || core::equals(Z, other.Z)));
+		}
+
+		//! sort in order X, Y, Z. Equality with rounding tolerance.
+		bool operator>=(const vector3d<T>&other) const
+		{
+			return 	(X>other.X || core::equals(X, other.X)) ||
+					(core::equals(X, other.X) && (Y>other.Y || core::equals(Y, other.Y))) ||
+					(core::equals(X, other.X) && core::equals(Y, other.Y) && (Z>other.Z || core::equals(Z, other.Z)));
+		}
+
+		//! sort in order X, Y, Z. Difference must be above rounding tolerance.
+		bool operator<(const vector3d<T>&other) const
+		{
+			return 	(X<other.X && !core::equals(X, other.X)) ||
+					(core::equals(X, other.X) && Y<other.Y && !core::equals(Y, other.Y)) ||
+					(core::equals(X, other.X) && core::equals(Y, other.Y) && Z<other.Z && !core::equals(Z, other.Z));
+		}
+
+		//! sort in order X, Y, Z. Difference must be above rounding tolerance.
+		bool operator>(const vector3d<T>&other) const
+		{
+			return 	(X>other.X && !core::equals(X, other.X)) ||
+					(core::equals(X, other.X) && Y>other.Y && !core::equals(Y, other.Y)) ||
+					(core::equals(X, other.X) && core::equals(Y, other.Y) && Z>other.Z && !core::equals(Z, other.Z));
+		}
 
 		//! use weak float compare
 		bool operator==(const vector3d<T>& other) const
@@ -76,7 +103,7 @@ namespace core
 		// functions
 
 		//! returns if this vector equals the other one, taking floating point rounding errors into account
-		bool equals(const vector3d<T>& other, const T tolerance = (T)ROUNDING_ERROR_32 ) const
+		bool equals(const vector3d<T>& other, const T tolerance = (T)ROUNDING_ERROR_f32 ) const
 		{
 			return core::equals(X, other.X, tolerance) &&
 				core::equals(Y, other.Y, tolerance) &&
@@ -87,7 +114,7 @@ namespace core
 		vector3d<T>& set(const vector3d<T>& p) {X=p.X; Y=p.Y; Z=p.Z;return *this;}
 
 		//! Get length of the vector.
-		T getLength() const { return (T) sqrt((f64)(X*X + Y*Y + Z*Z)); }
+		T getLength() const { return core::squareroot( X*X + Y*Y + Z*Z ); }
 
 		//! Get squared length of the vector.
 		/** This is useful because it is much faster than getLength().
@@ -140,10 +167,11 @@ namespace core
 		\return Reference to this vector after normalization. */
 		vector3d<T>& normalize()
 		{
-			f32 length = (f32)(X*X + Y*Y + Z*Z);
-			if (core::equals(length, 0.f))
+			f64 length = X*X + Y*Y + Z*Z;
+			if (core::equals(length, 0.0)) // this check isn't an optimization but prevents getting NAN in the sqrt.
 				return *this;
-			length = core::reciprocal_squareroot ( (f32)length );
+			length = core::reciprocal_squareroot(length);
+
 			X = (T)(X * length);
 			Y = (T)(Y * length);
 			Z = (T)(Z * length);
@@ -160,9 +188,9 @@ namespace core
 		//! Inverts the vector.
 		vector3d<T>& invert()
 		{
-			X *= -1.0f;
-			Y *= -1.0f;
-			Z *= -1.0f;
+			X *= -1;
+			Y *= -1;
+			Z *= -1;
 			return *this;
 		}
 
@@ -265,31 +293,56 @@ namespace core
 		// Where target and seeker are of type ISceneNode*
 		const vector3df toTarget(target->getAbsolutePosition() - seeker->getAbsolutePosition());
 		const vector3df requiredRotation = toTarget.getHorizontalAngle();
-		seeker->setRotation(requiredRotation); 
+		seeker->setRotation(requiredRotation);
 
-		\return A rotation vector containing the X (pitch) and Y (raw) rotations (in degrees) that when applied to a 
-		+Z (e.g. 0, 0, 1) direction vector would make it point in the same direction as this vector. The Z (roll) rotation 
+		\return A rotation vector containing the X (pitch) and Y (raw) rotations (in degrees) that when applied to a
+		+Z (e.g. 0, 0, 1) direction vector would make it point in the same direction as this vector. The Z (roll) rotation
 		is always 0, since two Euler rotations are sufficient to point in any given direction. */
 		vector3d<T> getHorizontalAngle() const
 		{
 			vector3d<T> angle;
 
-			angle.Y = (T)(atan2(X, Z) * RADTODEG64);
+			const f64 tmp = (atan2((f64)X, (f64)Z) * RADTODEG64);
+			angle.Y = (T)tmp;
 
-			if (angle.Y < 0.0f)
-				angle.Y += 360.0f;
-			if (angle.Y >= 360.0f)
-				angle.Y -= 360.0f;
+			if (angle.Y < 0)
+				angle.Y += 360;
+			if (angle.Y >= 360)
+				angle.Y -= 360;
 
-			const f64 z1 = sqrt(X*X + Z*Z);
+			const f64 z1 = core::squareroot(X*X + Z*Z);
 
-			angle.X = (T)(atan2(z1, (f64)Y) * RADTODEG64 - 90.0);
+			angle.X = (T)(atan2((f64)z1, (f64)Y) * RADTODEG64 - 90.0);
 
-			if (angle.X < 0.0f)
-				angle.X += 360.0f;
-			if (angle.X >= 360.0f)
-				angle.X -= 360.0f;
+			if (angle.X < 0)
+				angle.X += 360;
+			if (angle.X >= 360)
+				angle.X -= 360;
 
+			return angle;
+		}
+
+		//! Get the spherical coordinate angles
+		/** This returns Euler degrees for the point represented by
+		this vector.  The calculation assumes the pole at (0,1,0) and
+		returns the angles in X and Y.
+		*/
+		vector3d<T> getSphericalCoordinateAngles()
+		{
+			vector3d<T> angle;
+			const f64 length = X*X + Y*Y + Z*Z;
+
+			if (length)
+			{
+				if (X!=0)
+				{
+					angle.Y = (T)(atan2((f64)Z,(f64)X) * RADTODEG64);
+				}
+				else if (Z<0)
+					angle.Y=180;
+
+				angle.X = (T)(acos(Y * core::reciprocal_squareroot(length)) * RADTODEG64);
+			}
 			return angle;
 		}
 
@@ -297,9 +350,9 @@ namespace core
 		/** This vector is assumed to be a rotation vector composed of 3 Euler angle rotations, in degrees.
 		The implementation performs the same calculations as using a matrix to do the rotation.
 
-		\param[in] forwards  The direction representing "forwards" which will be rotated by this vector. 
+		\param[in] forwards  The direction representing "forwards" which will be rotated by this vector.
 		If you do not provide a direction, then the +Z axis (0, 0, 1) will be assumed to be forwards.
-		\return A direction vector calculated by rotating the forwards direction by the 3 Euler angles 
+		\return A direction vector calculated by rotating the forwards direction by the 3 Euler angles
 		(in degrees) represented by this vector. */
 		vector3d<T> rotationToDirection(const vector3d<T> & forwards = vector3d<T>(0, 0, 1)) const
 		{
@@ -343,15 +396,24 @@ namespace core
 
 		//! X coordinate of the vector
 		T X;
+
 		//! Y coordinate of the vector
 		T Y;
+
 		//! Z coordinate of the vector
 		T Z;
 	};
 
+	//! partial specialization for integer vectors
+	// Implementor note: inline keyword needed due to template specialization for s32. Otherwise put specialization into a .cpp
+	template <>
+	inline vector3d<s32> vector3d<s32>::operator /(s32 val) const {return core::vector3d<s32>(X/val,Y/val,Z/val);}
+	template <>
+	inline vector3d<s32>& vector3d<s32>::operator /=(s32 val) {X/=val;Y/=val;Z/=val; return *this;}
 
 	//! Typedef for a f32 3d vector.
 	typedef vector3d<f32> vector3df;
+
 	//! Typedef for an integer 3d vector.
 	typedef vector3d<s32> vector3di;
 

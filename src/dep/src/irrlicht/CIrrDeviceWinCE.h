@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -6,7 +6,7 @@
 #define __C_IRR_DEVICE_WINCE_H_INCLUDED__
 
 #include "IrrCompileConfig.h"
-#ifdef _IRR_USE_WINDOWS_CE_DEVICE_
+#ifdef _IRR_COMPILE_WITH_WINDOWS_CE_DEVICE_
 
 #include "CIrrDeviceStub.h"
 #include "IrrlichtDevice.h"
@@ -66,17 +66,33 @@ namespace irr
 		//! Notifies the device, that it has been resized
 		void OnResized();
 
-		//! Sets if the window should be resizeable in windowed mode.
-		virtual void setResizeAble(bool resize=false);
+		//! Sets if the window should be resizable in windowed mode.
+		virtual void setResizable(bool resize=false);
+
+		//! Minimizes the window.
+		virtual void minimizeWindow();
+
+		//! Maximizes the window.
+		virtual void maximizeWindow();
+
+		//! Restores the window size.
+		virtual void restoreWindow();
+
+		//! Get the device type
+		virtual E_DEVICE_TYPE getType() const
+		{
+				return EIDT_WINCE;
+		}
 
 		//! Implementation of the win32 cursor control
 		class CCursorControl : public gui::ICursorControl
 		{
 		public:
 
-			CCursorControl(const core::dimension2d<s32>& wsize, HWND hwnd, bool fullscreen)
-				: WindowSize(wsize), InvWindowSize(0.0f, 0.0f), IsVisible(true),
-					HWnd(hwnd), BorderX(0), BorderY(0), UseReferenceRect(false)
+			CCursorControl(const core::dimension2d<u32>& wsize, HWND hwnd, bool fullscreen)
+				: WindowSize(wsize), InvWindowSize(0.0f, 0.0f),
+					HWnd(hwnd), BorderX(0), BorderY(0),
+					UseReferenceRect(false), IsVisible(true)
 			{
 				if (WindowSize.Width!=0)
 					InvWindowSize.Width = 1.0f / WindowSize.Width;
@@ -114,9 +130,9 @@ namespace irr
 			virtual void setPosition(f32 x, f32 y)
 			{
 				if (!UseReferenceRect)
-					setPosition((s32)(x*WindowSize.Width), (s32)(y*WindowSize.Height));
+					setPosition(core::round32(x*WindowSize.Width), core::round32(y*WindowSize.Height));
 				else
-					setPosition((s32)(x*ReferenceRect.getWidth()), (s32)(y*ReferenceRect.getHeight()));
+					setPosition(core::round32(x*ReferenceRect.getWidth()), core::round32(y*ReferenceRect.getHeight()));
 			}
 
 			//! Sets the new position of the cursor.
@@ -132,7 +148,7 @@ namespace irr
 
 				if (UseReferenceRect)
 				{
-					SetCursorPos(ReferenceRect.UpperLeftCorner.X + x, 
+					SetCursorPos(ReferenceRect.UpperLeftCorner.X + x,
 								 ReferenceRect.UpperLeftCorner.Y + y);
 				}
 				else
@@ -146,7 +162,7 @@ namespace irr
 			}
 
 			//! Returns the current position of the mouse cursor.
-			virtual core::position2d<s32> getPosition()
+			virtual const core::position2d<s32>& getPosition()
 			{
 				updateInternalCursorPosition();
 				return CursorPos;
@@ -187,14 +203,33 @@ namespace irr
 					UseReferenceRect = false;
 			}
 
+			/** Used to notify the cursor that the window was resized. */
+			virtual void OnResize(const core::dimension2d<u32>& size)
+			{
+				WindowSize = size;
+				if (size.Width!=0)
+					InvWindowSize.Width = 1.0f / size.Width;
+				else 
+					InvWindowSize.Width = 0.f;
+ 
+				if (size.Height!=0)
+					InvWindowSize.Height = 1.0f / size.Height;
+				else
+					InvWindowSize.Height = 0.f;
+			}
+
 		private:
 
 			//! Updates the internal cursor position
 			void updateInternalCursorPosition()
 			{
 				POINT p;
-				GetCursorPos(&p);
-				RECT rect;
+				if (!GetCursorPos(&p))
+				{
+					DWORD xy = GetMessagePos();
+					p.x = GET_X_LPARAM(xy);
+					p.y = GET_Y_LPARAM(xy);
+				} 
 
 				if (UseReferenceRect)
 				{
@@ -203,6 +238,7 @@ namespace irr
 				}
 				else
 				{
+					RECT rect;
 					if (GetWindowRect(HWnd, &rect))
 					{
 						CursorPos.X = p.x-rect.left-BorderX;
@@ -221,12 +257,12 @@ namespace irr
 			core::position2d<s32> CursorPos;
 			core::dimension2d<s32> WindowSize;
 			core::dimension2d<f32> InvWindowSize;
-			bool IsVisible;
 			HWND HWnd;
 
 			s32 BorderX, BorderY;
-			bool UseReferenceRect;
 			core::rect<s32> ReferenceRect;
+			bool UseReferenceRect;
+			bool IsVisible;
 		};
 
 
@@ -256,6 +292,5 @@ namespace irr
 
 } // end namespace irr
 
-#endif
-#endif
-
+#endif // _IRR_COMPILE_WITH_WINDOWS_CE_DEVICE_
+#endif // __C_IRR_DEVICE_WINCE_H_INCLUDED__

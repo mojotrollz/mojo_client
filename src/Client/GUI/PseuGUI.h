@@ -128,7 +128,7 @@ private:
     Scene *_scene;
     irr::ITimer *_timer;
     uint32 _passtime, _lastpasstime, _passtimediff;
-    irr::core::dimension2d<irr::s32> _screendimension;
+    irr::core::dimension2d<irr::u32> _screendimension;
     uint32 _throttle;//used for frameratelimiting
     bool _updateScene; // manually update scene?
 

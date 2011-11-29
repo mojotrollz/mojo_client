@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -21,9 +21,9 @@ CGUIStaticText::CGUIStaticText(const wchar_t* text, bool border,
 			IGUIEnvironment* environment, IGUIElement* parent,
 			s32 id, const core::rect<s32>& rectangle,
 			bool background)
-: IGUIStaticText(environment, parent, id, rectangle), Border(border), 
+: IGUIStaticText(environment, parent, id, rectangle),
 	HAlign(EGUIA_UPPERLEFT), VAlign(EGUIA_UPPERLEFT),
-	OverrideColorEnabled(false), WordWrap(false), Background(background),
+	Border(border), OverrideColorEnabled(false), OverrideBGColorEnabled(false), WordWrap(false), Background(background),
 	OverrideColor(video::SColor(101,255,255,255)), BGColor(video::SColor(101,210,210,210)),
 	OverrideFont(0), LastBreakFont(0)
 {
@@ -64,6 +64,9 @@ void CGUIStaticText::draw()
 
 	if (Background)
 	{
+		if ( !OverrideBGColorEnabled )	// skin-colors can change
+			BGColor = skin->getColor(gui::EGDC_3D_FACE);
+
 		driver->draw2DRectangle(BGColor, frameRect, &AbsoluteClippingRect);
 	}
 
@@ -88,12 +91,12 @@ void CGUIStaticText::draw()
 			{
 				if (VAlign == EGUIA_LOWERRIGHT)
 				{
-					frameRect.UpperLeftCorner.Y = frameRect.LowerRightCorner.Y - 
+					frameRect.UpperLeftCorner.Y = frameRect.LowerRightCorner.Y -
 						font->getDimension(L"A").Height - font->getKerningHeight();
 				}
 				if (HAlign == EGUIA_LOWERRIGHT)
 				{
-					frameRect.UpperLeftCorner.X = frameRect.LowerRightCorner.X - 
+					frameRect.UpperLeftCorner.X = frameRect.LowerRightCorner.X -
 						font->getDimension(Text.c_str()).Width;
 				}
 
@@ -122,7 +125,7 @@ void CGUIStaticText::draw()
 				{
 					if (HAlign == EGUIA_LOWERRIGHT)
 					{
-						r.UpperLeftCorner.X = frameRect.LowerRightCorner.X - 
+						r.UpperLeftCorner.X = frameRect.LowerRightCorner.X -
 							font->getDimension(BrokenText[i].c_str()).Width;
 					}
 
@@ -177,6 +180,7 @@ void CGUIStaticText::setOverrideColor(video::SColor color)
 void CGUIStaticText::setBackgroundColor(video::SColor color)
 {
 	BGColor = color;
+	OverrideBGColorEnabled = true;
 	Background = true;
 }
 
@@ -274,17 +278,17 @@ void CGUIStaticText::breakText()
 		if (c == L'\r') // Mac or Windows breaks
 		{
 			lineBreak = true;
-			c = ' ';
 			if (Text[i+1] == L'\n') // Windows breaks
 			{
 				Text.erase(i+1);
 				--size;
 			}
+			c = '\0';
 		}
 		else if (c == L'\n') // Unix breaks
 		{
 			lineBreak = true;
-			c = ' ';
+			c = '\0';
 		}
 
 		if (c == L' ' || c == 0 || i == (size-1))
@@ -348,6 +352,7 @@ void CGUIStaticText::setText(const wchar_t* text)
 	IGUIElement::setText(text);
 	breakText();
 }
+
 
 void CGUIStaticText::updateAbsolutePosition()
 {
@@ -424,9 +429,11 @@ void CGUIStaticText::serializeAttributes(io::IAttributes* out, io::SAttributeRea
 
 	out->addBool	("Border",              Border);
 	out->addBool	("OverrideColorEnabled",OverrideColorEnabled);
-	out->addBool	("WordWrap",		WordWrap);
+	out->addBool	("OverrideBGColorEnabled",OverrideBGColorEnabled);
+	out->addBool	("WordWrap",			WordWrap);
 	out->addBool	("Background",          Background);
 	out->addColor	("OverrideColor",       OverrideColor);
+	out->addColor	("BGColor",       		BGColor);
 	out->addEnum	("HTextAlign",          HAlign, GUIAlignmentNames);
 	out->addEnum	("VTextAlign",          VAlign, GUIAlignmentNames);
 
@@ -440,11 +447,12 @@ void CGUIStaticText::deserializeAttributes(io::IAttributes* in, io::SAttributeRe
 	IGUIStaticText::deserializeAttributes(in,options);
 
 	Border = in->getAttributeAsBool("Border");
-	OverrideColor = in->getAttributeAsColor("OverrideColor");
-
 	enableOverrideColor(in->getAttributeAsBool("OverrideColorEnabled"));
+	OverrideBGColorEnabled = in->getAttributeAsBool("OverrideBGColorEnabled");
 	setWordWrap(in->getAttributeAsBool("WordWrap"));
 	Background = in->getAttributeAsBool("Background");
+	OverrideColor = in->getAttributeAsColor("OverrideColor");
+	BGColor = in->getAttributeAsColor("BGColor");
 
 	setTextAlignment( (EGUI_ALIGNMENT) in->getAttributeAsEnumeration("HTextAlign", GUIAlignmentNames),
                       (EGUI_ALIGNMENT) in->getAttributeAsEnumeration("VTextAlign", GUIAlignmentNames));

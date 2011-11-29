@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -37,11 +37,14 @@ namespace gui
 		EGST_BURNING_SKIN,
 
 		//! An unknown skin, not serializable at present
-		EGST_UNKNOWN
+		EGST_UNKNOWN,
+
+		//! this value is not used, it only specifies the number of skin types
+		EGST_COUNT
 	};
 
 	//! Names for gui element types
-	const c8* const GUISkinTypeNames[] =
+	const c8* const GUISkinTypeNames[EGST_COUNT+1] =
 	{
 		"windowsClassic",
 		"windowsMetallic",
@@ -102,7 +105,7 @@ namespace gui
 	};
 
 	//! Names for default skin colors
-	const c8* const GUISkinColorNames[] =
+	const c8* const GUISkinColorNames[EGDC_COUNT+1] =
 	{
 		"3DDarkShadow",
 		"3DShadow",
@@ -139,9 +142,9 @@ namespace gui
 		EGDS_WINDOW_BUTTON_WIDTH,
 		//! width of a checkbox check
 		EGDS_CHECK_BOX_WIDTH,
-		//! width of a messagebox
+		//! deprecated
 		EGDS_MESSAGE_BOX_WIDTH,
-		//! height of a messagebox
+		//! deprecated
 		EGDS_MESSAGE_BOX_HEIGHT,
 		//! width of a default button
 		EGDS_BUTTON_WIDTH,
@@ -151,6 +154,23 @@ namespace gui
 		EGDS_TEXT_DISTANCE_X,
 		//! distance for text from background
 		EGDS_TEXT_DISTANCE_Y,
+		//! distance for text in the title bar, from the left of the window rect
+		EGDS_TITLEBARTEXT_DISTANCE_X,
+		//! distance for text in the title bar, from the top of the window rect
+		EGDS_TITLEBARTEXT_DISTANCE_Y,
+		//! free space in a messagebox between borders and contents on all sides
+		EGDS_MESSAGE_BOX_GAP_SPACE,
+		//! minimal space to reserve for messagebox text-width
+		EGDS_MESSAGE_BOX_MIN_TEXT_WIDTH,
+		//! maximal space to reserve for messagebox text-width
+		EGDS_MESSAGE_BOX_MAX_TEXT_WIDTH,
+		//! deprecated - this was a typo. Should be removed for 1.8
+		EGDS_MESSAGE_BOX_MAX_TEST_WIDTH = EGDS_MESSAGE_BOX_MAX_TEXT_WIDTH,
+		//! minimal space to reserve for messagebox text-height
+		EGDS_MESSAGE_BOX_MIN_TEXT_HEIGHT,
+		//! maximal space to reserve for messagebox text-height
+		EGDS_MESSAGE_BOX_MAX_TEXT_HEIGHT,
+
 		//! this value is not used, it only specifies the amount of default sizes
 		//! available.
 		EGDS_COUNT
@@ -158,7 +178,7 @@ namespace gui
 
 
 	//! Names for default skin sizes
-	const c8* const GUISkinSizeNames[] =
+	const c8* const GUISkinSizeNames[EGDS_COUNT+1] =
 	{
 		"ScrollBarSize",
 		"MenuHeight",
@@ -170,7 +190,14 @@ namespace gui
 		"ButtonHeight",
 		"TextDistanceX",
 		"TextDistanceY",
-		0,
+		"TitleBarTextX",
+		"TitleBarTextY",
+		"MessageBoxGapSpace",
+		"MessageBoxMinTextWidth",
+		"MessageBoxMaxTextWidth",
+		"MessageBoxMinTextHeight",
+		"MessageBoxMaxTextHeight",
+		0
 	};
 
 
@@ -198,7 +225,7 @@ namespace gui
 	};
 
 	//! Names for default skin sizes
-	const c8* const GUISkinTextNames[] =
+	const c8* const GUISkinTextNames[EGDT_COUNT+1] =
 	{
 		"MessageBoxOkay",
 		"MessageBoxCancel",
@@ -208,7 +235,7 @@ namespace gui
 		"WindowButtonMaximize",
 		"WindowButtonMinimize",
 		"WindowButtonRestore",
-		0,
+		0
 	};
 
 	//! Customizable symbols for GUI
@@ -265,7 +292,7 @@ namespace gui
 		EGDI_COUNT
 	};
 
-	const c8* const GUISkinIconNames[] =
+	const c8* const GUISkinIconNames[EGDI_COUNT+1] =
 	{
 		"windowMaximize",
 		"windowRestore",
@@ -311,7 +338,7 @@ namespace gui
 		EGDF_COUNT
 	};
 
-	const c8* const GUISkinFontNames[] =
+	const c8* const GUISkinFontNames[EGDF_COUNT+1] =
 	{
 		"defaultFont",
 		"buttonFont",
@@ -423,11 +450,16 @@ namespace gui
 		\param drawTitleBar: True to enable title drawing.
 		\param rect: Defining area where to draw.
 		\param clip: Clip area.
-		\return Returns rect where it would be good to draw title bar text. */
+		\param checkClientArea: When set to non-null the function will not draw anything,
+		but will instead return the clientArea which can be used for drawing by the calling window.
+		That is the area without borders and without titlebar.
+		\return Returns rect where it would be good to draw title bar text. This will
+		work even when checkClientArea is set to a non-null value.*/
 		virtual core::rect<s32> draw3DWindowBackground(IGUIElement* element,
 			bool drawTitleBar, video::SColor titleBarColor,
 			const core::rect<s32>& rect,
-			const core::rect<s32>* clip=0) = 0;
+			const core::rect<s32>* clip=0,
+			core::rect<s32>* checkClientArea=0) = 0;
 
 		//! draws a standard 3d menu pane
 		/** Used for drawing for menus and context menus.
@@ -460,7 +492,8 @@ namespace gui
 		implementations to find out how to draw the part exactly.
 		\param active: Specifies if the tab is currently active.
 		\param rect: Defining area where to draw.
-		\param clip: Clip area. */
+		\param clip: Clip area.
+		\param alignment Alignment of GUI element. */
 		virtual void draw3DTabButton(IGUIElement* element, bool active,
 			const core::rect<s32>& rect, const core::rect<s32>* clip=0, gui::EGUI_ALIGNMENT alignment=EGUIA_UPPERLEFT) = 0;
 
@@ -471,7 +504,9 @@ namespace gui
 		\param border: Specifies if the border should be drawn.
 		\param background: Specifies if the background should be drawn.
 		\param rect: Defining area where to draw.
-		\param clip: Clip area. */
+		\param clip: Clip area.
+		\param tabHeight Height of tab.
+		\param alignment Alignment of GUI element. */
 		virtual void draw3DTabBody(IGUIElement* element, bool border, bool background,
 			const core::rect<s32>& rect, const core::rect<s32>* clip=0, s32 tabHeight=-1, gui::EGUI_ALIGNMENT alignment=EGUIA_UPPERLEFT ) = 0;
 
@@ -510,7 +545,4 @@ namespace gui
 } // end namespace irr
 
 #endif
-
-
-
 

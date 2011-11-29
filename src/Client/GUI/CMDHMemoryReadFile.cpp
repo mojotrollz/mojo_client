@@ -27,7 +27,7 @@ CMDHReadFile::CMDHReadFile(void* memory, long len, const c8* fileName)
 CMDHReadFile::~CMDHReadFile()
 {
     // Drop the Memory, Irrlicht keeps a Model Cache of loaded models
-    MemoryDataHolder::Delete(getFileName());
+    MemoryDataHolder::Delete(Filename.c_str());
 }
 
 
@@ -44,7 +44,7 @@ irr::s32 CMDHReadFile::read(void* buffer, irr::u32 sizeToRead)
 
 	irr::c8* p = (irr::c8*)Buffer;
 	memcpy(buffer, p + Pos, amount);
-	
+
 	Pos += amount;
 
 	return amount;
@@ -67,7 +67,7 @@ bool CMDHReadFile::seek(long finalPos, bool relativeMovement)
 	{
 		if (finalPos > Len)
 			return false;
-		
+
 		Pos = finalPos;
 	}
 
@@ -93,9 +93,9 @@ long CMDHReadFile::getPos() const
 
 
 //! returns name of file
-const irr::c8* CMDHReadFile::getFileName() const
+const irr::io::path& CMDHReadFile::getFileName() const
 {
-	return Filename.c_str();
+	return Filename;
 }
 
 

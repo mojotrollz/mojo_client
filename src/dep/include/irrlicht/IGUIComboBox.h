@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -27,8 +27,14 @@ namespace gui
 		//! Returns string of an item. the idx may be a value from 0 to itemCount-1
 		virtual const wchar_t* getItem(u32 idx) const = 0;
 
+		//! Returns item data of an item. the idx may be a value from 0 to itemCount-1
+		virtual u32 getItemData(u32 idx) const = 0;
+
+		//! Returns index based on item data
+		virtual s32 getIndexForItemData(u32 data ) const = 0;
+
 		//! Adds an item and returns the index of it
-		virtual u32 addItem(const wchar_t* text) = 0;
+		virtual u32 addItem(const wchar_t* text, u32 data = 0) = 0;
 
 		//! Removes an item from the combo box.
 		/** Warning. This will change the index of all following items */
@@ -44,10 +50,10 @@ namespace gui
 		virtual void setSelected(s32 idx) = 0;
 
 		//! Sets text justification of the text area
-		/** \param horizontal: EGUIA_UPPERLEFT for left justified (default), 
-		 EGUIA_LOWEERRIGHT for right justified, or EGUIA_CENTER for centered text.
-		\param vertical: EGUIA_UPPERLEFT to align with top edge, 
-		 EGUIA_LOWEERRIGHT for bottom edge, or EGUIA_CENTER for centered text (default). */
+		/** \param horizontal: EGUIA_UPPERLEFT for left justified (default),
+		EGUIA_LOWEERRIGHT for right justified, or EGUIA_CENTER for centered text.
+		\param vertical: EGUIA_UPPERLEFT to align with top edge,
+		EGUIA_LOWEERRIGHT for bottom edge, or EGUIA_CENTER for centered text (default). */
 		virtual void setTextAlignment(EGUI_ALIGNMENT horizontal, EGUI_ALIGNMENT vertical) = 0;
 	};
 

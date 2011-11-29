@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -24,7 +24,7 @@ CTextSceneNode::CTextSceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
 			video::SColor color)
 	: ITextSceneNode(parent, mgr, id, position), Text(text), Color(color),
 		Font(font), Coll(coll)
-	
+
 {
 	#ifdef _DEBUG
 	setDebugName("CTextSceneNode");
@@ -57,7 +57,7 @@ void CTextSceneNode::render()
 	if (!Font || !Coll)
 		return;
 
-	core::position2d<s32> pos = Coll->getScreenCoordinatesFrom3DPosition(getAbsolutePosition(), 
+	core::position2d<s32> pos = Coll->getScreenCoordinatesFrom3DPosition(getAbsolutePosition(),
 		SceneManager->getActiveCamera());
 
 	core::rect<s32> r(pos, core::dimension2d<s32>(1,1));
@@ -89,7 +89,7 @@ void CTextSceneNode::setTextColor(video::SColor color)
 
 
 //! constructor
-CBillboardTextSceneNode::CBillboardTextSceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,	
+CBillboardTextSceneNode::CBillboardTextSceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
 	gui::IGUIFont* font,const wchar_t* text,
 	const core::vector3df& position, const core::dimension2d<f32>& size,
 	video::SColor colorTop,video::SColor shade_bottom )
@@ -104,7 +104,7 @@ CBillboardTextSceneNode::CBillboardTextSceneNode(ISceneNode* parent, ISceneManag
 	Material.MaterialTypeParam = 1.f / 255.f;
 	Material.BackfaceCulling = false;
 	Material.Lighting = false;
-	Material.ZBuffer = true;
+	Material.ZBuffer = video::ECFN_LESSEQUAL;
 	Material.ZWriteEnable = false;
 
 	if (font)
@@ -154,6 +154,9 @@ CBillboardTextSceneNode::~CBillboardTextSceneNode()
 //! sets the text string
 void CBillboardTextSceneNode::setText(const wchar_t* text)
 {
+	if ( !Mesh )
+		return;
+
 	Text = text;
 
 	Symbol.clear();
@@ -199,7 +202,7 @@ void CBillboardTextSceneNode::setText(const wchar_t* text)
 		tex[1] = (s.LowerRightCorner.Y * dim[1]) + 0.5f*dim[1];
 		tex[2] = (s.UpperLeftCorner.Y  * dim[1]) - 0.5f*dim[1];
 		tex[3] = (s.UpperLeftCorner.X  * dim[0]) - 0.5f*dim[0];
-		
+
 		buf->Vertices[firstVert+0].TCoords.set(tex[0], tex[1]);
 		buf->Vertices[firstVert+1].TCoords.set(tex[0], tex[2]);
 		buf->Vertices[firstVert+2].TCoords.set(tex[3], tex[2]);
@@ -218,7 +221,7 @@ void CBillboardTextSceneNode::setText(const wchar_t* text)
 		buf->Indices[firstInd+5] = (u16)firstVert+2;
 
 		wchar_t *tp = 0;
-		if (i>0) 
+		if (i>0)
 			tp = &Text[i-1];
 
 		info.Width = (f32)s.getWidth();
@@ -325,6 +328,9 @@ void CBillboardTextSceneNode::OnRegisterSceneNode()
 //! render
 void CBillboardTextSceneNode::render()
 {
+	if ( !Mesh )
+		return;
+
 	video::IVideoDriver* driver = SceneManager->getVideoDriver();
 
 	// draw
@@ -408,6 +414,9 @@ void CBillboardTextSceneNode::setTextColor(video::SColor color)
 //! \param overallColor: the color to set
 void CBillboardTextSceneNode::setColor(const video::SColor & overallColor)
 {
+	if ( !Mesh )
+		return;
+
 	for ( u32 i = 0; i != Text.size (); ++i )
 	{
 		const SSymbolInfo &info = Symbol[i];
@@ -425,6 +434,9 @@ void CBillboardTextSceneNode::setColor(const video::SColor & overallColor)
 //! \param bottomColor: the color to set the bottom vertices
 void CBillboardTextSceneNode::setColor(const video::SColor & topColor, const video::SColor & bottomColor)
 {
+	if ( !Mesh )
+		return;
+
 	ColorBottom = bottomColor;
 	ColorTop = topColor;
 	for ( u32 i = 0; i != Text.size (); ++i )

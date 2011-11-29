@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -14,7 +14,8 @@ namespace video
 {
 
 //! constructor
-CSoftwareTexture::CSoftwareTexture(IImage* image, const char* name, bool renderTarget)
+CSoftwareTexture::CSoftwareTexture(IImage* image, const io::path& name,
+		bool renderTarget, void* mipmapData)
 : ITexture(name), Texture(0), IsRenderTarget(renderTarget)
 {
 	#ifdef _DEBUG
@@ -23,13 +24,11 @@ CSoftwareTexture::CSoftwareTexture(IImage* image, const char* name, bool renderT
 
 	if (image)
 	{
-		core::dimension2d<s32> optSize;
 		OrigSize = image->getDimension();
+		core::dimension2d<u32> optSize=OrigSize.getOptimalSize();
 
-		optSize.Width = getTextureSizeFromSurfaceSize(OrigSize.Width);
-		optSize.Height = getTextureSizeFromSurfaceSize(OrigSize.Height);
-
-		Image = new CImage(ECF_A1R5G5B5, image);
+		Image = new CImage(ECF_A1R5G5B5, OrigSize);
+		image->copyTo(Image);
 
 		if (optSize == OrigSize)
 		{
@@ -59,7 +58,7 @@ CSoftwareTexture::~CSoftwareTexture()
 
 
 //! lock function
-void* CSoftwareTexture::lock(bool readOnly)
+void* CSoftwareTexture::lock(bool readOnly, u32 mipmapLevel)
 {
 	return Image->lock();
 }
@@ -80,14 +79,14 @@ void CSoftwareTexture::unlock()
 
 
 //! Returns original size of the texture.
-const core::dimension2d<s32>& CSoftwareTexture::getOriginalSize() const
+const core::dimension2d<u32>& CSoftwareTexture::getOriginalSize() const
 {
 	return OrigSize;
 }
 
 
 //! Returns (=size) of the texture.
-const core::dimension2d<s32>& CSoftwareTexture::getSize() const
+const core::dimension2d<u32>& CSoftwareTexture::getSize() const
 {
 	return Image->getDimension();
 }
@@ -105,18 +104,6 @@ CImage* CSoftwareTexture::getImage()
 CImage* CSoftwareTexture::getTexture()
 {
 	return Texture;
-}
-
-
-
-//! returns the size of a texture which would be the optimize size for rendering it
-inline s32 CSoftwareTexture::getTextureSizeFromSurfaceSize(s32 size) const
-{
-	s32 ts = 0x01;
-	while(ts < size)
-		ts <<= 1;
-
-	return ts;
 }
 
 
@@ -146,7 +133,7 @@ u32 CSoftwareTexture::getPitch() const
 
 //! Regenerates the mip map levels of the texture. Useful after locking and
 //! modifying the texture
-void CSoftwareTexture::regenerateMipMapLevels()
+void CSoftwareTexture::regenerateMipMapLevels(void* mipmapData)
 {
 	// our software textures don't have mip maps
 }

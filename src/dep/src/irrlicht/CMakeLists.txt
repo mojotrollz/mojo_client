@@ -9,6 +9,25 @@ include_directories(${INCLUDE_DIRS})
 
 add_library(irrlicht ${LIBTYPE} # this may be considered a hack.
 
+aesGladman/aescrypt.cpp
+aesGladman/aeskey.cpp
+aesGladman/aestab.cpp
+aesGladman/fileenc.cpp
+aesGladman/hmac.cpp
+aesGladman/prng.cpp
+aesGladman/pwd2key.cpp
+aesGladman/sha1.cpp
+aesGladman/sha2.cpp
+
+bzip2/blocksort.c
+bzip2/bzlib.c
+bzip2/crctable.c
+bzip2/decompress.c
+bzip2/bzcompress.c
+bzip2/huffman.c
+bzip2/randtable.c
+
+
 zlib/adler32.c
 zlib/compress.c
 zlib/crc32.c
@@ -22,28 +41,38 @@ zlib/trees.c
 zlib/uncompr.c
 zlib/zutil.c
 
-libpng/example.c
-libpng/pnggccrd.c
-libpng/pngpread.c
-libpng/pngrtran.c
-libpng/pngtest.c
-libpng/pngwio.c
-libpng/pngwutil.c
-libpng/png.c
-libpng/pngget.c
-libpng/pngread.c
-libpng/pngrutil.c
-libpng/pngtrans.c
-libpng/pngwrite.c
-libpng/pngerror.c
-libpng/pngmem.c
-libpng/pngrio.c
-libpng/pngset.c
-libpng/pngvcrd.c
-libpng/pngwtran.c
+lzma/LzmaDec.c
 
+libpng/example.c
+libpng/png.c
+libpng/pngerror.c
+libpng/pnggccrd.c
+libpng/pngget.c
+libpng/pngmem.c
+libpng/pngpread.c
+libpng/pngread.c
+libpng/pngrio.c
+libpng/pngrtran.c
+libpng/pngrutil.c
+libpng/pngset.c
+libpng/pngtest.c
+libpng/pngtrans.c
+libpng/pngvcrd.c
+libpng/pngwio.c
+libpng/pngwrite.c
+libpng/pngwtran.c
+libpng/pngwutil.c
+
+# jpeglib/ansi2knr.c
+# # jpeglib/cdjpeg.c
+# jpeglib/cjpeg.c
+# jpeglib/ckconfig.c
+# jpeglib/djpeg.c
+# jpeglib/example.c
+jpeglib/jaricom.c
 jpeglib/jcapimin.c
 jpeglib/jcapistd.c
+jpeglib/jcarith.c
 jpeglib/jccoefct.c
 jpeglib/jccolor.c
 jpeglib/jcdctmgr.c
@@ -54,12 +83,12 @@ jpeglib/jcmarker.c
 jpeglib/jcmaster.c
 jpeglib/jcomapi.c
 jpeglib/jcparam.c
-jpeglib/jcphuff.c
 jpeglib/jcprepct.c
 jpeglib/jcsample.c
 jpeglib/jctrans.c
 jpeglib/jdapimin.c
 jpeglib/jdapistd.c
+jpeglib/jdarith.c
 jpeglib/jdatadst.c
 jpeglib/jdatasrc.c
 jpeglib/jdcoefct.c
@@ -71,7 +100,6 @@ jpeglib/jdmainct.c
 jpeglib/jdmarker.c
 jpeglib/jdmaster.c
 jpeglib/jdmerge.c
-jpeglib/jdphuff.c
 jpeglib/jdpostct.c
 jpeglib/jdsample.c
 jpeglib/jdtrans.c
@@ -82,12 +110,31 @@ jpeglib/jfdctint.c
 jpeglib/jidctflt.c
 jpeglib/jidctfst.c
 jpeglib/jidctint.c
-jpeglib/jidctred.c
+# jpeglib/jmemansi.c
+# # jpeglib/jmemdos.c
+# # jpeglib/jmemmac.c
 jpeglib/jmemmgr.c
+# jpeglib/jmemname.c
 jpeglib/jmemnobs.c
+# jpeglib/jpegtran.c
 jpeglib/jquant1.c
 jpeglib/jquant2.c
 jpeglib/jutils.c
+# jpeglib/rdbmp.c
+# jpeglib/rdcolmap.c
+# jpeglib/rdgif.c
+# # jpeglib/rdjpgcom.c
+# jpeglib/rdppm.c
+# jpeglib/rdrle.c
+# jpeglib/rdswitch.c
+# jpeglib/rdtarga.c
+# jpeglib/transupp.c
+# jpeglib/wrbmp.c
+# jpeglib/wrgif.c
+# # jpeglib/wrjpgcom.c
+# jpeglib/wrppm.c
+# jpeglib/wrrle.c
+# jpeglib/wrtarga.c
 
 
 C3DSMeshFileLoader.cpp
@@ -100,8 +147,6 @@ CBillboardSceneNode.cpp
 CBoneSceneNode.cpp
 CBSPMeshFileLoader.cpp
 CBurningShader_Raster_Reference.cpp
-CCameraFPSSceneNode.cpp
-CCameraMayaSceneNode.cpp
 CCameraSceneNode.cpp
 CColladaFileLoader.cpp
 CColladaMeshWriter.cpp
@@ -140,6 +185,7 @@ CGUIEnvironment.cpp
 CGUIFileOpenDialog.cpp
 CGUIFont.cpp
 CGUIImage.cpp
+CGUIImageList.cpp
 CGUIInOutFader.cpp
 CGUIListBox.cpp
 CGUIMenu.cpp
@@ -154,6 +200,7 @@ CGUIStaticText.cpp
 CGUITabControl.cpp
 CGUITable.cpp
 CGUIToolBar.cpp
+CGUITreeView.cpp
 CGUIWindow.cpp
 CImage.cpp
 CImageLoaderBMP.cpp
@@ -162,6 +209,7 @@ CImageLoaderPCX.cpp
 CImageLoaderPNG.cpp
 CImageLoaderPPM.cpp
 CImageLoaderPSD.cpp
+CImageLoaderRGB.cpp
 CImageLoaderTGA.cpp
 CImageLoaderWAL.cpp
 CImageWriterBMP.cpp
@@ -171,6 +219,8 @@ CImageWriterPNG.cpp
 CImageWriterPPM.cpp
 CImageWriterPSD.cpp
 CImageWriterTGA.cpp
+CIrrDeviceConsole.cpp
+CIrrDeviceFB.cpp
 CIrrDeviceLinux.cpp
 CIrrDeviceSDL.cpp
 CIrrDeviceStub.cpp
@@ -185,19 +235,21 @@ CLogger.cpp
 CLWOMeshFileLoader.cpp
 CMD2MeshFileLoader.cpp
 CMD3MeshFileLoader.cpp
-CMemoryReadFile.cpp
+CMemoryFile.cpp
 CMeshCache.cpp
 CMeshManipulator.cpp
 CMeshSceneNode.cpp
 CMetaTriangleSelector.cpp
+CMountPointReader.cpp
 CMS3DMeshFileLoader.cpp
 CMY3DMeshFileLoader.cpp
+CNPKReader.cpp
 CNullDriver.cpp
 COBJMeshFileLoader.cpp
 COBJMeshWriter.cpp
 COCTLoader.cpp
-COctTreeSceneNode.cpp
-COctTreeTriangleSelector.cpp
+COctreeSceneNode.cpp
+COctreeTriangleSelector.cpp
 COgreMeshFileLoader.cpp
 COpenGLDriver.cpp
 COpenGLExtensionHandler.cpp
@@ -221,6 +273,8 @@ CParticleRotationAffector.cpp
 CParticleScaleAffector.cpp
 CParticleSphereEmitter.cpp
 CParticleSystemSceneNode.cpp
+CPLYMeshFileLoader.cpp
+CPLYMeshWriter.cpp
 CQ3LevelMesh.cpp
 CQuake3ShaderSceneNode.cpp
 CReadFile.cpp
@@ -239,22 +293,23 @@ CShadowVolumeSceneNode.cpp
 CSkinnedMesh.cpp
 CSkyBoxSceneNode.cpp
 CSkyDomeSceneNode.cpp
-CSoftwareDriver2.cpp
 CSoftwareDriver.cpp
-CSoftwareTexture2.cpp
+CSoftwareDriver2.cpp
 CSoftwareTexture.cpp
+CSoftwareTexture2.cpp
 CSphereSceneNode.cpp
 CSTLMeshFileLoader.cpp
 CSTLMeshWriter.cpp
+CTarReader.cpp
 CTerrainSceneNode.cpp
 CTerrainTriangleSelector.cpp
 CTextSceneNode.cpp
 CTRFlat.cpp
 CTRFlatWire.cpp
+CTRGouraud.cpp
 CTRGouraud2.cpp
 CTRGouraudAlpha2.cpp
 CTRGouraudAlphaNoZ2.cpp
-CTRGouraud.cpp
 CTRGouraudWire.cpp
 CTriangleBBSelector.cpp
 CTriangleSelector.cpp
@@ -262,15 +317,15 @@ CTRTextureBlend.cpp
 CTRTextureDetailMap2.cpp
 CTRTextureFlat.cpp
 CTRTextureFlatWire.cpp
+CTRTextureGouraud.cpp
 CTRTextureGouraud2.cpp
-CTRTextureGouraudAdd2.cpp
 CTRTextureGouraudAdd.cpp
+CTRTextureGouraudAdd2.cpp
 CTRTextureGouraudAddNoZ2.cpp
 CTRTextureGouraudAlpha.cpp
 CTRTextureGouraudAlphaNoZ.cpp
-CTRTextureGouraud.cpp
-CTRTextureGouraudNoZ2.cpp
 CTRTextureGouraudNoZ.cpp
+CTRTextureGouraudNoZ2.cpp
 CTRTextureGouraudVertexAlpha2.cpp
 CTRTextureGouraudWire.cpp
 CTRTextureLightMap2_Add.cpp
@@ -289,11 +344,12 @@ CXMLWriter.cpp
 CZBuffer.cpp
 CZipReader.cpp
 IBurningShader.cpp
+Irrlicht-gcc.cbp
 Irrlicht.cpp
 irrXML.cpp
 os.cpp
 )
 if(WIN32)
   SET_TARGET_PROPERTIES (irrlicht PROPERTIES DEFINE_SYMBOL  "IRRLICHT_EXPORTS" )
-  target_link_libraries (irrlicht ${DirectX_D3D9_LIBRARY} ${DirectX_D3DX9_LIBRARY} Winmm) 
+  target_link_libraries (irrlicht ${DirectX_D3D9_LIBRARY} ${DirectX_D3DX9_LIBRARY} Winmm)
 endif()

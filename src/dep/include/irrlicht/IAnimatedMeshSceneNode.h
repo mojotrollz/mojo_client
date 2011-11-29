@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -25,10 +25,7 @@ namespace scene
 		EJUOR_READ,
 
 		//! control joint positions in the mesh (eg. ragdolls, or set the animation from animateJoints() )
-		EJUOR_CONTROL,
-
-		//! count of all available interpolation modes
-		EJUOR_COUNT
+		EJUOR_CONTROL
 	};
 
 
@@ -81,9 +78,13 @@ namespace scene
 		\return True if successful, false if not. */
 		virtual bool setFrameLoop(s32 begin, s32 end) = 0;
 
-		//! Sets the speed with witch the animation is played.
+		//! Sets the speed with which the animation is played.
 		/** \param framesPerSecond: Frames per second played. */
 		virtual void setAnimationSpeed(f32 framesPerSecond) = 0;
+
+		//! Gets the speed with which the animation is played.
+		/** \return Frames per second played. */
+		virtual f32 getAnimationSpeed() const =0;
 
 		//! Creates shadow volume scene node as child of this node.
 		/** The shadow can be rendered using the ZPass or the zfail
@@ -135,9 +136,11 @@ namespace scene
 		//! Deprecated command, please use getJointNode
 		virtual ISceneNode* getXJointNode(const c8* jointName) = 0;
 
+        //PSEUWOW
         //! Starts a M2 animation.
         virtual bool setM2Animation(u32 anim) = 0;
-        
+        //PSEUWOW END
+
         //! Starts a default MD2 animation.
 		/** With this method it is easily possible to start a Run,
 		Attack, Die or whatever animation, if the mesh contained in
@@ -196,7 +199,7 @@ namespace scene
 		virtual IAnimatedMesh* getMesh(void) = 0;
 
 		//! Get the absolute transformation for a special MD3 Tag if the mesh is a md3 mesh, or the absolutetransformation if it's a normal scenenode
-		virtual const SMD3QuaterionTag& getMD3TagTransformation( const core::stringc & tagname) = 0;
+		virtual const SMD3QuaternionTag* getMD3TagTransformation( const core::stringc & tagname) = 0;
 
 		//! Set how the joints should be updated on render
 		virtual void setJointMode(E_JOINT_UPDATE_ON_RENDER mode)=0;

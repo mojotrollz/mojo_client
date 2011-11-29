@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -38,11 +38,22 @@ namespace gui
 		//! Updates the absolute position.
 		virtual void updateAbsolutePosition();
 
+        //! Modalscreen is not a typical element, but rather acts like a state for it's children.
+        //! isVisible is overriden to give this a useful behaviour, so that a modal will no longer
+        //! be active when its parent is invisible or all its children are invisible.
+		virtual bool isVisible() const;
+
+		//! Modals are infinite so every point is inside
+		virtual bool isPointInside(const core::position2d<s32>& point) const;
+
 		//! Writes attributes of the element.
 		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options) const;
 
 		//! Reads attributes of the element
 		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options);
+
+    protected:
+        virtual bool canTakeFocus(IGUIElement* target) const;
 
 	private:
 
@@ -56,3 +67,4 @@ namespace gui
 #endif // _IRR_COMPILE_WITH_GUI_
 
 #endif
+

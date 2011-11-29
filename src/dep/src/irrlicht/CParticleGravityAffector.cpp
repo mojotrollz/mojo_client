@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -51,24 +51,10 @@ void CParticleGravityAffector::serializeAttributes(io::IAttributes* out, io::SAt
 
 
 //! Reads attributes of the object.
-s32 CParticleGravityAffector::deserializeAttributes(s32 startIndex, io::IAttributes* in, io::SAttributeReadWriteOptions* options)
+void CParticleGravityAffector::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
 {
-	const char* name = in->getAttributeName(startIndex);
-
-	if (!name || strcmp(name, "Gravity"))
-		return startIndex; // attribute not valid
-
-	Gravity = in->getAttributeAsVector3d(startIndex);
-	++startIndex;
-
-	name = in->getAttributeName(startIndex);
-	if (!name || strcmp(name, "TimeForceLost"))
-		return startIndex; // attribute not valid
-
-	TimeForceLost = in->getAttributeAsFloat(startIndex);
-
-	++startIndex;
-	return startIndex;
+	Gravity = in->getAttributeAsVector3d("Gravity");
+	TimeForceLost = in->getAttributeAsFloat("TimeForceLost");
 }
 
 

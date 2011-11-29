@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -9,6 +9,7 @@
 #include "IGUIEnvironment.h"
 #include "IGUIButton.h"
 #include "IGUIFont.h"
+#include "ITexture.h"
 
 namespace irr
 {
@@ -18,9 +19,10 @@ namespace gui
 //! constructor
 CGUIMessageBox::CGUIMessageBox(IGUIEnvironment* environment, const wchar_t* caption,
 	const wchar_t* text, s32 flags,
-	IGUIElement* parent, s32 id, core::rect<s32> rectangle)
+	IGUIElement* parent, s32 id, core::rect<s32> rectangle, video::ITexture* image)
 : CGUIWindow(environment, parent, id, rectangle),
 	OkButton(0), CancelButton(0), YesButton(0), NoButton(0), StaticText(0),
+	Icon(0), IconTexture(image),
 	Flags(flags), MessageText(text), Pressed(false)
 {
 	#ifdef _DEBUG
@@ -43,6 +45,9 @@ CGUIMessageBox::CGUIMessageBox(IGUIEnvironment* environment, const wchar_t* capt
 
 	Environment->setFocus(this);
 
+	if ( IconTexture )
+		IconTexture->grab();
+
 	refreshControls();
 }
 
@@ -64,61 +69,134 @@ CGUIMessageBox::~CGUIMessageBox()
 
 	if (NoButton)
 		NoButton->drop();
+
+	if (Icon)
+		Icon->drop();
+
+	if ( IconTexture )
+		IconTexture->drop();
 }
 
+void CGUIMessageBox::setButton(IGUIButton*& button, bool isAvailable, const core::rect<s32> & btnRect, const wchar_t * text, IGUIElement*& focusMe)
+{
+	// add/remove ok button
+	if (isAvailable)
+	{
+		if (!button)
+		{
+			button = Environment->addButton(btnRect, this);
+			button->setSubElement(true);
+			button->grab();
+		}
+		else
+			button->setRelativePosition(btnRect);
+
+		button->setText(text);
+
+		focusMe = button;
+	}
+	else if (button)
+	{
+		button->drop();
+		button->remove();
+		button =0;
+	}
+}
 
 void CGUIMessageBox::refreshControls()
 {
+	// Layout can be seen as 4 boxes (a layoutmanager would be nice)
+	// One box at top over the whole width for title
+	// Two boxes with same height at the middle beside each other for icon and for text
+	// One box at the bottom for the buttons
+
 	const IGUISkin* skin = Environment->getSkin();
-	IGUIElement* focusMe = 0;
 
-	const s32 buttonHeight = skin->getSize(EGDS_BUTTON_HEIGHT);
-	const s32 buttonWidth = skin->getSize(EGDS_BUTTON_WIDTH);
-	const s32 titleHeight = skin->getSize(EGDS_WINDOW_BUTTON_WIDTH)+2;
+	const s32 buttonHeight   = skin->getSize(EGDS_BUTTON_HEIGHT);
+	const s32 buttonWidth    = skin->getSize(EGDS_BUTTON_WIDTH);
+	const s32 titleHeight    = skin->getSize(EGDS_WINDOW_BUTTON_WIDTH)+2;	// titlebar has no own constant
 	const s32 buttonDistance = skin->getSize(EGDS_WINDOW_BUTTON_WIDTH);
+	const s32 borderWidth 	 = skin->getSize(EGDS_MESSAGE_BOX_GAP_SPACE);
 
-	// add static multiline text
-
-	core::dimension2d<s32> dim(AbsoluteClippingRect.getWidth() - buttonWidth,
-		AbsoluteClippingRect.getHeight() - (buttonHeight * 3));
-	const core::position2d<s32> pos((AbsoluteClippingRect.getWidth() - dim.Width) / 2,
-		buttonHeight / 2 + titleHeight);
-
+	// add the static text for the message
+	core::rect<s32> staticRect;
+	staticRect.UpperLeftCorner.X = borderWidth;
+	staticRect.UpperLeftCorner.Y = titleHeight + borderWidth;
+	staticRect.LowerRightCorner.X = staticRect.UpperLeftCorner.X + skin->getSize(EGDS_MESSAGE_BOX_MAX_TEXT_WIDTH);
+	staticRect.LowerRightCorner.Y = staticRect.UpperLeftCorner.Y + skin->getSize(EGDS_MESSAGE_BOX_MAX_TEXT_HEIGHT);
 	if (!StaticText)
 	{
-		StaticText = Environment->addStaticText(MessageText.c_str(),
-						core::rect<s32>(pos, dim), false, false, this);
+		StaticText = Environment->addStaticText(MessageText.c_str(), staticRect, false, false, this);
+
 		StaticText->setWordWrap(true);
 		StaticText->setSubElement(true);
 		StaticText->grab();
 	}
 	else
 	{
-		StaticText->setRelativePosition(core::rect<s32>(pos, dim));
+		StaticText->setRelativePosition(staticRect);
 		StaticText->setText(MessageText.c_str());
 	}
 
-	// adjust static text height
+	s32 textHeight  = StaticText->getTextHeight();
+	s32 textWidth = StaticText->getTextWidth() + 6;	// +6 because the static itself needs that
+	const s32 iconHeight = IconTexture ? IconTexture->getOriginalSize().Height : 0;
 
-	const s32 textHeight = StaticText->getTextHeight();
-	core::rect<s32> tmp = StaticText->getRelativePosition();
-	tmp.LowerRightCorner.Y = tmp.UpperLeftCorner.Y + textHeight;
-	StaticText->setRelativePosition(tmp);
-	dim.Height = textHeight;
+	if ( textWidth < skin->getSize(EGDS_MESSAGE_BOX_MIN_TEXT_WIDTH) )
+		textWidth = skin->getSize(EGDS_MESSAGE_BOX_MIN_TEXT_WIDTH) + 6;
+	// no neeed to check for max because it couldn't get larger due to statictextbox.
+	if ( textHeight < skin->getSize(EGDS_MESSAGE_BOX_MIN_TEXT_HEIGHT) )
+		textHeight = skin->getSize(EGDS_MESSAGE_BOX_MIN_TEXT_HEIGHT);
+	if ( textHeight > skin->getSize(EGDS_MESSAGE_BOX_MAX_TEXT_HEIGHT) )
+		textHeight = skin->getSize(EGDS_MESSAGE_BOX_MAX_TEXT_HEIGHT);
 
-	// adjust message box height
+	// content is text + icons + borders (but not titlebar)
+	s32 contentHeight = textHeight > iconHeight ? textHeight : iconHeight;
+	contentHeight += borderWidth;
+	s32 contentWidth = 0;
 
-	tmp = getRelativePosition();
-	s32 msgBoxHeight = textHeight +	core::floor32(2.5f * buttonHeight) + titleHeight;
+	// add icon
+	if ( IconTexture )
+	{
+		core::position2d<s32> iconPos;
+		iconPos.Y = titleHeight + borderWidth;
+		if ( iconHeight < textHeight )
+			iconPos.Y += (textHeight-iconHeight) / 2;
+		iconPos.X = borderWidth;
 
-	// adjust message box position
+		if (!Icon)
+		{
+			Icon = Environment->addImage(IconTexture, iconPos, true, this);
+			Icon->setSubElement(true);
+			Icon->grab();
+		}
+		else
+		{
+			core::rect<s32> iconRect( iconPos.X, iconPos.Y, iconPos.X + IconTexture->getOriginalSize().Width, iconPos.Y + IconTexture->getOriginalSize().Height );
+			Icon->setRelativePosition(iconRect);
+		}
 
-	tmp.UpperLeftCorner.Y = (Parent->getAbsolutePosition().getHeight() - msgBoxHeight) / 2;
-	tmp.LowerRightCorner.Y = tmp.UpperLeftCorner.Y + msgBoxHeight;
-	setRelativePosition(tmp);
+		contentWidth += borderWidth + IconTexture->getOriginalSize().Width;
+	}
+	else if ( Icon )
+	{
+		Icon->drop();
+		Icon->remove();
+		Icon = 0;
+	}
 
-	// add buttons
+	// position text
+	core::rect<s32> textRect;
+	textRect.UpperLeftCorner.X = contentWidth + borderWidth;
+	textRect.UpperLeftCorner.Y = titleHeight + borderWidth;
+	if ( textHeight < iconHeight )
+		textRect.UpperLeftCorner.Y += (iconHeight-textHeight) / 2;
+	textRect.LowerRightCorner.X = textRect.UpperLeftCorner.X + textWidth;
+	textRect.LowerRightCorner.Y = textRect.UpperLeftCorner.Y + textHeight;
+	contentWidth += 2*borderWidth + textWidth;
+	StaticText->setRelativePosition( textRect );
 
+	// find out button size needs
 	s32 countButtons = 0;
 	if (Flags & EMBF_OK)
 		++countButtons;
@@ -129,122 +207,44 @@ void CGUIMessageBox::refreshControls()
 	if (Flags & EMBF_NO)
 		++countButtons;
 
+	s32 buttonBoxWidth = countButtons * buttonWidth + 2 * borderWidth;
+	if ( countButtons > 1 )
+		buttonBoxWidth += (countButtons-1) * buttonDistance;
+	s32 buttonBoxHeight = buttonHeight + 2 * borderWidth;
+
+	// calc new message box sizes
+	core::rect<s32> tmp = getRelativePosition();
+	s32 msgBoxHeight = titleHeight + contentHeight + buttonBoxHeight;
+	s32 msgBoxWidth = contentWidth > buttonBoxWidth ? contentWidth : buttonBoxWidth;
+
+	// adjust message box position
+	tmp.UpperLeftCorner.Y = (Parent->getAbsolutePosition().getHeight() - msgBoxHeight) / 2;
+	tmp.LowerRightCorner.Y = tmp.UpperLeftCorner.Y + msgBoxHeight;
+	tmp.UpperLeftCorner.X = (Parent->getAbsolutePosition().getWidth() - msgBoxWidth) / 2;
+	tmp.LowerRightCorner.X = tmp.UpperLeftCorner.X + msgBoxWidth;
+	setRelativePosition(tmp);
+
+	// add buttons
+
 	core::rect<s32> btnRect;
-	btnRect.UpperLeftCorner.Y = pos.Y + dim.Height + buttonHeight / 2;
+	btnRect.UpperLeftCorner.Y = titleHeight + contentHeight + borderWidth;
 	btnRect.LowerRightCorner.Y = btnRect.UpperLeftCorner.Y + buttonHeight;
-	btnRect.UpperLeftCorner.X = (AbsoluteClippingRect.getWidth() -
-		((buttonWidth + buttonDistance)*countButtons)) / 2;
+	btnRect.UpperLeftCorner.X = borderWidth;
+	if ( contentWidth > buttonBoxWidth )
+		btnRect.UpperLeftCorner.X += (contentWidth - buttonBoxWidth) / 2;	// center buttons
 	btnRect.LowerRightCorner.X = btnRect.UpperLeftCorner.X + buttonWidth;
 
-	// add/remove ok button
-	if (Flags & EMBF_OK)
-	{
-		if (!OkButton)
-		{
-			OkButton = Environment->addButton(btnRect, this);
-			OkButton->setSubElement(true);
-			OkButton->grab();
-		}
-		else
-			OkButton->setRelativePosition(btnRect);
-
-		OkButton->setText(skin->getDefaultText(EGDT_MSG_BOX_OK));
-
-		btnRect.LowerRightCorner.X += buttonWidth + buttonDistance;
-		btnRect.UpperLeftCorner.X += buttonWidth + buttonDistance;
-
-		focusMe = OkButton;
-	}
-	else if (OkButton)
-	{
-		OkButton->drop();
-		OkButton->remove();
-		OkButton = 0;
-	}
-
-	// add cancel button
-	if (Flags & EMBF_CANCEL)
-	{
-		if (!CancelButton)
-		{
-			CancelButton = Environment->addButton(btnRect, this);
-			CancelButton->setSubElement(true);
-			CancelButton->grab();
-		}
-		else
-			CancelButton->setRelativePosition(btnRect);
-
-		CancelButton->setText(skin->getDefaultText(EGDT_MSG_BOX_CANCEL));
-
-		btnRect.LowerRightCorner.X += buttonWidth + buttonDistance;
-		btnRect.UpperLeftCorner.X += buttonWidth + buttonDistance;
-
-		if (!focusMe)
-			focusMe = CancelButton;
-
-	}
-	else if (CancelButton)
-	{
-		CancelButton->drop();
-		CancelButton->remove();
-		CancelButton = 0;
-	}
-
-
-	// add/remove yes button
-	if (Flags & EMBF_YES)
-	{
-		if (!YesButton)
-		{
-			YesButton = Environment->addButton(btnRect, this);
-			YesButton->setSubElement(true);
-			YesButton->grab();
-		}
-		else
-			YesButton->setRelativePosition(btnRect);
-
-		YesButton->setText(skin->getDefaultText(EGDT_MSG_BOX_YES));
-
-		btnRect.LowerRightCorner.X += buttonWidth + buttonDistance;
-		btnRect.UpperLeftCorner.X += buttonWidth + buttonDistance;
-
-		if (!focusMe)
-			focusMe = YesButton;
-	}
-	else if (YesButton)
-	{
-		YesButton->drop();
-		YesButton->remove();
-		YesButton = 0;
-	}
-
-	// add no button
-	if (Flags & EMBF_NO)
-	{
-		if (!NoButton)
-		{
-			NoButton = Environment->addButton(btnRect, this);
-			NoButton->setSubElement(true);
-			NoButton->grab();
-		}
-		else
-			NoButton->setRelativePosition(btnRect);
-
-		NoButton->setText(skin->getDefaultText(EGDT_MSG_BOX_NO));
-
-		btnRect.LowerRightCorner.X += buttonWidth + buttonDistance;
-		btnRect.UpperLeftCorner.X += buttonWidth + buttonDistance;
-
-		if (!focusMe)
-			focusMe = NoButton;
-
-	}
-	else if (NoButton)
-	{
-		NoButton->drop();
-		NoButton->remove();
-		NoButton = 0;
-	}
+	IGUIElement* focusMe = 0;
+	setButton(OkButton, (Flags & EMBF_OK) != 0, btnRect, skin->getDefaultText(EGDT_MSG_BOX_OK), focusMe);
+	if ( Flags & EMBF_OK )
+		btnRect += core::position2d<s32>(buttonWidth + buttonDistance, 0);
+	setButton(CancelButton, (Flags & EMBF_CANCEL) != 0, btnRect, skin->getDefaultText(EGDT_MSG_BOX_CANCEL), focusMe);
+	if ( Flags & EMBF_CANCEL )
+		btnRect += core::position2d<s32>(buttonWidth + buttonDistance, 0);
+	setButton(YesButton, (Flags & EMBF_YES) != 0, btnRect, skin->getDefaultText(EGDT_MSG_BOX_YES), focusMe);
+	if ( Flags & EMBF_YES )
+		btnRect += core::position2d<s32>(buttonWidth + buttonDistance, 0);
+	setButton(NoButton, (Flags & EMBF_NO) != 0, btnRect, skin->getDefaultText(EGDT_MSG_BOX_NO), focusMe);
 
 	if (Environment->hasFocus(this) && focusMe)
 		Environment->setFocus(focusMe);
@@ -295,8 +295,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 					{
 						// cancel press
 						if (OkButton) OkButton->setPressed(false);
-						if (YesButton) OkButton->setPressed(false);
-						if (NoButton) OkButton->setPressed(false);
+						if (YesButton) YesButton->setPressed(false);
+						if (NoButton) NoButton->setPressed(false);
 						Pressed = false;
 					}
 					else
@@ -321,6 +321,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 			{
 				if (OkButton && event.KeyInput.Key == KEY_RETURN)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_OK;
 					Parent->OnEvent(outevent);
 					remove();
@@ -329,6 +331,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 				else
 				if ((CancelButton || CloseButton) && event.KeyInput.Key == KEY_ESCAPE)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_CANCEL;
 					Parent->OnEvent(outevent);
 					remove();
@@ -337,6 +341,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 				else
 				if (YesButton && event.KeyInput.Key == KEY_KEY_Y)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_YES;
 					Parent->OnEvent(outevent);
 					remove();
@@ -345,6 +351,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 				else
 				if (NoButton && event.KeyInput.Key == KEY_KEY_N)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_NO;
 					Parent->OnEvent(outevent);
 					remove();
@@ -357,6 +365,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 			{
 				if (event.GUIEvent.Caller == OkButton)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_OK;
 					Parent->OnEvent(outevent);
 					remove();
@@ -366,6 +376,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 				if (event.GUIEvent.Caller == CancelButton ||
 					event.GUIEvent.Caller == CloseButton)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_CANCEL;
 					Parent->OnEvent(outevent);
 					remove();
@@ -374,6 +386,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 				else
 				if (event.GUIEvent.Caller == YesButton)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_YES;
 					Parent->OnEvent(outevent);
 					remove();
@@ -382,6 +396,8 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 				else
 				if (event.GUIEvent.Caller == NoButton)
 				{
+					setVisible(false);	// this is a workaround to make sure it's no longer the hovered element, crashes on pressing 1-2 times ESC
+					Environment->setFocus(0);
 					outevent.GUIEvent.EventType = EGET_MESSAGEBOX_NO;
 					Parent->OnEvent(outevent);
 					remove();
@@ -397,6 +413,7 @@ bool CGUIMessageBox::OnEvent(const SEvent& event)
 	return CGUIWindow::OnEvent(event);
 }
 
+
 //! Writes attributes of the element.
 void CGUIMessageBox::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0) const
 {
@@ -406,9 +423,11 @@ void CGUIMessageBox::serializeAttributes(io::IAttributes* out, io::SAttributeRea
 	out->addBool	("CancelButton",	(Flags & EMBF_CANCEL)	!= 0 );
 	out->addBool	("YesButton",		(Flags & EMBF_YES)	!= 0 );
 	out->addBool	("NoButton",		(Flags & EMBF_NO)	!= 0 );
+	out->addTexture	("Texture",			IconTexture);
 
 	out->addString	("MessageText",		MessageText.c_str());
 }
+
 
 //! Reads attributes of the element
 void CGUIMessageBox::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0)
@@ -420,6 +439,15 @@ void CGUIMessageBox::deserializeAttributes(io::IAttributes* in, io::SAttributeRe
 	Flags |= in->getAttributeAsBool("YesButton")   ? EMBF_YES    : 0;
 	Flags |= in->getAttributeAsBool("NoButton")    ? EMBF_NO     : 0;
 
+	if ( IconTexture )
+	{
+		IconTexture->drop();
+		IconTexture = NULL;
+	}
+	IconTexture = in->getAttributeAsTexture("Texture");
+	if ( IconTexture )
+		IconTexture->grab();
+
 	MessageText = in->getAttributeAsStringW("MessageText").c_str();
 
 	CGUIWindow::deserializeAttributes(in,options);
@@ -430,7 +458,6 @@ void CGUIMessageBox::deserializeAttributes(io::IAttributes* in, io::SAttributeRe
 
 } // end namespace gui
 } // end namespace irr
-
 
 #endif // _IRR_COMPILE_WITH_GUI_
 

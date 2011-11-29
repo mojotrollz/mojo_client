@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -7,34 +7,27 @@
 #include "IrrCompileConfig.h"
 #include "irrMath.h"
 
-#if defined(_IRR_USE_SDL_DEVICE_)
+#if defined(_IRR_COMPILE_WITH_SDL_DEVICE_)
 	#include <SDL/SDL_endian.h>
 	#define bswap_16(X) SDL_Swap16(X)
 	#define bswap_32(X) SDL_Swap32(X)
-#elif defined(_IRR_WINDOWS_API_)
-	#if (defined(_MSC_VER) && (_MSC_VER > 1298))
-		#include <stdlib.h>
-		#define bswap_16(X) _byteswap_ushort(X)
-		#define bswap_32(X) _byteswap_ulong(X)
-	#else
-		#define bswap_16(X) ((((X)&0xFF) << 8) | (((X)&=0xFF00) >> 8))
-		#define bswap_32(X) ( (((X)&0x000000FF)<<24) | (((X)&0xFF000000) >> 24) | (((X)&0x0000FF00) << 8) | (((X) &0x00FF0000) >> 8))
-	#endif
+#elif defined(_IRR_WINDOWS_API_) && defined(_MSC_VER) && (_MSC_VER > 1298)
+	#include <stdlib.h>
+	#define bswap_16(X) _byteswap_ushort(X)
+	#define bswap_32(X) _byteswap_ulong(X)
+#elif defined(_IRR_OSX_PLATFORM_)
+	#include <libkern/OSByteOrder.h>
+	#define bswap_16(X) OSReadSwapInt16(&X,0)
+	#define bswap_32(X) OSReadSwapInt32(&X,0)
+#elif defined(__FreeBSD__) || defined(__OpenBSD__)
+	#include <sys/endian.h>
+	#define bswap_16(X) bswap16(X)
+	#define bswap_32(X) bswap32(X)
+#elif !defined(_IRR_SOLARIS_PLATFORM_) && !defined(__PPC__) && !defined(_IRR_WINDOWS_API_)
+	#include <byteswap.h>
 #else
-	#if defined(_IRR_OSX_PLATFORM_)
-		#include <libkern/OSByteOrder.h>
-		#define bswap_16(X) OSReadSwapInt16(&X,0)
-		#define bswap_32(X) OSReadSwapInt32(&X,0)
-	#elif defined(__FreeBSD__)
-		#include <sys/endian.h>
-		#define bswap_16(X) bswap16(X)
-		#define bswap_32(X) bswap32(X)
-	#elif !defined(_IRR_SOLARIS_PLATFORM_) && !defined(__PPC__)
-		#include <byteswap.h>
-	#else
-		#define bswap_16(X) ((((X)&0xFF) << 8) | (((X)&=0xFF00) >> 8))
-		#define bswap_32(X) ( (((X)&0x000000FF)<<24) | (((X)&0xFF000000) >> 24) | (((X)&0x0000FF00) << 8) | (((X) &0x00FF0000) >> 8))
-	#endif
+	#define bswap_16(X) ((((X)&0xFF) << 8) | (((X)&0xFF00) >> 8))
+	#define bswap_32(X) ( (((X)&0x000000FF)<<24) | (((X)&0xFF000000) >> 24) | (((X)&0x0000FF00) << 8) | (((X) &0x00FF0000) >> 8))
 #endif
 
 namespace irr
@@ -45,7 +38,10 @@ namespace os
 	s16 Byteswap::byteswap(s16 num) {return bswap_16(num);}
 	u32 Byteswap::byteswap(u32 num) {return bswap_32(num);}
 	s32 Byteswap::byteswap(s32 num) {return bswap_32(num);}
-	f32 Byteswap::byteswap(f32 num) {u32 tmp=bswap_32(*((u32*)&num)); return *((f32*)&tmp);}
+	f32 Byteswap::byteswap(f32 num) {u32 tmp=IR(num); tmp=bswap_32(tmp); return (FR(tmp));}
+	// prevent accidental byte swapping of chars
+	u8  Byteswap::byteswap(u8 num)  {return num;}
+	c8  Byteswap::byteswap(c8 num)  {return num;}
 }
 }
 
@@ -68,12 +64,14 @@ namespace os
 	//! prints a debuginfo string
 	void Printer::print(const c8* message)
 	{
-#if !defined (_WIN32_WCE )
-		c8* tmp = new c8[strlen(message) + 2];
-		sprintf(tmp, "%s\n", message);
-		OutputDebugString(tmp);
-		printf(tmp);
-		delete [] tmp;
+#if defined (_WIN32_WCE )
+		core::stringw tmp(message);
+		tmp += L"\n";
+		OutputDebugStringW(tmp.c_str());
+#else
+		OutputDebugStringA(message);
+		OutputDebugStringA("\n");
+		printf("%s\n", message);
 #endif
 	}
 
@@ -83,11 +81,11 @@ namespace os
 
 	void Timer::initTimer()
 	{
-#if !defined(_WIN32_WCE)
+#if !defined(_WIN32_WCE) && !defined (_IRR_XBOX_PLATFORM_)
 		// disable hires timer on multiple core systems, bios bugs result in bad hires timers.
 		SYSTEM_INFO sysinfo;
 		GetSystemInfo(&sysinfo);
-		MultiCore = (sysinfo.dwNumberOfProcessors > 1);	
+		MultiCore = (sysinfo.dwNumberOfProcessors > 1);
 #endif
 		HighPerformanceTimerSupport = QueryPerformanceFrequency(&HighPerformanceFreq);
 		initVirtualTimer();
@@ -97,17 +95,17 @@ namespace os
 	{
 		if (HighPerformanceTimerSupport)
 		{
-#if !defined(_WIN32_WCE)
-			// Avoid potential timing inaccuracies across multiple cores by 
+#if !defined(_WIN32_WCE) && !defined (_IRR_XBOX_PLATFORM_)
+			// Avoid potential timing inaccuracies across multiple cores by
 			// temporarily setting the affinity of this process to one core.
 			DWORD_PTR affinityMask;
 			if(MultiCore)
-				affinityMask = SetThreadAffinityMask(GetCurrentThread(), 1); 
+				affinityMask = SetThreadAffinityMask(GetCurrentThread(), 1);
 #endif
 			LARGE_INTEGER nTime;
 			BOOL queriedOK = QueryPerformanceCounter(&nTime);
 
-#if !defined(_WIN32_WCE)
+#if !defined(_WIN32_WCE)  && !defined (_IRR_XBOX_PLATFORM_)
 			// Restore the true affinity.
 			if(MultiCore)
 				(void)SetThreadAffinityMask(GetCurrentThread(), affinityMask);
@@ -171,20 +169,23 @@ namespace os
 			Logger->log(message, ll);
 	}
 
-	void Printer::log(const c8* message, const c8* hint, ELOG_LEVEL ll)
-	{
-		if (!Logger)
-			return;
-
-		Logger->log(message, hint, ll);
-	}
-
 	void Printer::log(const wchar_t* message, ELOG_LEVEL ll)
 	{
 		if (Logger)
 			Logger->log(message, ll);
 	}
 
+	void Printer::log(const c8* message, const c8* hint, ELOG_LEVEL ll)
+	{
+		if (Logger)
+			Logger->log(message, hint, ll);
+	}
+
+	void Printer::log(const c8* message, const io::path& hint, ELOG_LEVEL ll)
+	{
+		if (Logger)
+			Logger->log(message, hint.c_str(), ll);
+	}
 
 	// our Randomizer is not really os specific, so we
 	// code one for all, which should work on every platform the same,
@@ -288,7 +289,7 @@ namespace os
 	//! returns if the timer currently is stopped
 	bool Timer::isStopped()
 	{
-		return VirtualTimerStopCounter != 0;
+		return VirtualTimerStopCounter < 0;
 	}
 
 	void Timer::initVirtualTimer()

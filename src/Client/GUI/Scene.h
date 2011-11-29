@@ -13,7 +13,7 @@ using namespace gui;
 using namespace irrklang;
 
 
-inline core::rect<s32> CalcRelativeScreenPos(core::dimension2d<s32> dim, f32 x, f32 y, f32 w, f32 h)
+inline core::rect<s32> CalcRelativeScreenPos(core::dimension2d<u32> dim, f32 x, f32 y, f32 w, f32 h)
 {
     core::rect<s32> r;
     r.UpperLeftCorner.X = dim.Width * x;
@@ -22,7 +22,7 @@ inline core::rect<s32> CalcRelativeScreenPos(core::dimension2d<s32> dim, f32 x, 
     r.LowerRightCorner.Y = r.UpperLeftCorner.Y + (dim.Height * h);
     return r;
 }
-
+//Pure and applied stupidity: the driver returns u32, but guiend->addbutton insists on getting s32
 inline core::rect<s32> CalcRelativeScreenPos(video::IVideoDriver* drv, f32 x, f32 y, f32 w, f32 h)
 {
     return CalcRelativeScreenPos(drv->getScreenSize(),x,y,w,h);

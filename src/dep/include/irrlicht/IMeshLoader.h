@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -6,6 +6,7 @@
 #define __I_MESH_LOADER_H_INCLUDED__
 
 #include "IReferenceCounted.h"
+#include "path.h"
 
 namespace irr
 {
@@ -32,9 +33,9 @@ public:
 	//! Returns true if the file might be loaded by this class.
 	/** This decision should be based on the file extension (e.g. ".cob")
 	only.
-	\param fileName Name of the file to test.
+	\param filename Name of the file to test.
 	\return True if the file might be loaded by this class. */
-	virtual bool isALoadableFileExtension(const c8* fileName) const = 0;
+	virtual bool isALoadableFileExtension(const io::path& filename) const = 0;
 
 	//! Creates/loads an animated mesh from the file.
 	/** \param file File handler to load the file from.

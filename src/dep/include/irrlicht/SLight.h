@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -78,14 +78,14 @@ struct SLight
 	/** If Type is ELT_POINT, it is ignored. Changed via light scene node's rotation. */
 	core::vector3df Direction;
 
-	//! Read-ONLY! Radius of light. Everything within this radius be be lighted.
+	//! Read-ONLY! Radius of light. Everything within this radius will be lighted.
 	f32 Radius;
 
 	//! Read-ONLY! Type of the light. Default: ELT_POINT
 	E_LIGHT_TYPE Type;
 
 	//! Read-ONLY! Does the light cast shadows?
-	bool CastShadows;
+	bool CastShadows:1;
 };
 
 } // end namespace video

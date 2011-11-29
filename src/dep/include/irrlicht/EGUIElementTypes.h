@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -79,17 +79,19 @@ enum EGUI_ELEMENT_TYPE
 	//! A tool bar (IGUIToolBar)
 	EGUIET_TOOL_BAR,
 
+	//! A Tree View
+	EGUIET_TREE_VIEW,
+
 	//! A window
 	EGUIET_WINDOW,
-
-	//! Not an element, amount of elements in there
-	EGUIET_COUNT,
 
 	//! Unknown type.
 	EGUIET_ELEMENT,
 
-	//! This enum is never used, it only forces the compiler to
-	//! compile these enumeration values to 32 bit.
+	//! Not an element, amount of elements in there
+	EGUIET_COUNT,
+
+	//! This enum is never used, it only forces the compiler to compile this enumeration to 32 bit.
 	EGUIET_FORCE_32_BIT = 0x7fffffff
 
 };
@@ -118,7 +120,9 @@ const c8* const GUIElementTypeNames[] =
 	"tabControl",
 	"table",
 	"toolBar",
+	"treeview",
 	"window",
+	"element",
 	0
 };
 

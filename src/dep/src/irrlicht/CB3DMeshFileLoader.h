@@ -1,4 +1,4 @@
-// Copyright (C) 2006-2008 Luke Hoschke
+// Copyright (C) 2006-2010 Luke Hoschke
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -32,7 +32,7 @@ public:
 
 	//! returns true if the file maybe is able to be loaded by this class
 	//! based on the file extension (e.g. ".bsp")
-	virtual bool isALoadableFileExtension(const c8* fileName) const;
+	virtual bool isALoadableFileExtension(const io::path& filename) const;
 
 	//! creates/loads an animated mesh from the file.
 	//! \return Pointer to the created mesh. Returns 0 if loading failed.
@@ -105,8 +105,7 @@ private:
 
 	void loadTextures(SB3dMaterial& material) const;
 
-	core::stringc readString();
-	core::stringc stripPathFromString(const core::stringc& string, bool returnPath=false) const;
+	void readString(core::stringc& newstring);
 	void readFloats(f32* vec, u32 count);
 
 	core::array<SB3dChunk> B3dStack;
@@ -120,14 +119,12 @@ private:
 
 	core::array<video::S3DVertex2TCoords> BaseVertices;
 
-	core::array<scene::SSkinMeshBuffer*> *Buffers;
-	core::array<CSkinnedMesh::SJoint*> *AllJoints;
-
 	ISceneManager*	SceneManager;
 	CSkinnedMesh*	AnimatedMesh;
 	io::IReadFile*	B3DFile;
 
 	bool NormalsInFile;
+	bool HasVertexColors;
 	bool ShowWarning;
 };
 

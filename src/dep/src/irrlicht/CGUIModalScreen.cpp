@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -17,36 +17,84 @@ namespace gui
 
 //! constructor
 CGUIModalScreen::CGUIModalScreen(IGUIEnvironment* environment, IGUIElement* parent, s32 id)
-: IGUIElement(EGUIET_MODAL_SCREEN, environment, parent, id, parent->getAbsolutePosition()),
+: IGUIElement(EGUIET_MODAL_SCREEN, environment, parent, id, core::recti(0, 0, parent->getAbsolutePosition().getWidth(), parent->getAbsolutePosition().getHeight()) ),
 	MouseDownTime(0)
 {
 	#ifdef _DEBUG
 	setDebugName("CGUIModalScreen");
 	#endif
 	setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT);
-	
+
 	// this element is a tab group
 	setTabGroup(true);
 }
 
+bool CGUIModalScreen::canTakeFocus(IGUIElement* target) const
+{
+    return (target && ((const IGUIElement*)target == this // this element can take it
+                        || isMyChild(target)    // own childs also
+                        || (target->getType() == EGUIET_MODAL_SCREEN )// other modals also fine
+                        || (target->getParent() && target->getParent()->getType() == EGUIET_MODAL_SCREEN )))   // childs of other modals will do
+            ;
+}
+
+bool CGUIModalScreen::isVisible() const
+{
+    // any parent invisible?
+    IGUIElement * parentElement = getParent();
+    while ( parentElement )
+    {
+        if ( !parentElement->isVisible() )
+            return false;
+        parentElement = parentElement->getParent();
+    }
+
+    // if we have no children then the modal is probably abused as a way to block input
+    if ( Children.empty() )
+    {
+        return IGUIElement::isVisible();
+    }
+
+    // any child visible?
+    bool visible = false;
+    core::list<IGUIElement*>::ConstIterator it = Children.begin();
+    for (; it != Children.end(); ++it)
+    {
+        if ( (*it)->isVisible() )
+        {
+            visible = true;
+            break;
+        }
+    }
+    return visible;
+}
+
+bool CGUIModalScreen::isPointInside(const core::position2d<s32>& point) const
+{
+    return true;
+}
 
 //! called if an event happened.
 bool CGUIModalScreen::OnEvent(const SEvent& event)
 {
+    if (!IsEnabled || !isVisible() )
+        return IGUIElement::OnEvent(event);
+
     switch(event.EventType)
 	{
 	case EET_GUI_EVENT:
 		switch(event.GUIEvent.EventType)
 		{
 		case EGET_ELEMENT_FOCUSED:
-			// only children are allowed the focus
-			if (event.GUIEvent.Caller != this && !isMyChild(event.GUIEvent.Caller))
+			if ( !canTakeFocus(event.GUIEvent.Caller))
+			{
 				Environment->setFocus(this);
+			}
+			IGUIElement::OnEvent(event);
 			return false;
 		case EGET_ELEMENT_FOCUS_LOST:
-			// only children are allowed the focus
-			if (!(isMyChild(event.GUIEvent.Element) || event.GUIEvent.Element == this))
-			{
+			if ( !canTakeFocus(event.GUIEvent.Element))
+            {
 				MouseDownTime = os::Timer::getTime();
 				return true;
 			}
@@ -69,7 +117,7 @@ bool CGUIModalScreen::OnEvent(const SEvent& event)
 	default:
 		break;
 	}
-	
+
 	IGUIElement::OnEvent(event);
 
 	return true; // absorb everything else
@@ -110,15 +158,17 @@ void CGUIModalScreen::draw()
 }
 
 
-
 //! Removes a child.
 void CGUIModalScreen::removeChild(IGUIElement* child)
 {
 	IGUIElement::removeChild(child);
 
 	if (Children.empty())
+	{
 		remove();
+	}
 }
+
 
 //! adds a child
 void CGUIModalScreen::addChild(IGUIElement* child)
@@ -144,16 +194,17 @@ void CGUIModalScreen::updateAbsolutePosition()
 	IGUIElement::updateAbsolutePosition();
 }
 
+
 //! Writes attributes of the element.
 void CGUIModalScreen::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0) const
 {
-	// these don't get serialized, their status is added to their children.
+	IGUIElement::serializeAttributes(out,options);
 }
 
 //! Reads attributes of the element
 void CGUIModalScreen::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0)
 {
-	// these don't get deserialized. children create them if required
+	IGUIElement::deserializeAttributes(in, options);
 }
 
 
@@ -161,3 +212,4 @@ void CGUIModalScreen::deserializeAttributes(io::IAttributes* in, io::SAttributeR
 } // end namespace irr
 
 #endif // _IRR_COMPILE_WITH_GUI_
+

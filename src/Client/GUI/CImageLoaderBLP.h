@@ -14,7 +14,7 @@ public:
 
    //! returns true if the file maybe is able to be loaded by this class
    //! based on the file extension (e.g. ".blp")
-   virtual bool isALoadableFileExtension(const c8* fileName) const;
+   virtual bool isALoadableFileExtension(const io::path& fileName) const;
 
    //! returns true if the file maybe is able to be loaded by this class
    virtual bool isALoadableFileFormat(io::IReadFile* file) const;

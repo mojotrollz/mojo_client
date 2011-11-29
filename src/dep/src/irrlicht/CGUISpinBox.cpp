@@ -1,4 +1,4 @@
-// Copyright (C) 2006-2008 Michael Zeilfelder
+// Copyright (C) 2006-2010 Michael Zeilfelder
 // This file uses the licence of the Irrlicht Engine.
 
 #include "CGUISpinBox.h"
@@ -9,7 +9,6 @@
 #include "IGUIEnvironment.h"
 #include "IEventReceiver.h"
 #include "fast_atof.h"
-#include <float.h>
 #include <wchar.h>
 
 
@@ -19,13 +18,18 @@ namespace gui
 {
 
 //! constructor
-CGUISpinBox::CGUISpinBox(const wchar_t* text, IGUIEnvironment* environment,
+CGUISpinBox::CGUISpinBox(const wchar_t* text, bool border,IGUIEnvironment* environment,
 			IGUIElement* parent, s32 id, const core::rect<s32>& rectangle)
 : IGUISpinBox(environment, parent, id, rectangle),
 	EditBox(0), ButtonSpinUp(0), ButtonSpinDown(0), StepSize(1.f),
 	RangeMin(-FLT_MAX), RangeMax(FLT_MAX), FormatString(L"%f"),
 	DecimalPlaces(-1)
 {
+	#ifdef _DEBUG
+	setDebugName("CGUISpinBox");
+	#endif
+
+	CurrentIconColor = video::SColor(255,255,255,255);
 	s32 ButtonWidth = 16;
 	IGUISpriteBank *sb = 0;
 	if (environment && environment->getSkin())
@@ -49,27 +53,14 @@ CGUISpinBox::CGUISpinBox(const wchar_t* text, IGUIEnvironment* environment,
 	ButtonSpinUp->setSubElement(true);
 	ButtonSpinUp->setTabStop(false);
 	ButtonSpinUp->setAlignment(EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_CENTER);
-	if (sb)
-	{
-		IGUISkin *skin = environment->getSkin();
-		ButtonSpinDown->setSpriteBank(sb);
-		ButtonSpinDown->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_SMALL_CURSOR_DOWN), skin->getColor(EGDC_WINDOW_SYMBOL));
-		ButtonSpinDown->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_SMALL_CURSOR_DOWN), skin->getColor(EGDC_WINDOW_SYMBOL));
-		ButtonSpinUp->setSpriteBank(sb);
-		ButtonSpinUp->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_SMALL_CURSOR_UP), skin->getColor(EGDC_WINDOW_SYMBOL));
-		ButtonSpinUp->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_SMALL_CURSOR_UP), skin->getColor(EGDC_WINDOW_SYMBOL));
-	}
-	else
-	{
-		ButtonSpinDown->setText(L"-");
-		ButtonSpinUp->setText(L"+");
-	}
 
 	const core::rect<s32> rectEdit(0, 0, rectangle.getWidth() - ButtonWidth - 1, rectangle.getHeight());
-	EditBox = Environment->addEditBox(text, rectEdit, true, this, -1);
+	EditBox = Environment->addEditBox(text, rectEdit, border, this, -1);
 	EditBox->grab();
 	EditBox->setSubElement(true);
 	EditBox->setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT);
+
+	refreshSprites();
 }
 
 
@@ -84,6 +75,31 @@ CGUISpinBox::~CGUISpinBox()
 		EditBox->drop();
 }
 
+void CGUISpinBox::refreshSprites()
+{
+	IGUISpriteBank *sb = 0;
+	if (Environment && Environment->getSkin())
+	{
+		sb = Environment->getSkin()->getSpriteBank();
+	}
+
+	if (sb)
+	{
+		IGUISkin * skin = Environment->getSkin();
+		CurrentIconColor = skin->getColor(EGDC_WINDOW_SYMBOL);
+		ButtonSpinDown->setSpriteBank(sb);
+		ButtonSpinDown->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_SMALL_CURSOR_DOWN), CurrentIconColor);
+		ButtonSpinDown->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_SMALL_CURSOR_DOWN), CurrentIconColor);
+		ButtonSpinUp->setSpriteBank(sb);
+		ButtonSpinUp->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_SMALL_CURSOR_UP), CurrentIconColor);
+		ButtonSpinUp->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_SMALL_CURSOR_UP), CurrentIconColor);
+	}
+	else
+	{
+		ButtonSpinDown->setText(L"-");
+		ButtonSpinUp->setText(L"+");
+	}
+}
 
 IGUIEditBox* CGUISpinBox::getEditBox() const
 {
@@ -166,6 +182,21 @@ bool CGUISpinBox::OnEvent(const SEvent& event)
 		bool changeEvent = false;
 		switch(event.EventType)
 		{
+		case EET_MOUSE_INPUT_EVENT:
+			switch(event.MouseInput.Event)
+			{
+			case EMIE_MOUSE_WHEEL:
+				{
+					f32 val = getValue() + (StepSize * event.MouseInput.Wheel);
+					setValue(val);
+					changeEvent = true;
+				}
+				break;
+			default:
+				break;
+			}
+			break;
+
 		case EET_GUI_EVENT:
 			if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
 			{
@@ -184,7 +215,7 @@ bool CGUISpinBox::OnEvent(const SEvent& event)
 					changeEvent = true;
 				}
 			}
-			if ( event.GUIEvent.EventType == EGET_EDITBOX_ENTER )
+			if ( event.GUIEvent.EventType == EGET_EDITBOX_CHANGED )
 			{
 				if (event.GUIEvent.Caller == EditBox)
 				{
@@ -217,10 +248,15 @@ bool CGUISpinBox::OnEvent(const SEvent& event)
 
 void CGUISpinBox::verifyValueRange()
 {
+	// TODO: This should be called in "draw" similar to the way it's done in CGUIWindow.
+	// But guess I can't in bugfix-release as overloading draw would break binary compitibility.
+	// So added here to allow users at least to manually force the element to having new skin-colors.
+	refreshSprites();
+
 	f32 val = getValue();
-	if ( val < RangeMin )
+	if ( val+core::ROUNDING_ERROR_f32 < RangeMin )
 		val = RangeMin;
-	else if ( val > RangeMax )
+	else if ( val-core::ROUNDING_ERROR_f32 > RangeMax )
 		val = RangeMax;
 	else
 		return;
@@ -254,6 +290,7 @@ void CGUISpinBox::serializeAttributes(io::IAttributes* out, io::SAttributeReadWr
 	out->addFloat("Step", getStepSize());
 	out->addInt("DecimalPlaces", DecimalPlaces);
 }
+
 
 //! Reads attributes of the element
 void CGUISpinBox::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)

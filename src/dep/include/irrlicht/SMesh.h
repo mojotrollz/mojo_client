@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -116,6 +116,7 @@ namespace scene
 
 		//! The meshbuffers of this mesh
 		core::array<IMeshBuffer*> MeshBuffers;
+
 		//! The bounding box of this mesh
 		core::aabbox3d<f32> BoundingBox;
 	};

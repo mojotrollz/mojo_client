@@ -12,16 +12,16 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="4"
+			OutputDirectory="..\obj\IrrDebug"
+			IntermediateDirectory="..\obj\IrrDebug"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include\zlib;..\..\include\irrlicht;..\..\include\DXSDK\include"
+				AdditionalIncludeDirectories="..\..\include;zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;IRRLICHT_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				ExceptionHandling="FALSE"
 				BasicRuntimeChecks="3"
@@ -39,8 +39,16 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="./dep/lib/debug/irrlicht.lib"/>
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib opengl32.lib winmm.lib"
+				OutputFile="..\..\bin\Win32-visualstudio\Irrlicht.dll"
+				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
+				IgnoreDefaultLibraryNames="libci.lib"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="..\obj\IrrDebug\Irrlicht.pdb"
+				ImportLibrary="..\..\lib\Win32-visualstudio\Irrlicht.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
@@ -63,15 +71,17 @@
 			<Tool
 				Name="VCXMLDataGeneratorTool"/>
 			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="4"
+			OutputDirectory="obj\IrrRelease"
+			IntermediateDirectory="obj\IrrRelease"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2"
@@ -81,7 +91,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="FALSE"
-				AdditionalIncludeDirectories="..\..\include\zlib;..\..\include\irrlicht;..\..\include\DXSDK\include"
+				AdditionalIncludeDirectories="..\..\include;zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRRLICHT_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -99,8 +109,16 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="./dep/lib/release/zthread.lib"/>
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib opengl32.lib winmm.lib"
+				OutputFile="..\..\bin\Win32-visualstudio\Irrlicht.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				IgnoreDefaultLibraryNames="libci.lib"
+				GenerateDebugInformation="FALSE"
+				ProgramDatabaseFile="..\obj\IrrRelease\Irrlicht.pdb"
+				ImportLibrary="..\..\lib\Win32-visualstudio\Irrlicht.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -123,15 +141,17 @@
 			<Tool
 				Name="VCXMLDataGeneratorTool"/>
 			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release - Fast FPU|Win32"
-			OutputDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			ConfigurationType="4"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2"
@@ -143,7 +163,7 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="..\..\include\zlib;..\..\include\irrlicht;..\..\include\DXSDK\include"
+				AdditionalIncludeDirectories="..\..\include;zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;IRRLICHT_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -163,8 +183,16 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="./dep/lib/release/irrlicht_fastfpu.lib"/>
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib opengl32.lib winmm.lib"
+				OutputFile="..\..\bin\Win32-visualstudio\Irrlicht.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				IgnoreDefaultLibraryNames="libci.lib"
+				GenerateDebugInformation="FALSE"
+				ProgramDatabaseFile="..\obj\IrrRelease\Irrlicht.pdb"
+				ImportLibrary="..\..\lib\Win32-visualstudio\Irrlicht.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -187,14 +215,16 @@
 			<Tool
 				Name="VCXMLDataGeneratorTool"/>
 			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Static lib - Debug|Win32"
-			OutputDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -202,7 +232,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include\zlib;..\..\include\irrlicht;..\..\include\DXSDK\include"
+				AdditionalIncludeDirectories="..\..\include;zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_IRR_STATIC_LIB_;_CRT_SECURE_NO_DEPRECATE"
 				ExceptionHandling="FALSE"
 				BasicRuntimeChecks="3"
@@ -251,8 +281,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static lib - Release|Win32"
-			OutputDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -263,7 +293,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="FALSE"
-				AdditionalIncludeDirectories="..\..\include\zlib;..\..\include\irrlicht;..\..\include\DXSDK\include"
+				AdditionalIncludeDirectories="..\..\include;zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_IRR_STATIC_LIB_;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -312,8 +342,8 @@
 		</Configuration>
 		<Configuration
 			Name="Static lib - Release - Fast FPU|Win32"
-			OutputDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/temp/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -326,7 +356,7 @@
 				EnableIntrinsicFunctions="TRUE"
 				FavorSizeOrSpeed="0"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="..\..\include\zlib;..\..\include\irrlicht;..\..\include\DXSDK\include"
+				AdditionalIncludeDirectories="..\..\include;zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_IRR_STATIC_LIB_;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="TRUE"
 				ExceptionHandling="FALSE"
@@ -528,6 +558,9 @@
 			<Filter
 				Name="io">
 				<File
+					RelativePath=".\..\..\include\EAttributes.h">
+				</File>
+				<File
 					RelativePath=".\..\..\include\IAttributeExchangingObject.h">
 				</File>
 				<File
@@ -540,7 +573,7 @@
 					RelativePath=".\..\..\include\IFileSystem.h">
 				</File>
 				<File
-					RelativePath=".\..\..\include\IReadFile.H">
+					RelativePath=".\..\..\include\IReadFile.h">
 				</File>
 				<File
 					RelativePath=".\..\..\include\irrXML.h">
@@ -759,6 +792,9 @@
 					RelativePath=".\..\..\include\IGUIImage.h">
 				</File>
 				<File
+					RelativePath="..\..\include\IGUIImageList.h">
+				</File>
+				<File
 					RelativePath=".\..\..\include\IGUIInOutFader.h">
 				</File>
 				<File
@@ -790,6 +826,9 @@
 				</File>
 				<File
 					RelativePath=".\..\..\include\IGUIToolbar.h">
+				</File>
+				<File
+					RelativePath="..\..\include\IGUITreeView.h">
 				</File>
 				<File
 					RelativePath=".\..\..\include\IGUIWindow.h">
@@ -866,6 +905,12 @@
 			</File>
 			<File
 				RelativePath="CGUIImage.h">
+			</File>
+			<File
+				RelativePath=".\CGUIImageList.cpp">
+			</File>
+			<File
+				RelativePath=".\CGUIImageList.h">
 			</File>
 			<File
 				RelativePath="CGUIInOutFader.cpp">
@@ -950,6 +995,12 @@
 			</File>
 			<File
 				RelativePath="CGUIToolBar.h">
+			</File>
+			<File
+				RelativePath=".\CGUITreeView.cpp">
+			</File>
+			<File
+				RelativePath=".\CGUITreeView.h">
 			</File>
 			<File
 				RelativePath="CGUIWindow.cpp">
@@ -1171,6 +1222,12 @@
 				</File>
 				<File
 					RelativePath="CImageLoaderPSD.h">
+				</File>
+				<File
+					RelativePath="CImageLoaderRGB.cpp">
+				</File>
+				<File
+					RelativePath="CImageLoaderRGB.h">
 				</File>
 				<File
 					RelativePath="CImageLoaderTGA.cpp">
@@ -1420,7 +1477,7 @@
 				RelativePath="CSceneManager.h">
 			</File>
 			<File
-				RelativePath="OctTree.h">
+				RelativePath="Octree.h">
 			</File>
 			<Filter
 				Name="loaders">
@@ -1536,6 +1593,12 @@
 					RelativePath=".\COgreMeshFileLoader.h">
 				</File>
 				<File
+					RelativePath=".\CPLYMeshFileLoader.cpp">
+				</File>
+				<File
+					RelativePath=".\CPLYMeshFileLoader.h">
+				</File>
+				<File
 					RelativePath=".\CQ3LevelMesh.cpp">
 				</File>
 				<File
@@ -1620,10 +1683,10 @@
 					RelativePath=".\CMeshSceneNode.h">
 				</File>
 				<File
-					RelativePath=".\COctTreeSceneNode.cpp">
+					RelativePath=".\COctreeSceneNode.cpp">
 				</File>
 				<File
-					RelativePath=".\COctTreeSceneNode.h">
+					RelativePath=".\COctreeSceneNode.h">
 				</File>
 				<File
 					RelativePath=".\CQuake3ShaderSceneNode.cpp">
@@ -1749,10 +1812,10 @@
 					RelativePath="CMetaTriangleSelector.h">
 				</File>
 				<File
-					RelativePath="COctTreeTriangleSelector.cpp">
+					RelativePath="COctreeTriangleSelector.cpp">
 				</File>
 				<File
-					RelativePath="COctTreeTriangleSelector.h">
+					RelativePath="COctreeTriangleSelector.h">
 				</File>
 				<File
 					RelativePath="CSceneCollisionManager.cpp">
@@ -1852,16 +1915,22 @@
 					RelativePath="CIrrMeshWriter.h">
 				</File>
 				<File
-					RelativePath=".\COBJMeshWriter.cpp">
+					RelativePath="COBJMeshWriter.cpp">
 				</File>
 				<File
-					RelativePath=".\COBJMeshWriter.h">
+					RelativePath="COBJMeshWriter.h">
 				</File>
 				<File
-					RelativePath=".\CSTLMeshWriter.cpp">
+					RelativePath="CPLYMeshWriter.cpp">
 				</File>
 				<File
-					RelativePath=".\CSTLMeshWriter.h">
+					RelativePath="CPLYMeshWriter.h">
+				</File>
+				<File
+					RelativePath="CSTLMeshWriter.cpp">
+				</File>
+				<File
+					RelativePath="CSTLMeshWriter.h">
 				</File>
 			</Filter>
 		</Filter>
@@ -1895,10 +1964,16 @@
 				RelativePath=".\CLimitReadFile.h">
 			</File>
 			<File
-				RelativePath=".\CMemoryReadFile.cpp">
+				RelativePath=".\CMemoryFile.cpp">
 			</File>
 			<File
-				RelativePath=".\CMemoryReadFile.h">
+				RelativePath=".\CMemoryFile.h">
+			</File>
+			<File
+				RelativePath=".\CMountPointReader.cpp">
+			</File>
+			<File
+				RelativePath=".\CMountPointReader.h">
 			</File>
 			<File
 				RelativePath=".\CPakReader.cpp">
@@ -1907,10 +1982,22 @@
 				RelativePath=".\CPakReader.h">
 			</File>
 			<File
+				RelativePath=".\CNPKReader.cpp">
+			</File>
+			<File
+				RelativePath=".\CNPKReader.h">
+			</File>
+			<File
 				RelativePath=".\CReadFile.cpp">
 			</File>
 			<File
 				RelativePath=".\CReadFile.h">
+			</File>
+			<File
+				RelativePath=".\CTarReader.cpp">
+			</File>
+			<File
+				RelativePath=".\CTarReader.h">
 			</File>
 			<File
 				RelativePath="CWriteFile.cpp">
@@ -1940,11 +2027,20 @@
 				RelativePath=".\CZipReader.h">
 			</File>
 			<File
+				RelativePath=".\IAttribute.h">
+			</File>
+			<File
 				RelativePath=".\irrXML.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="irr impl">
+			<File
+				RelativePath="CIrrDeviceConsole.cpp">
+			</File>
+			<File
+				RelativePath="CIrrDeviceConsole.h">
+			</File>
 			<File
 				RelativePath="CIrrDeviceLinux.cpp">
 			</File>
@@ -1989,22 +2085,31 @@
 			</File>
 			<Filter
 				Name="extern">
+				<File
+					RelativePath=".\lzma\LzmaDec.c">
+				</File>
+				<File
+					RelativePath=".\lzma\LzmaDec.h">
+				</File>
+				<File
+					RelativePath=".\lzma\Types.h">
+				</File>
 				<Filter
 					Name="zlib">
 					<File
 						RelativePath="zlib\adler32.c">
 					</File>
 					<File
-						RelativePath=".\zlib\compress.c">
+						RelativePath="zlib\compress.c">
 					</File>
 					<File
-						RelativePath=".\zlib\crc32.c">
+						RelativePath="zlib\crc32.c">
 					</File>
 					<File
-						RelativePath=".\zlib\crc32.h">
+						RelativePath="zlib\crc32.h">
 					</File>
 					<File
-						RelativePath=".\zlib\deflate.c">
+						RelativePath="zlib\deflate.c">
 					</File>
 					<File
 						RelativePath="zlib\deflate.h">
@@ -2055,10 +2160,16 @@
 						RelativePath="jpeglib\cderror.h">
 					</File>
 					<File
+						RelativePath="jpeglib\jaricom.c">
+					</File>
+					<File
 						RelativePath="jpeglib\jcapimin.c">
 					</File>
 					<File
 						RelativePath="jpeglib\jcapistd.c">
+					</File>
+					<File
+						RelativePath="jpeglib\jcarith.c">
 					</File>
 					<File
 						RelativePath="jpeglib\jccoefct.c">
@@ -2097,9 +2208,6 @@
 						RelativePath="jpeglib\jcparam.c">
 					</File>
 					<File
-						RelativePath="jpeglib\jcphuff.c">
-					</File>
-					<File
 						RelativePath="jpeglib\jcprepct.c">
 					</File>
 					<File
@@ -2113,6 +2221,9 @@
 					</File>
 					<File
 						RelativePath="jpeglib\jdapistd.c">
+					</File>
+					<File
+						RelativePath="jpeglib\jdarith.c">
 					</File>
 					<File
 						RelativePath="jpeglib\jdatadst.c">
@@ -2154,9 +2265,6 @@
 						RelativePath="jpeglib\jdmerge.c">
 					</File>
 					<File
-						RelativePath="jpeglib\jdphuff.c">
-					</File>
-					<File
 						RelativePath="jpeglib\jdpostct.c">
 					</File>
 					<File
@@ -2188,9 +2296,6 @@
 					</File>
 					<File
 						RelativePath="jpeglib\jidctint.c">
-					</File>
-					<File
-						RelativePath="jpeglib\jidctred.c">
 					</File>
 					<File
 						RelativePath="jpeglib\jinclude.h">
@@ -2278,6 +2383,90 @@
 					</File>
 					<File
 						RelativePath=".\libpng\pngwutil.c">
+					</File>
+				</Filter>
+				<Filter
+					Name="aesGladman">
+					<File
+						RelativePath=".\aesGladman\aes.h">
+					</File>
+					<File
+						RelativePath=".\aesGladman\aescrypt.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\aeskey.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\aesopt.h">
+					</File>
+					<File
+						RelativePath=".\aesGladman\aestab.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\fileenc.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\fileenc.h">
+					</File>
+					<File
+						RelativePath=".\aesGladman\hmac.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\hmac.h">
+					</File>
+					<File
+						RelativePath=".\aesGladman\prng.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\prng.h">
+					</File>
+					<File
+						RelativePath=".\aesGladman\pwd2key.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\pwd2key.h">
+					</File>
+					<File
+						RelativePath=".\aesGladman\sha1.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\sha1.h">
+					</File>
+					<File
+						RelativePath=".\aesGladman\sha2.cpp">
+					</File>
+					<File
+						RelativePath=".\aesGladman\sha2.h">
+					</File>
+				</Filter>
+				<Filter
+					Name="bzip2">
+					<File
+						RelativePath=".\bzip2\blocksort.c">
+					</File>
+					<File
+						RelativePath=".\bzip2\bzcompress.c">
+					</File>
+					<File
+						RelativePath=".\bzip2\bzlib.c">
+					</File>
+					<File
+						RelativePath=".\bzip2\bzlib.h">
+					</File>
+					<File
+						RelativePath=".\bzip2\bzlib_private.h">
+					</File>
+					<File
+						RelativePath=".\bzip2\crctable.c">
+					</File>
+					<File
+						RelativePath=".\bzip2\decompress.c">
+					</File>
+					<File
+						RelativePath=".\bzip2\huffman.c">
+					</File>
+					<File
+						RelativePath=".\bzip2\randtable.c">
 					</File>
 				</Filter>
 			</Filter>

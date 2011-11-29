@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -29,9 +29,9 @@ CImageLoaderPSD::CImageLoaderPSD()
 
 //! returns true if the file maybe is able to be loaded by this class
 //! based on the file extension (e.g. ".tga")
-bool CImageLoaderPSD::isALoadableFileExtension(const c8* fileName) const
+bool CImageLoaderPSD::isALoadableFileExtension(const io::path& filename) const
 {
-	return strstr(fileName, ".psd") != 0;
+	return core::hasFileExtension ( filename, "psd" );
 }
 
 
@@ -152,7 +152,7 @@ IImage* CImageLoaderPSD::loadImage(io::IReadFile* file) const
 	{
 		// create surface
 		image = new CImage(ECF_A8R8G8B8,
-			core::dimension2d<s32>(header.width, header.height), imageData);
+			core::dimension2d<u32>(header.width, header.height), imageData);
 	}
 
 	if (!image)

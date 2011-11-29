@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 //
@@ -87,7 +87,7 @@ public:
 	CMY3DMeshFileLoader(ISceneManager *scmgr, io::IFileSystem* fs);
 	virtual ~CMY3DMeshFileLoader();
 
-	virtual bool isALoadableFileExtension(const c8* fileName) const;
+	virtual bool isALoadableFileExtension(const io::path& filename) const;
 
 	virtual IAnimatedMesh* createMesh(io::IReadFile* file);
 

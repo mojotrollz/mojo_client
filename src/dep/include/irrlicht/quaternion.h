@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -40,6 +40,9 @@ class quaternion
 		//! Equalilty operator
 		bool operator==(const quaternion& other) const;
 
+		//! inequality operator
+		bool operator!=(const quaternion& other) const;
+
 		//! Assignment operator
 		inline quaternion& operator=(const quaternion& other);
 
@@ -76,6 +79,13 @@ class quaternion
 		//! Sets new quaternion based on euler angles (radians)
 		inline quaternion& set(const core::vector3df& vec);
 
+		//! Sets new quaternion from other quaternion
+		inline quaternion& set(const core::quaternion& quat);
+
+		//! returns if this quaternion equals the other one, taking floating point rounding errors into account
+		inline bool equals(const quaternion& other,
+				const f32 tolerance = ROUNDING_ERROR_f32 ) const;
+
 		//! Normalizes the quaternion
 		inline quaternion& normalize();
 
@@ -83,7 +93,26 @@ class quaternion
 		matrix4 getMatrix() const;
 
 		//! Creates a matrix from this quaternion
-		void getMatrix( matrix4 &dest ) const;
+		void getMatrix( matrix4 &dest, const core::vector3df &translation ) const;
+
+		/*!
+			Creates a matrix from this quaternion
+			Rotate about a center point
+			shortcut for
+			core::quaternion q;
+			q.rotationFromTo ( vin[i].Normal, forward );
+			q.getMatrixCenter ( lookat, center, newPos );
+
+			core::matrix4 m2;
+			m2.setInverseTranslation ( center );
+			lookat *= m2;
+
+			core::matrix4 m3;
+			m2.setTranslation ( newPos );
+			lookat *= m3;
+
+		*/
+		void getMatrixCenter( matrix4 &dest, const core::vector3df &center, const core::vector3df &translation ) const;
 
 		//! Creates a matrix from this quaternion
 		inline void getMatrix_transposed( matrix4 &dest ) const;
@@ -115,7 +144,10 @@ class quaternion
 		quaternion& rotationFromTo(const vector3df& from, const vector3df& to);
 
 		//! Quaternion elements.
-		f32 X, Y, Z, W;
+		f32 X; // vectorial (imaginary) part
+		f32 Y;
+		f32 Z;
+		f32 W; // real part
 };
 
 
@@ -149,6 +181,11 @@ inline bool quaternion::operator==(const quaternion& other) const
 		(W == other.W));
 }
 
+// inequality operator
+inline bool quaternion::operator!=(const quaternion& other) const
+{
+	return !(*this == other);
+}
 
 // assignment operator
 inline quaternion& quaternion::operator=(const quaternion& other)
@@ -272,28 +309,73 @@ inline matrix4 quaternion::getMatrix() const
 }
 
 
-// Creates a matrix from this quaternion
-inline void quaternion::getMatrix( matrix4 &dest ) const
+/*!
+	Creates a matrix from this quaternion
+*/
+inline void quaternion::getMatrix( matrix4 &dest, const core::vector3df &center ) const
 {
-	dest[0] = 1.0f - 2.0f*Y*Y - 2.0f*Z*Z;
-	dest[1] = 2.0f*X*Y + 2.0f*Z*W;
-	dest[2] = 2.0f*X*Z - 2.0f*Y*W;
-	dest[3] = 0.0f;
+	f32 * m = dest.pointer();
 
-	dest[4] = 2.0f*X*Y - 2.0f*Z*W;
-	dest[5] = 1.0f - 2.0f*X*X - 2.0f*Z*Z;
-	dest[6] = 2.0f*Z*Y + 2.0f*X*W;
-	dest[7] = 0.0f;
+	m[0] = 1.0f - 2.0f*Y*Y - 2.0f*Z*Z;
+	m[1] = 2.0f*X*Y + 2.0f*Z*W;
+	m[2] = 2.0f*X*Z - 2.0f*Y*W;
+	m[3] = 0.0f;
 
-	dest[8] = 2.0f*X*Z + 2.0f*Y*W;
-	dest[9] = 2.0f*Z*Y - 2.0f*X*W;
-	dest[10] = 1.0f - 2.0f*X*X - 2.0f*Y*Y;
-	dest[11] = 0.0f;
+	m[4] = 2.0f*X*Y - 2.0f*Z*W;
+	m[5] = 1.0f - 2.0f*X*X - 2.0f*Z*Z;
+	m[6] = 2.0f*Z*Y + 2.0f*X*W;
+	m[7] = 0.0f;
 
-	dest[12] = 0.f;
-	dest[13] = 0.f;
-	dest[14] = 0.f;
-	dest[15] = 1.f;
+	m[8] = 2.0f*X*Z + 2.0f*Y*W;
+	m[9] = 2.0f*Z*Y - 2.0f*X*W;
+	m[10] = 1.0f - 2.0f*X*X - 2.0f*Y*Y;
+	m[11] = 0.0f;
+
+	m[12] = center.X;
+	m[13] = center.Y;
+	m[14] = center.Z;
+	m[15] = 1.f;
+
+	//dest.setDefinitelyIdentityMatrix ( matrix4::BIT_IS_NOT_IDENTITY );
+	dest.setDefinitelyIdentityMatrix ( false );
+}
+
+
+
+/*!
+	Creates a matrix from this quaternion
+	Rotate about a center point
+	shortcut for
+	core::quaternion q;
+	q.rotationFromTo ( vin[i].Normal, forward );
+	q.getMatrix ( lookat, center );
+
+	core::matrix4 m2;
+	m2.setInverseTranslation ( center );
+	lookat *= m2;
+*/
+inline void quaternion::getMatrixCenter(matrix4 &dest,
+					const core::vector3df &center,
+					const core::vector3df &translation) const
+{
+	f32 * m = dest.pointer();
+
+	m[0] = 1.0f - 2.0f*Y*Y - 2.0f*Z*Z;
+	m[1] = 2.0f*X*Y + 2.0f*Z*W;
+	m[2] = 2.0f*X*Z - 2.0f*Y*W;
+	m[3] = 0.0f;
+
+	m[4] = 2.0f*X*Y - 2.0f*Z*W;
+	m[5] = 1.0f - 2.0f*X*X - 2.0f*Z*Z;
+	m[6] = 2.0f*Z*Y + 2.0f*X*W;
+	m[7] = 0.0f;
+
+	m[8] = 2.0f*X*Z + 2.0f*Y*W;
+	m[9] = 2.0f*Z*Y - 2.0f*X*W;
+	m[10] = 1.0f - 2.0f*X*X - 2.0f*Y*Y;
+	m[11] = 0.0f;
+
+	dest.setRotationCenter ( center, translation );
 }
 
 // Creates a matrix from this quaternion
@@ -318,6 +400,8 @@ inline void quaternion::getMatrix_transposed( matrix4 &dest ) const
 	dest[7] = 0.f;
 	dest[11] = 0.f;
 	dest[15] = 1.f;
+	//dest.setDefinitelyIdentityMatrix ( matrix4::BIT_IS_NOT_IDENTITY );
+	dest.setDefinitelyIdentityMatrix ( false );
 }
 
 
@@ -375,6 +459,23 @@ inline quaternion& quaternion::set(const core::vector3df& vec)
 {
 	return set(vec.X, vec.Y, vec.Z);
 }
+
+// sets new quaternion based on other quaternion
+inline quaternion& quaternion::set(const core::quaternion& quat)
+{
+	return (*this=quat);
+}
+
+
+//! returns if this quaternion equals the other one, taking floating point rounding errors into account
+inline bool quaternion::equals(const quaternion& other, const f32 tolerance) const
+{
+	return core::equals(X, other.X, tolerance) &&
+		core::equals(Y, other.Y, tolerance) &&
+		core::equals(Z, other.Z, tolerance) &&
+		core::equals(W, other.W, tolerance);
+}
+
 
 // normalizes the quaternion
 inline quaternion& quaternion::normalize()
@@ -527,11 +628,21 @@ inline core::quaternion& quaternion::rotationFromTo(const vector3df& from, const
 	{
 		return makeIdentity();
 	}
+	else if (d <= -1.0f) // exactly opposite
+	{
+		core::vector3df axis(1.0f, 0.f, 0.f);
+		axis = axis.crossProduct(core::vector3df(X,Y,Z));
+		if (axis.getLength()==0)
+		{
+			axis.set(0.f,1.f,0.f);
+			axis.crossProduct(core::vector3df(X,Y,Z));
+		}
+		return this->fromAngleAxis(core::PI, axis);
+	}
 
 	const f32 s = sqrtf( (1+d)*2 ); // optimize inv_sqrt
 	const f32 invs = 1.f / s;
 	const vector3df c = v0.crossProduct(v1)*invs;
-
 	X = c.X;
 	Y = c.Y;
 	Z = c.Z;

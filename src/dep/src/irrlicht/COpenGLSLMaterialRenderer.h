@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -16,8 +16,10 @@
 #else
 #if defined(_IRR_OPENGL_USE_EXTPOINTER_)
 	#define GL_GLEXT_LEGACY 1
+#else
+	#define GL_GLEXT_PROTOTYPES 1
 #endif
-#if defined(_IRR_USE_OSX_DEVICE_)
+#if defined(_IRR_OSX_PLATFORM_)
 	#include <OpenGL/gl.h>
 #else
 	#include <GL/gl.h>
@@ -52,15 +54,21 @@ public:
 	COpenGLSLMaterialRenderer(
 		COpenGLDriver* driver, 
 		s32& outMaterialTypeNr, 
-		const c8* vertexShaderProgram,
-		const c8* vertexShaderEntryPointName,
-		E_VERTEX_SHADER_TYPE vsCompileTarget,
-		const c8* pixelShaderProgram, 
-		const c8* pixelShaderEntryPointName,
-		E_PIXEL_SHADER_TYPE psCompileTarget,
-		IShaderConstantSetCallBack* callback,
-		IMaterialRenderer* baseMaterial,
-		s32 userData);
+		const c8* vertexShaderProgram = 0,
+		const c8* vertexShaderEntryPointName = 0,
+		E_VERTEX_SHADER_TYPE vsCompileTarget = video::EVST_VS_1_1,
+		const c8* pixelShaderProgram = 0,
+		const c8* pixelShaderEntryPointName = 0,
+		E_PIXEL_SHADER_TYPE psCompileTarget = video::EPST_PS_1_1,
+		const c8* geometryShaderProgram = 0,
+		const c8* geometryShaderEntryPointName = "main",
+		E_GEOMETRY_SHADER_TYPE gsCompileTarget = EGST_GS_4_0,
+		scene::E_PRIMITIVE_TYPE inType = scene::EPT_TRIANGLES,
+		scene::E_PRIMITIVE_TYPE outType = scene::EPT_TRIANGLE_STRIP,
+		u32 verticesOut = 0,
+		IShaderConstantSetCallBack* callback = 0,
+		IMaterialRenderer* baseMaterial = 0,
+		s32 userData = 0);
 
 	//! Destructor
 	virtual ~COpenGLSLMaterialRenderer();
@@ -94,7 +102,11 @@ protected:
 
 	void init(s32& outMaterialTypeNr, 
 		const c8* vertexShaderProgram, 
-		const c8* pixelShaderProgram);
+		const c8* pixelShaderProgram,
+		const c8* geometryShaderProgram,
+		scene::E_PRIMITIVE_TYPE inType=scene::EPT_TRIANGLES,
+		scene::E_PRIMITIVE_TYPE outType=scene::EPT_TRIANGLE_STRIP,
+		u32 verticesOut=0);
 
 	bool createProgram();
 	bool createShader(GLenum shaderType, const char* shader);

@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -18,6 +18,7 @@ namespace irr
 		EKA_STRAFE_LEFT,
 		EKA_STRAFE_RIGHT,
 		EKA_JUMP_UP,
+		EKA_CROUCH,
 		EKA_COUNT,
 
 		//! This value is not used. It only forces this enumeration to compile in 32 bit.

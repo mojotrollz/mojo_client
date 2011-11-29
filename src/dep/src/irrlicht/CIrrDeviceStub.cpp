@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -15,12 +15,12 @@
 
 namespace irr
 {
-
 //! constructor
 CIrrDeviceStub::CIrrDeviceStub(const SIrrlichtCreationParameters& params)
-: IrrlichtDevice(), VideoDriver(0), GUIEnvironment(0), SceneManager(0), 
+: IrrlichtDevice(), VideoDriver(0), GUIEnvironment(0), SceneManager(0),
 	Timer(0), CursorControl(0), UserReceiver(params.EventReceiver), Logger(0), Operator(0),
-	FileSystem(0), InputReceivingSceneManager(0), CreationParams(params)
+	FileSystem(0), InputReceivingSceneManager(0), CreationParams(params),
+	Close(false)
 {
 	Timer = new CTimer();
 	if (os::Printer::Logger)
@@ -34,6 +34,7 @@ CIrrDeviceStub::CIrrDeviceStub(const SIrrlichtCreationParameters& params)
 		Logger = new CLogger(UserReceiver);
 		os::Printer::Logger = Logger;
 	}
+	Logger->setLogLevel( CreationParams.LoggingLevel );
 
 	os::Printer::Logger = Logger;
 
@@ -82,7 +83,7 @@ void CIrrDeviceStub::createGUIAndScene()
 	#ifdef _IRR_COMPILE_WITH_GUI_
 	// create gui environment
 	GUIEnvironment = gui::createGUIEnvironment(FileSystem, VideoDriver, Operator);
-	#endif 
+	#endif
 
 	// create Scene manager
 	SceneManager = scene::createSceneManager(VideoDriver, FileSystem, CursorControl, GUIEnvironment);
@@ -130,7 +131,7 @@ ITimer* CIrrDeviceStub::getTimer()
 }
 
 
-//! Returns the version of the engine. 
+//! Returns the version of the engine.
 const char* CIrrDeviceStub::getVersion() const
 {
 	return IRRLICHT_SDK_VERSION;
@@ -168,6 +169,36 @@ bool CIrrDeviceStub::checkVersion(const char* version)
 	}
 
 	return true;
+}
+
+
+//! Compares to the last call of this function to return double and triple clicks.
+u32 CIrrDeviceStub::checkSuccessiveClicks(s32 mouseX, s32 mouseY, EMOUSE_INPUT_EVENT inputEvent )
+{
+	const s32 MAX_MOUSEMOVE = 3;
+
+	irr::u32 clickTime = getTimer()->getRealTime();
+
+	if ( (clickTime-MouseMultiClicks.LastClickTime) < MouseMultiClicks.DoubleClickTime
+		&& core::abs_(MouseMultiClicks.LastClick.X - mouseX ) <= MAX_MOUSEMOVE
+		&& core::abs_(MouseMultiClicks.LastClick.Y - mouseY ) <= MAX_MOUSEMOVE
+		&& MouseMultiClicks.CountSuccessiveClicks < 3
+		&& MouseMultiClicks.LastMouseInputEvent == inputEvent
+	   )
+	{
+		++MouseMultiClicks.CountSuccessiveClicks;
+	}
+	else
+	{
+		MouseMultiClicks.CountSuccessiveClicks = 1;
+	}
+
+	MouseMultiClicks.LastMouseInputEvent = inputEvent;
+	MouseMultiClicks.LastClickTime = clickTime;
+	MouseMultiClicks.LastClick.X = mouseX;
+	MouseMultiClicks.LastClick.Y = mouseY;
+
+	return MouseMultiClicks.CountSuccessiveClicks;
 }
 
 
@@ -225,16 +256,15 @@ IOSOperator* CIrrDeviceStub::getOSOperator()
 }
 
 
-//! Sets the input receiving scene manager. 
+//! Sets the input receiving scene manager.
 void CIrrDeviceStub::setInputReceivingSceneManager(scene::ISceneManager* sceneManager)
 {
+    if (sceneManager)
+        sceneManager->grab();
 	if (InputReceivingSceneManager)
 		InputReceivingSceneManager->drop();
 
 	InputReceivingSceneManager = sceneManager;
-
-	if (InputReceivingSceneManager)
-		InputReceivingSceneManager->grab();
 }
 
 
@@ -256,6 +286,79 @@ bool CIrrDeviceStub::activateJoysticks(core::array<SJoystickInfo> & joystickInfo
 {
 	return false;
 }
+
+/*!
+*/
+void CIrrDeviceStub::calculateGammaRamp ( u16 *ramp, f32 gamma, f32 relativebrightness, f32 relativecontrast )
+{
+	s32 i;
+	s32 value;
+	s32 rbright = (s32) ( relativebrightness * (65535.f / 4 ) );
+	f32 rcontrast = 1.f / (255.f - ( relativecontrast * 127.5f ) );
+
+	gamma = gamma > 0.f ? 1.0f / gamma : 0.f;
+
+	for ( i = 0; i < 256; ++i )
+	{
+		value = (s32)(pow( rcontrast * i, gamma)*65535.f + 0.5f );
+		ramp[i] = (u16) core::s32_clamp ( value + rbright, 0, 65535 );
+	}
+
+}
+
+void CIrrDeviceStub::calculateGammaFromRamp ( f32 &gamma, const u16 *ramp )
+{
+	/* The following is adapted from a post by Garrett Bass on OpenGL
+	Gamedev list, March 4, 2000.
+	*/
+	f32 sum = 0.0;
+	s32 i, count = 0;
+
+	gamma = 1.0;
+	for ( i = 1; i < 256; ++i ) {
+		if ( (ramp[i] != 0) && (ramp[i] != 65535) ) {
+			f32 B = (f32)i / 256.f;
+			f32 A = ramp[i] / 65535.f;
+			sum += (f32) ( logf(A) / logf(B) );
+			count++;
+		}
+	}
+	if ( count && sum ) {
+		gamma = 1.0f / (sum / count);
+	}
+
+}
+
+//! Set the current Gamma Value for the Display
+bool CIrrDeviceStub::setGammaRamp( f32 red, f32 green, f32 blue, f32 brightness, f32 contrast )
+{
+	return false;
+}
+
+//! Get the current Gamma Value for the Display
+bool CIrrDeviceStub::getGammaRamp( f32 &red, f32 &green, f32 &blue, f32 &brightness, f32 &contrast )
+{
+	return false;
+}
+
+//! Set the maximal elapsed time between 2 clicks to generate doubleclicks for the mouse. It also affects tripleclick behaviour.
+void CIrrDeviceStub::setDoubleClickTime( u32 timeMs )
+{
+	MouseMultiClicks.DoubleClickTime = timeMs;
+}
+
+//! Get the maximal elapsed time between 2 clicks to generate double- and tripleclicks for the mouse.
+u32 CIrrDeviceStub::getDoubleClickTime() const
+{
+	return MouseMultiClicks.DoubleClickTime;
+}
+
+//! Remove all messages pending in the system message loop
+void CIrrDeviceStub::clearSystemMessages()
+{
+}
+
+
 
 } // end namespace irr
 

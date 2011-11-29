@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -119,10 +119,27 @@ typedef unsigned short wchar_t;
 #endif // microsoft compiler
 #endif // _IRR_WINDOWS_API_
 
+namespace irr
+{
+
+//! Type name for character type used by the file system.
+/** Should the wide character version of the FileSystem be used it is a
+16 bit character variable. Used for unicode Filesystem and unicode strings.
+Else it is a 8 bit character variable. Used for ansi Filesystem and non-unicode
+strings
+*/
+#if defined(_IRR_WCHAR_FILESYSTEM)
+	typedef wchar_t fschar_t;
+#else
+	typedef char fschar_t;
+#endif
+
+} // end namespace irr
+
 //! define a break macro for debugging.
 #if defined(_DEBUG)
 #if defined(_IRR_WINDOWS_API_) && defined(_MSC_VER) && !defined (_WIN32_WCE)
-  #if defined(_WIN64) // using portable common solution for x64 configuration
+  #if defined(WIN64) || defined(_WIN64) // using portable common solution for x64 configuration
   #include <crtdbg.h>
   #define _IRR_DEBUG_BREAK_IF( _CONDITION_ ) if (_CONDITION_) {_CrtDbgBreak();}
   #else
@@ -134,6 +151,23 @@ typedef unsigned short wchar_t;
 #endif
 #else
 #define _IRR_DEBUG_BREAK_IF( _CONDITION_ )
+#endif
+
+//! Defines a deprecated macro which generates a warning at compile time
+/** The usage is simple
+For typedef:		typedef _IRR_DEPRECATED_ int test1;
+For classes/structs:	class _IRR_DEPRECATED_ test2 { ... };
+For methods:		class test3 { _IRR_DEPRECATED_ virtual void foo() {} };
+For functions:		template<class T> _IRR_DEPRECATED_ void test4(void) {}
+**/
+#if defined(IGNORE_DEPRECATED_WARNING)
+#define _IRR_DEPRECATED_
+#elif _MSC_VER >= 1310 //vs 2003 or higher
+#define _IRR_DEPRECATED_ __declspec(deprecated)
+#elif (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)) // all versions above 3.0 should support this feature
+#define _IRR_DEPRECATED_  __attribute__ ((deprecated))
+#else
+#define _IRR_DEPRECATED_
 #endif
 
 //! Defines a small statement to work around a microsoft compiler bug.
@@ -180,10 +214,12 @@ Compiler version defines: VC6.0 : 1200, VC7.0 : 1300, VC7.1 : 1310, VC8.0 : 1400
 /** some compilers can create those by directly writing the
 code like 'code', but some generate warnings so we use this macro here */
 #define MAKE_IRR_ID(c0, c1, c2, c3) \
-		((u32)(u8)(c0) | ((u32)(u8)(c1) << 8) | \
-		((u32)(u8)(c2) << 16) | ((u32)(u8)(c3) << 24 ))
+		((irr::u32)(irr::u8)(c0) | ((irr::u32)(irr::u8)(c1) << 8) | \
+		((irr::u32)(irr::u8)(c2) << 16) | ((irr::u32)(irr::u8)(c3) << 24 ))
 
+#if defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#define _strcmpi(a,b) strcmpi(a,b)
+#endif
 
 #endif // __IRR_TYPES_H_INCLUDED__
-
 

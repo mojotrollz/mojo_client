@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -120,7 +120,7 @@ class line3d
 			if (d < 0.0)
 				return false;
 
-			outdistance = v - sqrt((f64)d);
+			outdistance = v - core::squareroot ( d );
 			return true;
 		}
 

@@ -1,9 +1,9 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 // orginally written by Christian Stehno, modified by Nikolaus Gebhardt
 
-#include "IrrCompileConfig.h" 
+#include "IrrCompileConfig.h"
 #ifdef _IRR_COMPILE_WITH_OGRE_LOADER_
 
 #include "COgreMeshFileLoader.h"
@@ -23,31 +23,44 @@ namespace irr
 namespace scene
 {
 
-// Main Chunks
-const u16 COGRE_HEADER= 0x1000;
-const u16 COGRE_MESH= 0x3000;
+namespace
+{
+	enum OGRE_CHUNKS
+	{
+		// Main Chunks
+		COGRE_HEADER= 0x1000,
+		COGRE_SKELETON= 0x2000,
+		COGRE_MESH= 0x3000,
 
-// sub chunks of COGRE_MESH
-const u16 COGRE_SUBMESH= 0x4000;
-const u16 COGRE_GEOMETRY= 0x5000;
-const u16 COGRE_SKELETON_LINK= 0x6000;
-const u16 COGRE_BONE_ASSIGNMENT= 0x7000;
-const u16 COGRE_MESH_LOD= 0x8000;
-const u16 COGRE_MESH_BOUNDS= 0x9000;
-const u16 COGRE_MESH_SUBMESH_NAME_TABLE= 0xA000;
-const u16 COGRE_MESH_EDGE_LISTS= 0xB000;
+		// sub chunks of COGRE_MESH
+		COGRE_SUBMESH= 0x4000,
+		COGRE_GEOMETRY= 0x5000,
+		COGRE_SKELETON_LINK= 0x6000,
+		COGRE_BONE_ASSIGNMENT= 0x7000,
+		COGRE_MESH_LOD= 0x8000,
+		COGRE_MESH_BOUNDS= 0x9000,
+		COGRE_MESH_SUBMESH_NAME_TABLE= 0xA000,
+		COGRE_MESH_EDGE_LISTS= 0xB000,
 
-// sub chunks of COGRE_GEOMETRY
-const u16 COGRE_GEOMETRY_VERTEX_DECLARATION= 0x5100;
-const u16 COGRE_GEOMETRY_VERTEX_ELEMENT= 0x5110;
-const u16 COGRE_GEOMETRY_VERTEX_BUFFER= 0x5200;
-const u16 COGRE_GEOMETRY_VERTEX_BUFFER_DATA= 0x5210;
+		// sub chunks of COGRE_SKELETON
+		COGRE_BONE_PARENT= 0x3000,
+		COGRE_ANIMATION= 0x4000,
+		COGRE_ANIMATION_TRACK= 0x4100,
+		COGRE_ANIMATION_KEYFRAME= 0x4110,
+		COGRE_ANIMATION_LINK= 0x5000,
 
-// sub chunks of COGRE_SUBMESH
-const u16 COGRE_SUBMESH_OPERATION= 0x4010;
-const u16 COGRE_SUBMESH_BONE_ASSIGNMENT= 0x4100;
-const u16 COGRE_SUBMESH_TEXTURE_ALIAS= 0x4200;
+		// sub chunks of COGRE_SUBMESH
+		COGRE_SUBMESH_OPERATION= 0x4010,
+		COGRE_SUBMESH_BONE_ASSIGNMENT= 0x4100,
+		COGRE_SUBMESH_TEXTURE_ALIAS= 0x4200,
 
+		// sub chunks of COGRE_GEOMETRY
+		COGRE_GEOMETRY_VERTEX_DECLARATION= 0x5100,
+		COGRE_GEOMETRY_VERTEX_ELEMENT= 0x5110,
+		COGRE_GEOMETRY_VERTEX_BUFFER= 0x5200,
+		COGRE_GEOMETRY_VERTEX_BUFFER_DATA= 0x5210
+	};
+}
 
 //! Constructor
 COgreMeshFileLoader::COgreMeshFileLoader(io::IFileSystem* fs, video::IVideoDriver* driver)
@@ -84,9 +97,9 @@ COgreMeshFileLoader::~COgreMeshFileLoader()
 
 //! returns true if the file maybe is able to be loaded by this class
 //! based on the file extension (e.g. ".bsp")
-bool COgreMeshFileLoader::isALoadableFileExtension(const c8* filename) const
+bool COgreMeshFileLoader::isALoadableFileExtension(const io::path& filename) const
 {
-	return strstr(filename, ".mesh")!=0;
+	return core::hasFileExtension ( filename, "mesh" );
 }
 
 
@@ -108,33 +121,44 @@ IAnimatedMesh* COgreMeshFileLoader::createMesh(io::IReadFile* file)
 		return 0;
 	ChunkData data;
 	readString(file, data, Version);
-	if ((Version != "[MeshSerializer_v1.30]") && (Version != "[MeshSerializer_v1.40]"))
+	if ((Version != "[MeshSerializer_v1.30]") && (Version != "[MeshSerializer_v1.40]") && (Version != "[MeshSerializer_v1.41]"))
 		return 0;
 
 	clearMeshes();
 	if (Mesh)
 		Mesh->drop();
 
-	Mesh = new SMesh();
-	setCurrentlyLoadingPath(file);
+	CurrentlyLoadingFromPath = FileSystem->getFileDir(file->getFileName());
 	loadMaterials(file);
 
 	if (readChunk(file))
 	{
-		// success
-		SAnimatedMesh* am = new SAnimatedMesh();
-		am->Type = EAMT_3DS;
+		// delete data loaded from file
+		clearMeshes();
 
-		for (u32 i=0; i<Mesh->getMeshBufferCount(); ++i)
-			((SMeshBuffer*)Mesh->getMeshBuffer(i))->recalculateBoundingBox();
+		if (Skeleton.Bones.size())
+		{
+			ISkinnedMesh* tmp = static_cast<CSkinnedMesh*>(Mesh);
+			static_cast<CSkinnedMesh*>(Mesh)->updateBoundingBox();
+			Skeleton.Animations.clear();
+			Skeleton.Bones.clear();
+			Mesh=0;
+			return tmp;
+		}
+		else
+		{
+			for (u32 i=0; i<Mesh->getMeshBufferCount(); ++i)
+				((SMeshBuffer*)Mesh->getMeshBuffer(i))->recalculateBoundingBox();
 
-		Mesh->recalculateBoundingBox();
-
-		am->addMesh(Mesh);
-		am->recalculateBoundingBox();
-		Mesh->drop();
-		Mesh = 0;
+			((SMesh*)Mesh)->recalculateBoundingBox();
+			SAnimatedMesh* am = new SAnimatedMesh();
+			am->Type = EAMT_3DS;
+			am->addMesh(Mesh);
+			am->recalculateBoundingBox();
+			Mesh->drop();
+			Mesh = 0;
         	return am;
+		}
 	}
 
 	Mesh->drop();
@@ -157,6 +181,10 @@ bool COgreMeshFileLoader::readChunk(io::IReadFile* file)
 			{
 				Meshes.push_back(OgreMesh());
 				readObjectChunk(file, data, Meshes.getLast());
+				if (Skeleton.Bones.size())
+					Mesh = new CSkinnedMesh();
+				else
+					Mesh = new SMesh();
 				composeObject();
 			}
 			break;
@@ -175,6 +203,7 @@ bool COgreMeshFileLoader::readObjectChunk(io::IReadFile* file, ChunkData& parent
 	os::Printer::log("Read Object Chunk");
 #endif
 	readBool(file, parent, mesh.SkeletalAnimation);
+	bool skeleton_loaded=false;
 	while ((parent.read < parent.header.length)&&(file->getPos() < file->getSize()))
 	{
 		ChunkData data;
@@ -183,24 +212,42 @@ bool COgreMeshFileLoader::readObjectChunk(io::IReadFile* file, ChunkData& parent
 		switch(data.header.id)
 		{
 			case COGRE_GEOMETRY:
-			{
 				readGeometry(file, data, mesh.Geometry);
-			}
 			break;
-			case COGRE_SUBMESH: 
+			case COGRE_SUBMESH:
 				mesh.SubMeshes.push_back(OgreSubMesh());
 				readSubMesh(file, data, mesh.SubMeshes.getLast());
 			break;
-			case COGRE_MESH_BOUNDS: 
+			case COGRE_MESH_BOUNDS:
 			{
+#ifdef IRR_OGRE_LOADER_DEBUG
+				os::Printer::log("Read Mesh Bounds");
+#endif
 				readVector(file, data, mesh.BBoxMinEdge);
 				readVector(file, data, mesh.BBoxMaxEdge);
-				readFloat(file, data, mesh.BBoxRadius);
+				readFloat(file, data, &mesh.BBoxRadius);
 			}
 			break;
-			case COGRE_SKELETON_LINK: 
-			case COGRE_BONE_ASSIGNMENT: 
-			case COGRE_MESH_LOD: 
+			case COGRE_SKELETON_LINK:
+			{
+#ifdef IRR_OGRE_LOADER_DEBUG
+				os::Printer::log("Read Skeleton link");
+#endif
+				core::stringc name;
+				readString(file, data, name);
+				loadSkeleton(file, name);
+				skeleton_loaded=true;
+			}
+			break;
+			case COGRE_BONE_ASSIGNMENT:
+			{
+				mesh.BoneAssignments.push_back(OgreBoneAssignment());
+				readInt(file, data, &mesh.BoneAssignments.getLast().VertexID);
+				readShort(file, data, &mesh.BoneAssignments.getLast().BoneID);
+				readFloat(file, data, &mesh.BoneAssignments.getLast().Weight);
+			}
+			break;
+			case COGRE_MESH_LOD:
 			case COGRE_MESH_SUBMESH_NAME_TABLE:
 			case COGRE_MESH_EDGE_LISTS:
 				// ignore chunk
@@ -208,12 +255,18 @@ bool COgreMeshFileLoader::readObjectChunk(io::IReadFile* file, ChunkData& parent
 				data.read += data.header.length-data.read;
 				break;
 			default:
-				parent.read=parent.header.length;
-				file->seek(-(long)sizeof(ChunkHeader), true);
-				return true;
+#ifdef IRR_OGRE_LOADER_DEBUG
+				os::Printer::log("Skipping", core::stringc(data.header.id));
+#endif
+				// ignore chunk
+				file->seek(data.header.length-data.read, true);
+				data.read += data.header.length-data.read;
+				break;
 		}
 		parent.read += data.read;
 	}
+	if (!skeleton_loaded)
+		loadSkeleton(file, FileSystem->getFileBasename(file->getFileName(), false));
 	return true;
 }
 
@@ -223,7 +276,7 @@ bool COgreMeshFileLoader::readGeometry(io::IReadFile* file, ChunkData& parent, O
 #ifdef IRR_OGRE_LOADER_DEBUG
 	os::Printer::log("Read Geometry");
 #endif
-	readInt(file, parent, geometry.NumVertex);
+	readInt(file, parent, &geometry.NumVertex);
 	while(parent.read < parent.header.length)
 	{
 		ChunkData data;
@@ -239,6 +292,9 @@ bool COgreMeshFileLoader::readGeometry(io::IReadFile* file, ChunkData& parent, O
 			break;
 		default:
 			// ignore chunk
+#ifdef IRR_OGRE_LOADER_DEBUG
+			os::Printer::log("Skipping", core::stringc(data.header.id));
+#endif
 			file->seek(data.header.length-data.read, true);
 			data.read += data.header.length-data.read;
 		}
@@ -263,18 +319,18 @@ bool COgreMeshFileLoader::readVertexDeclaration(io::IReadFile* file, ChunkData& 
 		{
 		case COGRE_GEOMETRY_VERTEX_ELEMENT:
 		{
-			OgreVertexElement elem;
-			readShort(file, data, elem.Source);
-			readShort(file, data, elem.Type);
-			readShort(file, data, elem.Semantic);
+			geometry.Elements.push_back(OgreVertexElement());
+			OgreVertexElement& elem = geometry.Elements.getLast();
+			readShort(file, data, &elem.Source);
+			readShort(file, data, &elem.Type);
+			readShort(file, data, &elem.Semantic);
 			if (elem.Semantic == 7) //Tex coords
 			{
 				++NumUV;
 			}
-			readShort(file, data, elem.Offset);
+			readShort(file, data, &elem.Offset);
 			elem.Offset /= sizeof(f32);
-			readShort(file, data, elem.Index);
-			geometry.Elements.push_back(elem);
+			readShort(file, data, &elem.Index);
 		}
 			break;
 		default:
@@ -294,17 +350,16 @@ bool COgreMeshFileLoader::readVertexBuffer(io::IReadFile* file, ChunkData& paren
 	os::Printer::log("Read Vertex Buffer");
 #endif
 	OgreVertexBuffer buf;
-	readShort(file, parent, buf.BindIndex);
-	readShort(file, parent, buf.VertexSize);
+	readShort(file, parent, &buf.BindIndex);
+	readShort(file, parent, &buf.VertexSize);
 	buf.VertexSize /= sizeof(f32);
 	ChunkData data;
 	readChunkData(file, data);
 
 	if (data.header.id == COGRE_GEOMETRY_VERTEX_BUFFER_DATA)
 	{
-		buf.Data = new f32[geometry.NumVertex*buf.VertexSize];
-		for (s32 i=0; i<geometry.NumVertex*buf.VertexSize; ++i)
-			readFloat(file, data, buf.Data[i]);
+		buf.Data.set_used(geometry.NumVertex*buf.VertexSize);
+		readFloat(file, data, buf.Data.pointer(), geometry.NumVertex*buf.VertexSize);
 	}
 
 	geometry.Buffers.push_back(buf);
@@ -319,35 +374,27 @@ bool COgreMeshFileLoader::readSubMesh(io::IReadFile* file, ChunkData& parent, Og
 	os::Printer::log("Read Submesh");
 #endif
 	readString(file, parent, subMesh.Material);
+#ifdef IRR_OGRE_LOADER_DEBUG
+	os::Printer::log("using material", subMesh.Material);
+#endif
 	readBool(file, parent, subMesh.SharedVertices);
 
 	s32 numIndices;
-	readInt(file, parent, numIndices);
+	readInt(file, parent, &numIndices);
 	subMesh.Indices.set_used(numIndices);
 
 	readBool(file, parent, subMesh.Indices32Bit);
 
 	if (subMesh.Indices32Bit)
-		for (s32 i=0; i<numIndices; ++i)
-			readInt(file, parent, subMesh.Indices[i]);
+		readInt(file, parent, subMesh.Indices.pointer(), numIndices);
 	else
+	{
 		for (s32 i=0; i<numIndices; ++i)
 		{
 			u16 num;
-			readShort(file, parent, num);
+			readShort(file, parent, &num);
 			subMesh.Indices[i]=num;
 		}
-
-	if (!subMesh.SharedVertices)
-	{
-		ChunkData data;
-		readChunkData(file, data);
-
-		if (data.header.id==COGRE_GEOMETRY)
-		{
-			readGeometry(file, data, subMesh.Geometry);
-		}
-		parent.read += data.read;
 	}
 
 	while(parent.read < parent.header.length)
@@ -357,11 +404,22 @@ bool COgreMeshFileLoader::readSubMesh(io::IReadFile* file, ChunkData& parent, Og
 
 		switch(data.header.id)
 		{
+		case COGRE_GEOMETRY:
+			readGeometry(file, data, subMesh.Geometry);
+		break;
 		case COGRE_SUBMESH_OPERATION:
-			readShort(file, data, subMesh.Operation);
+			readShort(file, data, &subMesh.Operation);
+#ifdef IRR_OGRE_LOADER_DEBUG
+			os::Printer::log("Read Submesh Operation",core::stringc(subMesh.Operation));
+#endif
+			if (subMesh.Operation != 4)
+				os::Printer::log("Primitive type != trilist not yet implemented", ELL_WARNING);
 			break;
 		case COGRE_SUBMESH_TEXTURE_ALIAS:
 		{
+#ifdef IRR_OGRE_LOADER_DEBUG
+				os::Printer::log("Read Submesh Texture Alias");
+#endif
 			core::stringc texture, alias;
 			readString(file, data, texture);
 			readString(file, data, alias);
@@ -369,11 +427,17 @@ bool COgreMeshFileLoader::readSubMesh(io::IReadFile* file, ChunkData& parent, Og
 		}
 			break;
 		case COGRE_SUBMESH_BONE_ASSIGNMENT:
-			// currently ignore chunk
-			file->seek(data.header.length-data.read, true);
-			data.read += data.header.length-data.read;
+		{
+			subMesh.BoneAssignments.push_back(OgreBoneAssignment());
+			readInt(file, data, &subMesh.BoneAssignments.getLast().VertexID);
+			readShort(file, data, &subMesh.BoneAssignments.getLast().BoneID);
+			readFloat(file, data, &subMesh.BoneAssignments.getLast().Weight);
+		}
 			break;
 		default:
+#ifdef IRR_OGRE_LOADER_DEBUG
+			os::Printer::log("Skipping", core::stringc(data.header.id));
+#endif
 			parent.read=parent.header.length;
 			file->seek(-(long)sizeof(ChunkHeader), true);
 			return true;
@@ -394,19 +458,10 @@ void COgreMeshFileLoader::composeMeshBufferMaterial(scene::IMeshBuffer* mb, cons
 			material=Materials[k].Techniques[0].Passes[0].Material;
 			if (Materials[k].Techniques[0].Passes[0].Texture.Filename.size())
 			{
-				material.setTexture(0, Driver->getTexture(Materials[k].Techniques[0].Passes[0].Texture.Filename.c_str()));
-				if (!material.getTexture(0))
-				{
-					// retry with relative path
-					core::stringc relative = Materials[k].Techniques[0].Passes[0].Texture.Filename;
-					s32 idx = relative.findLast('\\');
-					if (idx != -1)
-						relative = relative.subString(idx+1, relative.size()-idx-1);
-					idx = relative.findLast('/');
-					if (idx != -1)
-						relative = relative.subString(idx+1, relative.size()-idx-1);
-					material.setTexture(0, Driver->getTexture((CurrentlyLoadingFromPath+"/"+relative).c_str()));
-				}
+				if (FileSystem->existFile(Materials[k].Techniques[0].Passes[0].Texture.Filename))
+					material.setTexture(0, Driver->getTexture(Materials[k].Techniques[0].Passes[0].Texture.Filename));
+				else
+					material.setTexture(0, Driver->getTexture((CurrentlyLoadingFromPath+"/"+FileSystem->getFileBasename(Materials[k].Techniques[0].Passes[0].Texture.Filename))));
 			}
 			break;
 		}
@@ -542,7 +597,92 @@ scene::SMeshBufferLightMap* COgreMeshFileLoader::composeMeshBufferLightMap(const
 					{
 						mb->Vertices[k].TCoords.set(geom.Buffers[j].Data[ePos], geom.Buffers[j].Data[ePos+1]);
 						mb->Vertices[k].TCoords2.set(geom.Buffers[j].Data[ePos+2], geom.Buffers[j].Data[ePos+3]);
-						
+
+						ePos += eSize;
+					}
+				}
+			}
+		}
+	}
+
+	return mb;
+}
+
+
+scene::IMeshBuffer* COgreMeshFileLoader::composeMeshBufferSkinned(scene::CSkinnedMesh& mesh, const core::array<s32>& indices, const OgreGeometry& geom)
+{
+	scene::SSkinMeshBuffer *mb=mesh.addMeshBuffer();
+	if (NumUV>1)
+	{
+		mb->convertTo2TCoords();
+		mb->Vertices_2TCoords.set_used(geom.NumVertex);
+	}
+	else
+		mb->Vertices_Standard.set_used(geom.NumVertex);
+
+	u32 i;
+	mb->Indices.set_used(indices.size());
+	for (i=0; i<indices.size(); i+=3)
+	{
+		mb->Indices[i+0]=indices[i+2];
+		mb->Indices[i+1]=indices[i+1];
+		mb->Indices[i+2]=indices[i+0];
+	}
+
+	for (i=0; i<geom.Elements.size(); ++i)
+	{
+		if (geom.Elements[i].Semantic==1) //Pos
+		{
+			for (u32 j=0; j<geom.Buffers.size(); ++j)
+			{
+				if (geom.Elements[i].Source==geom.Buffers[j].BindIndex)
+				{
+					u32 eSize=geom.Buffers[j].VertexSize;
+					u32 ePos=geom.Elements[i].Offset;
+					for (s32 k=0; k<geom.NumVertex; ++k)
+					{
+						if (NumUV>1)
+							mb->Vertices_2TCoords[k].Color=mb->Material.DiffuseColor;
+						else
+							mb->Vertices_Standard[k].Color=mb->Material.DiffuseColor;
+						mb->getPosition(k).set(-geom.Buffers[j].Data[ePos],geom.Buffers[j].Data[ePos+1],geom.Buffers[j].Data[ePos+2]);
+						ePos += eSize;
+					}
+				}
+			}
+		}
+
+		if (geom.Elements[i].Semantic==4) //Normal
+		{
+			for (u32 j=0; j<geom.Buffers.size(); ++j)
+			{
+				if (geom.Elements[i].Source==geom.Buffers[j].BindIndex)
+				{
+					u32 eSize=geom.Buffers[j].VertexSize;
+					u32 ePos=geom.Elements[i].Offset;
+					for (s32 k=0; k<geom.NumVertex; ++k)
+					{
+						mb->getNormal(k).set(-geom.Buffers[j].Data[ePos],geom.Buffers[j].Data[ePos+1],geom.Buffers[j].Data[ePos+2]);
+						ePos += eSize;
+					}
+				}
+			}
+		}
+
+		if (geom.Elements[i].Semantic==7) //TexCoord
+		{
+			for (u32 j=0; j<geom.Buffers.size(); ++j)
+			{
+				if (geom.Elements[i].Source==geom.Buffers[j].BindIndex)
+				{
+					u32 eSize=geom.Buffers[j].VertexSize;
+					u32 ePos=geom.Elements[i].Offset;
+					for (s32 k=0; k<geom.NumVertex; ++k)
+					{
+						mb->getTCoords(k).set(geom.Buffers[j].Data[ePos], geom.Buffers[j].Data[ePos+1]);
+						if (NumUV>1)
+							mb->Vertices_2TCoords[k].TCoords2.set(geom.Buffers[j].Data[ePos+2], geom.Buffers[j].Data[ePos+3]);
+
 						ePos += eSize;
 					}
 				}
@@ -563,7 +703,11 @@ void COgreMeshFileLoader::composeObject(void)
 			IMeshBuffer* mb;
 			if (Meshes[i].SubMeshes[j].SharedVertices)
 			{
-				if (NumUV < 2)
+				if (Skeleton.Bones.size())
+				{
+					mb = composeMeshBufferSkinned(*(CSkinnedMesh*)Mesh, Meshes[i].SubMeshes[j].Indices, Meshes[i].Geometry);
+				}
+				else if (NumUV < 2)
 				{
 					mb = composeMeshBuffer(Meshes[i].SubMeshes[j].Indices, Meshes[i].Geometry);
 				}
@@ -574,7 +718,11 @@ void COgreMeshFileLoader::composeObject(void)
 			}
 			else
 			{
-				if (NumUV < 2)
+				if (Skeleton.Bones.size())
+				{
+					mb = composeMeshBufferSkinned(*(CSkinnedMesh*)Mesh, Meshes[i].SubMeshes[j].Indices, Meshes[i].SubMeshes[j].Geometry);
+				}
+				else if (NumUV < 2)
 				{
 					mb = composeMeshBuffer(Meshes[i].SubMeshes[j].Indices, Meshes[i].SubMeshes[j].Geometry);
 				}
@@ -587,29 +735,81 @@ void COgreMeshFileLoader::composeObject(void)
 			if (mb != 0)
 			{
 				composeMeshBufferMaterial(mb, Meshes[i].SubMeshes[j].Material);
-				Mesh->addMeshBuffer(mb);
-				mb->drop();
+				if (!Skeleton.Bones.size())
+				{
+					((SMesh*)Mesh)->addMeshBuffer(mb);
+					mb->drop();
+				}
 			}
 		}
 	}
-}
+	if (Skeleton.Bones.size())
+	{
+		CSkinnedMesh* m = (CSkinnedMesh*)Mesh;
+		// Create Joints
+		for (u32 i=0; i<Skeleton.Bones.size(); ++i)
+		{
+			ISkinnedMesh::SJoint* joint = m->addJoint();
+			joint->Name=Skeleton.Bones[i].Name;
 
+			joint->LocalMatrix = Skeleton.Bones[i].Orientation.getMatrix();
+			if (Skeleton.Bones[i].Scale != core::vector3df(1,1,1))
+			{
+				core::matrix4 scaleMatrix;
+				scaleMatrix.setScale( Skeleton.Bones[i].Scale );
+				joint->LocalMatrix *= scaleMatrix;
+			}
+			joint->LocalMatrix.setTranslation( Skeleton.Bones[i].Position );
+		}
+		// Joints hierarchy
+		for (u32 i=0; i<Skeleton.Bones.size(); ++i)
+		{
+			if (Skeleton.Bones[i].Parent<m->getJointCount())
+			{
+				m->getAllJoints()[Skeleton.Bones[i].Parent]->Children.push_back(m->getAllJoints()[Skeleton.Bones[i].Handle]);
+			}
+		}
 
-core::stringc COgreMeshFileLoader::getTextureFileName(const core::stringc& texture, 
-						 core::stringc& model)
-{
-	s32 idx = -1;
-	idx = model.findLast('/');
+		// Weights
+		u32 bufCount=0;
+		for (u32 i=0; i<Meshes.size(); ++i)
+		{
+			for (u32 j=0; j<Meshes[i].SubMeshes.size(); ++j)
+			{
+				for (u32 k=0; k<Meshes[i].SubMeshes[j].BoneAssignments.size(); ++k)
+				{
+					const OgreBoneAssignment& ba = Meshes[i].SubMeshes[j].BoneAssignments[k];
+					if (ba.BoneID<m->getJointCount())
+					{
+						ISkinnedMesh::SWeight* w = m->addWeight(m->getAllJoints()[ba.BoneID]);
+						w->strength=ba.Weight;
+						w->vertex_id=ba.VertexID;
+						w->buffer_id=bufCount;
+					}
+				}
+				++bufCount;
+			}
+		}
 
-	if (idx == -1)
-		idx = model.findLast('\\');
-
-	if (idx == -1)
-		return core::stringc();
-
-	core::stringc p = model.subString(0, idx+1);
-	p.append(texture);
-	return p;
+		for (u32 i=0; i<Skeleton.Animations.size(); ++i)
+		{
+			for (u32 j=0; j<Skeleton.Animations[i].Keyframes.size(); ++j)
+			{
+				OgreKeyframe& frame = Skeleton.Animations[i].Keyframes[j];
+				ISkinnedMesh::SJoint* keyjoint = m->getAllJoints()[frame.BoneID];
+				ISkinnedMesh::SPositionKey* poskey = m->addPositionKey(keyjoint);
+				poskey->frame=frame.Time*25;
+				poskey->position=keyjoint->LocalMatrix.getTranslation()+frame.Position;
+				ISkinnedMesh::SRotationKey* rotkey = m->addRotationKey(keyjoint);
+				rotkey->frame=frame.Time*25;
+				rotkey->rotation=core::quaternion(keyjoint->LocalMatrix)*frame.Orientation;
+				ISkinnedMesh::SScaleKey* scalekey = m->addScaleKey(keyjoint);
+				scalekey->frame=frame.Time*25;
+				scalekey->scale=frame.Scale;
+			}
+		}
+		m->finalize();
+	}
 }
 
 
@@ -729,21 +929,24 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 		getMaterialToken(file, token); //open brace
 
 	getMaterialToken(file, token);
+	if (token == "}")
+		return;
 	u32 inBlocks=1;
+	u32 textureUnit=0;
 	while(inBlocks)
 	{
 		if (token=="ambient")
 			pass.AmbientTokenColor=readColor(file, pass.Material.AmbientColor);
 		else if (token=="diffuse")
-			pass.DiffuseTokenColor=readColor(file, pass.Material.AmbientColor);
+			pass.DiffuseTokenColor=readColor(file, pass.Material.DiffuseColor);
 		else if (token=="specular")
 		{
-			pass.SpecularTokenColor=readColor(file, pass.Material.AmbientColor);
+			pass.SpecularTokenColor=readColor(file, pass.Material.SpecularColor);
 			getMaterialToken(file, token);
 			pass.Material.Shininess=core::fast_atof(token.c_str());
 		}
 		else if (token=="emissive")
-			pass.EmissiveTokenColor=readColor(file, pass.Material.AmbientColor);
+			pass.EmissiveTokenColor=readColor(file, pass.Material.EmissiveColor);
 		else if (token=="scene_blend")
 		{ // TODO: Choose correct values
 			getMaterialToken(file, token);
@@ -761,7 +964,8 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 		else if (token=="depth_check")
 		{
 			getMaterialToken(file, token);
-			pass.Material.ZBuffer=(token=="on");
+			if (token!="on")
+				pass.Material.ZBuffer=video::ECFN_NEVER;
 		}
 		else if (token=="depth_write")
 		{
@@ -771,6 +975,27 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 		else if (token=="depth_func")
 		{
 			getMaterialToken(file, token); // Function name
+			if (token=="always_fail")
+				pass.Material.ZBuffer=video::ECFN_NEVER;
+			else if (token=="always_pass")
+				pass.Material.ZBuffer=video::ECFN_ALWAYS;
+			else if (token=="equal")
+				pass.Material.ZBuffer=video::ECFN_EQUAL;
+			else if (token=="greater")
+				pass.Material.ZBuffer=video::ECFN_GREATER;
+			else if (token=="greater_equal")
+				pass.Material.ZBuffer=video::ECFN_GREATEREQUAL;
+			else if (token=="less")
+				pass.Material.ZBuffer=video::ECFN_LESS;
+			else if (token=="less_equal")
+				pass.Material.ZBuffer=video::ECFN_LESSEQUAL;
+			else if (token=="not_equal")
+				pass.Material.ZBuffer=video::ECFN_NOTEQUAL;
+		}
+		else if (token=="normalise_normals")
+		{
+			getMaterialToken(file, token);
+			pass.Material.NormalizeNormals=(token=="on");
 		}
 		else if (token=="depth_bias")
 		{
@@ -780,6 +1005,18 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 		{
 			getMaterialToken(file, token); // function name
 			getMaterialToken(file, token); // value
+			pass.Material.MaterialTypeParam=core::fast_atof(token.c_str());
+		}
+		else if (token=="alpha_to_coverage")
+		{
+			getMaterialToken(file, token);
+			if (token=="on")
+				pass.Material.AntiAliasing |= video::EAAM_ALPHA_TO_COVERAGE;
+		}
+		else if (token=="colour_write")
+		{
+			getMaterialToken(file, token);
+			pass.Material.ColorMask = (token=="on")?video::ECP_ALL:video::ECP_NONE;
 		}
 		else if (token=="cull_hardware")
 		{
@@ -803,13 +1040,8 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 		else if (token=="polygon_mode")
 		{
 			getMaterialToken(file, token);
-			// We take points as wireframe
-			pass.Material.Wireframe=(token!="solid");
-		}
-		else if (token=="colour_write")
-		{
-			getMaterialToken(file, token);
-			pass.ColorWrite=(token=="on");
+			pass.Material.Wireframe=(token=="wireframe");
+			pass.Material.PointCloud=(token=="points");
 		}
 		else if (token=="max_lights")
 		{
@@ -855,8 +1087,54 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 					getMaterialToken(file, pass.Texture.MipMaps, true);
 					getMaterialToken(file, pass.Texture.Alpha, true);
 				}
+				else if (token=="filtering")
+				{
+					getMaterialToken(file, token);
+					pass.Material.TextureLayer[textureUnit].AnisotropicFilter=0;
+					if (token=="point")
+					{
+						pass.Material.TextureLayer[textureUnit].BilinearFilter=false;
+						pass.Material.TextureLayer[textureUnit].TrilinearFilter=false;
+						getMaterialToken(file, token);
+						getMaterialToken(file, token);
+					}
+					else if (token=="linear")
+					{
+						getMaterialToken(file, token);
+						if (token=="point")
+						{
+							pass.Material.TextureLayer[textureUnit].BilinearFilter=false;
+							pass.Material.TextureLayer[textureUnit].TrilinearFilter=false;
+							getMaterialToken(file, token);
+						}
+						else
+						{
+							pass.Material.TextureLayer[textureUnit].BilinearFilter=true;
+							getMaterialToken(file, token);
+							pass.Material.TextureLayer[textureUnit].TrilinearFilter=(token=="linear");
+						}
+					}
+					else
+					{
+						pass.Material.TextureLayer[textureUnit].BilinearFilter=(token=="bilinear");
+						pass.Material.TextureLayer[textureUnit].TrilinearFilter=(token=="trilinear");
+						pass.Material.TextureLayer[textureUnit].AnisotropicFilter=(token=="anisotropic")?2:1;
+					}
+				}
+				else if (token=="max_anisotropy")
+				{
+					getMaterialToken(file, token);
+					pass.Material.TextureLayer[textureUnit].AnisotropicFilter=(u8)core::strtol10(token.c_str());
+				}
 				else if (token=="texture_alias")
+				{
 					getMaterialToken(file, pass.Texture.Alias);
+				}
+				else if (token=="mipmap_bias")
+				{
+					getMaterialToken(file, token);
+					pass.Material.TextureLayer[textureUnit].LODBias=(s8)core::fast_atof(token.c_str());
+				}
 				else if (token=="colour_op")
 				{ // TODO: Choose correct values
 					getMaterialToken(file, token);
@@ -873,6 +1151,7 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 				}
 				getMaterialToken(file, token);
 			}
+			++textureUnit;
 		}
 		else if (token=="shadow_caster_program_ref")
 		{
@@ -880,7 +1159,13 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 			{
 				getMaterialToken(file, token);
 			} while (token != "}");
-			getMaterialToken(file, token);
+		}
+		else if (token=="shadow_caster_vertex_program_ref")
+		{
+			do
+			{
+				getMaterialToken(file, token);
+			} while (token != "}");
 		}
 		else if (token=="vertex_program_ref")
 		{
@@ -888,7 +1173,6 @@ void COgreMeshFileLoader::readPass(io::IReadFile* file, OgreTechnique& technique
 			{
 				getMaterialToken(file, token);
 			} while (token != "}");
-			getMaterialToken(file, token);
 		}
 		//fog_override, iteration, point_size_attenuation
 		//not considered yet!
@@ -930,19 +1214,22 @@ void COgreMeshFileLoader::readTechnique(io::IReadFile* file, OgreMaterial& mat)
 }
 
 
-
 void COgreMeshFileLoader::loadMaterials(io::IReadFile* meshFile)
 {
 #ifdef IRR_OGRE_LOADER_DEBUG
 	os::Printer::log("Load Materials");
 #endif
-	core::stringc token,filename=meshFile->getFileName();
-	core::stringc material = filename.subString(0, filename.size()-4) + "material";
-	io::IReadFile* file = FileSystem->createAndOpenFile(material.c_str());
+	core::stringc token;
+	io::IReadFile* file = 0;
+	io::path filename = FileSystem->getFileBasename(meshFile->getFileName(), false) + ".material";
+	if (FileSystem->existFile(filename))
+		file = FileSystem->createAndOpenFile(filename);
+	else
+		file = FileSystem->createAndOpenFile(FileSystem->getFileDir(meshFile->getFileName())+"/"+filename);
 
 	if (!file)
 	{
-		os::Printer::log("Could not load OGRE material", material.c_str());
+		os::Printer::log("Could not load OGRE material", filename);
 		return;
 	}
 
@@ -1018,6 +1305,143 @@ void COgreMeshFileLoader::loadMaterials(io::IReadFile* meshFile)
 }
 
 
+bool COgreMeshFileLoader::loadSkeleton(io::IReadFile* meshFile, const core::stringc& name)
+{
+#ifdef IRR_OGRE_LOADER_DEBUG
+	os::Printer::log("Load Skeleton", name);
+#endif
+	io::IReadFile* file = 0;
+	io::path filename;
+	if (FileSystem->existFile(name))
+		file = FileSystem->createAndOpenFile(name);
+	else if (FileSystem->existFile(filename = FileSystem->getFileDir(meshFile->getFileName())+"/"+name))
+		file = FileSystem->createAndOpenFile(filename);
+	else if (FileSystem->existFile(filename = FileSystem->getFileBasename(meshFile->getFileName(), false) + ".skeleton"))
+		file = FileSystem->createAndOpenFile(filename);
+	else
+		file = FileSystem->createAndOpenFile(FileSystem->getFileDir(meshFile->getFileName())+"/"+filename);
+	if (!file)
+	{
+		os::Printer::log("Could not load matching skeleton", name);
+		return false;
+	}
+
+	s16 id;
+	file->read(&id, 2);
+	if (SwapEndian)
+		id = os::Byteswap::byteswap(id);
+	if (id != COGRE_HEADER)
+	{
+		file->drop();
+		return false;
+	}
+
+	core::stringc skeletonVersion;
+	ChunkData head;
+	readString(file, head, skeletonVersion);
+	if (skeletonVersion != "[Serializer_v1.10]")
+	{
+		file->drop();
+		return false;
+	}
+
+	u16 bone=0;
+	f32 animationTotal=0.f;
+	while(file->getPos() < file->getSize())
+	{
+		ChunkData data;
+		readChunkData(file, data);
+
+		switch(data.header.id)
+		{
+		case COGRE_SKELETON:
+			{
+				Skeleton.Bones.push_back(OgreBone());
+				OgreBone& bone = Skeleton.Bones.getLast();
+				readString(file, data, bone.Name);
+				readShort(file, data, &bone.Handle);
+				readVector(file, data, bone.Position);
+				readQuaternion(file, data, bone.Orientation);
+#ifdef IRR_OGRE_LOADER_DEBUG
+				os::Printer::log("Bone", bone.Name+" ("+core::stringc(bone.Handle)+")");
+				os::Printer::log("Position", core::stringc(bone.Position.X)+" "+core::stringc(bone.Position.Y)+" "+core::stringc(bone.Position.Z));
+				os::Printer::log("Rotation quat", core::stringc(bone.Orientation.W)+" "+core::stringc(bone.Orientation.X)+" "+core::stringc(bone.Orientation.Y)+" "+core::stringc(bone.Orientation.Z));
+//				core::vector3df rot;
+//				bone.Orientation.toEuler(rot);
+//				rot *= core::RADTODEG;
+//				os::Printer::log("Rotation", core::stringc(rot.X)+" "+core::stringc(rot.Y)+" "+core::stringc(rot.Z));
+#endif
+				if (data.read<(data.header.length-bone.Name.size()))
+				{
+					readVector(file, data, bone.Scale);
+					bone.Scale.X *= -1.f;
+				}
+				else
+					bone.Scale=core::vector3df(1,1,1);
+				bone.Parent=0xffff;
+			}
+			break;
+		case COGRE_BONE_PARENT:
+			{
+				u16 parent;
+				readShort(file, data, &bone);
+				readShort(file, data, &parent);
+				if (bone<Skeleton.Bones.size() && parent<Skeleton.Bones.size())
+					Skeleton.Bones[bone].Parent=parent;
+			}
+			break;
+		case COGRE_ANIMATION:
+			{
+				if (Skeleton.Animations.size())
+					animationTotal+=Skeleton.Animations.getLast().Length;
+				Skeleton.Animations.push_back(OgreAnimation());
+				OgreAnimation& anim = Skeleton.Animations.getLast();
+				readString(file, data, anim.Name);
+				readFloat(file, data, &anim.Length);
+#ifdef IRR_OGRE_LOADER_DEBUG
+				os::Printer::log("Animation", anim.Name);
+				os::Printer::log("Length", core::stringc(anim.Length));
+#endif
+			}
+			break;
+		case COGRE_ANIMATION_TRACK:
+#ifdef IRR_OGRE_LOADER_DEBUG
+			os::Printer::log("for Bone ", core::stringc(bone));
+#endif
+				readShort(file, data, &bone); // store current bone
+			break;
+		case COGRE_ANIMATION_KEYFRAME:
+			{
+				Skeleton.Animations.getLast().Keyframes.push_back(OgreKeyframe());
+				OgreKeyframe& keyframe = Skeleton.Animations.getLast().Keyframes.getLast();
+				readFloat(file, data, &keyframe.Time);
+				keyframe.Time+=animationTotal;
+				readQuaternion(file, data, keyframe.Orientation);
+				readVector(file, data, keyframe.Position);
+				if (data.read<data.header.length)
+				{
+					readVector(file, data, keyframe.Scale);
+					keyframe.Scale.X *= -1.f;
+				}
+				else
+					keyframe.Scale=core::vector3df(1,1,1);
+				keyframe.BoneID=bone;
+			}
+			break;
+		case COGRE_ANIMATION_LINK:
+#ifdef IRR_OGRE_LOADER_DEBUG
+			os::Printer::log("Animation link");
+#endif
+			break;
+		default:
+			break;
+		}
+	}
+	file->drop();
+	return true;
+}
+
+
 void COgreMeshFileLoader::readChunkData(io::IReadFile* file, ChunkData& data)
 {
 	file->read(&data.header, sizeof(ChunkHeader));
@@ -1056,84 +1480,72 @@ void COgreMeshFileLoader::readBool(io::IReadFile* file, ChunkData& data, bool& o
 }
 
 
-void COgreMeshFileLoader::readInt(io::IReadFile* file, ChunkData& data, s32& out)
+void COgreMeshFileLoader::readInt(io::IReadFile* file, ChunkData& data, s32* out, u32 num)
 {
 	// normal C type because we read a bit string
-	int tmp;
-	file->read(&tmp, sizeof(int));
+	file->read(out, sizeof(int)*num);
 	if (SwapEndian)
 	{
-		tmp = os::Byteswap::byteswap(tmp);
+		for (u32 i=0; i<num; ++i)
+			out[i] = os::Byteswap::byteswap(out[i]);
 	}
-	out=tmp;
-	data.read+=sizeof(int);
+	data.read+=sizeof(int)*num;
 }
 
 
-void COgreMeshFileLoader::readShort(io::IReadFile* file, ChunkData& data, u16& out)
+void COgreMeshFileLoader::readShort(io::IReadFile* file, ChunkData& data, u16* out, u32 num)
 {
 	// normal C type because we read a bit string
-	short tmp;
-	file->read(&tmp, sizeof(short));
+	file->read(out, sizeof(short)*num);
 	if (SwapEndian)
 	{
-		tmp = os::Byteswap::byteswap(tmp);
+		for (u32 i=0; i<num; ++i)
+			out[i] = os::Byteswap::byteswap(out[i]);
 	}
-	out=tmp;
-	data.read+=sizeof(short);
+	data.read+=sizeof(short)*num;
 }
 
 
-void COgreMeshFileLoader::readFloat(io::IReadFile* file, ChunkData& data, f32& out)
+void COgreMeshFileLoader::readFloat(io::IReadFile* file, ChunkData& data, f32* out, u32 num)
 {
 	// normal C type because we read a bit string
-	float tmp;
-	file->read(&tmp, sizeof(float));
+	file->read(out, sizeof(float)*num);
 	if (SwapEndian)
 	{
-		tmp = os::Byteswap::byteswap(tmp);
+		for (u32 i=0; i<num; ++i)
+			out[i] = os::Byteswap::byteswap(out[i]);
 	}
-	out=tmp;
-	data.read+=sizeof(float);
+	data.read+=sizeof(float)*num;
 }
 
 
 void COgreMeshFileLoader::readVector(io::IReadFile* file, ChunkData& data, core::vector3df& out)
 {
-	readFloat(file, data, out.X);
-	readFloat(file, data, out.Y);
-	readFloat(file, data, out.Z);
+	readFloat(file, data, &out.X);
+	readFloat(file, data, &out.Y);
+	readFloat(file, data, &out.Z);
+	out.X *= -1.f;
 }
 
-void COgreMeshFileLoader::setCurrentlyLoadingPath(io::IReadFile* file)
+
+void COgreMeshFileLoader::readQuaternion(io::IReadFile* file, ChunkData& data, core::quaternion& out)
 {
-	CurrentlyLoadingFromPath = file->getFileName();
-	int idx = CurrentlyLoadingFromPath.findLast('/');
-
-	if (idx != -1)
-	{
-		CurrentlyLoadingFromPath = CurrentlyLoadingFromPath.subString(0, idx);
-	}
-	else
-	{
-		idx = CurrentlyLoadingFromPath.findLast('\\');
-
-		if (idx != -1)
-			CurrentlyLoadingFromPath = CurrentlyLoadingFromPath.subString(0, idx);
-	}
+	readVector(file, data, *((core::vector3df*)&out.X));
+	readFloat(file, data, &out.W);
 }
+
 
 void COgreMeshFileLoader::clearMeshes()
 {
 	for (u32 i=0; i<Meshes.size(); ++i)
 	{
 		for (int k=0; k<(int)Meshes[i].Geometry.Buffers.size(); ++k)
-			Meshes[i].Geometry.Buffers[k].destroy();
+			Meshes[i].Geometry.Buffers[k].Data.clear();
 
 		for (u32 j=0; j<Meshes[i].SubMeshes.size(); ++j)
 		{
 			for (int h=0; h<(int)Meshes[i].SubMeshes[j].Geometry.Buffers.size(); ++h)
-				Meshes[i].SubMeshes[j].Geometry.Buffers[h].destroy();
+				Meshes[i].SubMeshes[j].Geometry.Buffers[h].Data.clear();
 		}
 	}
 
@@ -1145,3 +1557,4 @@ void COgreMeshFileLoader::clearMeshes()
 } // end namespace irr
 
 #endif // _IRR_COMPILE_WITH_OGRE_LOADER_
+

@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2008 Nikolaus Gebhardt
+// Copyright (C) 2003-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -21,7 +21,7 @@ namespace gui
 		//! Do not use ordering
 		EGCO_NONE,
 
-		//! Send a EGET_TABLE_HEADER_CHANGED message when a column header is clicked. 
+		//! Send a EGET_TABLE_HEADER_CHANGED message when a column header is clicked.
 		EGCO_CUSTOM,
 
 		//! Sort it ascending by it's ascii value like: a,b,c,...
@@ -48,7 +48,7 @@ namespace gui
 		0,
 	};
 
-    enum EGUI_ORDERING_MODE
+	enum EGUI_ORDERING_MODE
 	{
 		//! No element ordering
 		EGOM_NONE,
@@ -66,6 +66,7 @@ namespace gui
 
 	const c8* const GUIOrderingModeNames[] =
 	{
+		"none",
 		"ascending",
 		"descending",
 		0
@@ -79,8 +80,6 @@ namespace gui
 		EGTDF_COUNT
 	};
 
-	class IGUIFont;
-
 	//! Default list box GUI element.
 	class IGUITable : public IGUIElement
 	{
@@ -90,7 +89,7 @@ namespace gui
 			: IGUIElement(EGUIET_TABLE, environment, parent, id, rectangle) {}
 
 		//! Adds a column
-		//! If columnIndex is outside the current range, do push new colum at the end
+		/** If columnIndex is outside the current range, do push new colum at the end */
 		virtual void addColumn(const wchar_t* caption, s32 columnIndex=-1) = 0;
 
 		//! remove a column from the table
@@ -101,8 +100,8 @@ namespace gui
 
 		//! Makes a column active. This will trigger an ordering process.
 		/** \param idx: The id of the column to make active.
-		//! \param doOrder: Do also the ordering which depending on mode for active column
-		 \return Returns true if successful. */
+		\param doOrder: Do also the ordering which depending on mode for active column
+		\return True if successful. */
 		virtual bool setActiveColumn(s32 idx, bool doOrder=false) = 0;
 
 		//! Returns which header is currently active
@@ -113,32 +112,36 @@ namespace gui
 
 		//! Set the width of a column
 		virtual void setColumnWidth(u32 columnIndex, u32 width) = 0;
-		
+
 		//! columns can be resized by drag 'n drop
 		virtual void setResizableColumns(bool resizable) = 0;
-		
+
 		//! can columns be resized by dran 'n drop?
 		virtual bool hasResizableColumns() const = 0;
 
-		//! This tells the table control which ordering mode should be used when 
-		//! a column header is clicked. 
-		/** \param columnIndex: The index of the column header.
-		\param state: If true, a EGET_TABLE_HEADER_CHANGED message will be sent and you can order the table data as you whish.*/
-		//! \param mode: One of the modes defined in EGUI_COLUMN_ORDERING 
+		//! This tells the table control which ordering mode should be used when a column header is clicked.
+		/** \param columnIndex The index of the column header.
+		\param mode: One of the modes defined in EGUI_COLUMN_ORDERING */
 		virtual void setColumnOrdering(u32 columnIndex, EGUI_COLUMN_ORDERING mode) = 0;
 
 		//! Returns which row is currently selected
 		virtual s32 getSelected() const = 0;
 
-		//! Returns amount of rows in the tabcontrol
+		//! set wich row is currently selected
+		virtual void setSelected( s32 index ) = 0;
+
+		//! Get amount of rows in the tabcontrol
 		virtual s32 getRowCount() const = 0;
 
 		//! adds a row to the table
-		/** \param rowIndex: zero based index of rows. The row will be inserted at this
-		     position, if a row already exist there, it will be placed after it. If the row
-				 is larger than the actual number of row by more than one, it won't be created.
-		     Note that if you create a row that's not at the end, there might be performance issues*/
-		virtual void addRow(u32 rowIndex) = 0;
+		/** \param rowIndex Zero based index of rows. The row will be
+		inserted at this position, if a row already exist there, it
+		will be placed after it. If the row is larger than the actual
+		number of row by more than one, it won't be created.  Note that
+		if you create a row that's not at the end, there might be
+		performance issues.
+		\return index of inserted row. */
+		virtual u32 addRow(u32 rowIndex) = 0;
 
 		//! Remove a row from the table
 		virtual void removeRow(u32 rowIndex) = 0;
@@ -146,21 +149,23 @@ namespace gui
 		//! clears the table rows, but keeps the columns intact
 		virtual void clearRows() = 0;
 
-		//! Swap two row positions. This is useful for a custom ordering algo.
+		//! Swap two row positions.
 		virtual void swapRows(u32 rowIndexA, u32 rowIndexB) = 0;
 
-		//! This tells the table to start ordering all the rows. You need to explicitly
-		//! tell the table to re order the rows when a new row is added or the cells data is
-		//! changed. This makes the system more flexible and doesn't make you pay the cost of
-		//! ordering when adding a lot of rows.
-		//! \param columnIndex: When set to -1 the active column is used. 
+		//! This tells the table to start ordering all the rows.
+		/** You need to explicitly tell the table to re order the rows
+		when a new row is added or the cells data is changed. This
+		makes the system more flexible and doesn't make you pay the
+		cost of ordering when adding a lot of rows.
+		\param columnIndex: When set to -1 the active column is used.
+		\param mode Ordering mode of the rows. */
 		virtual void orderRows(s32 columnIndex=-1, EGUI_ORDERING_MODE mode=EGOM_NONE) = 0;
 
 		//! Set the text of a cell
-		virtual void setCellText(u32 rowIndex, u32 columnIndex, const wchar_t* text) = 0;
+		virtual void setCellText(u32 rowIndex, u32 columnIndex, const core::stringw& text) = 0;
 
 		//! Set the text of a cell, and set a color of this cell.
-		virtual void setCellText(u32 rowIndex, u32 columnIndex, const wchar_t* text, video::SColor color) = 0;
+		virtual void setCellText(u32 rowIndex, u32 columnIndex, const core::stringw& text, video::SColor color) = 0;
 
 		//! Set the data of a cell
 		virtual void setCellData(u32 rowIndex, u32 columnIndex, void *data) = 0;

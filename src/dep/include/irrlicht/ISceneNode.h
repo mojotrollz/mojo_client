@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -24,6 +24,11 @@ namespace scene
 {
 	class ISceneManager;
 
+	//! Typedef for list of scene nodes
+	typedef core::list<ISceneNode*> ISceneNodeList;
+	//! Typedef for list of scene node animators
+	typedef core::list<ISceneNodeAnimator*> ISceneNodeAnimatorList;
+
 	//! Scene node interface.
 	/** A scene node is a node in the hierarchical scene graph. Every scene
 	node may have children, which are also scene nodes. Children move
@@ -42,9 +47,9 @@ namespace scene
 				const core::vector3df& rotation = core::vector3df(0,0,0),
 				const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f))
 			: RelativeTranslation(position), RelativeRotation(rotation), RelativeScale(scale),
-				Parent(0), ID(id), SceneManager(mgr), TriangleSelector(0),
-				AutomaticCullingState(EAC_BOX), IsVisible(true),
-				DebugDataVisible(EDS_OFF), IsDebugObject(false)
+				Parent(0), SceneManager(mgr), TriangleSelector(0), ID(id),
+				AutomaticCullingState(EAC_BOX), DebugDataVisible(EDS_OFF),
+				IsVisible(true), IsDebugObject(false)
 		{
 			if (parent)
 				parent->addChild(this);
@@ -60,7 +65,7 @@ namespace scene
 			removeAll();
 
 			// delete all animators
-			core::list<ISceneNodeAnimator*>::Iterator ait = Animators.begin();
+			ISceneNodeAnimatorList::Iterator ait = Animators.begin();
 			for (; ait != Animators.end(); ++ait)
 				(*ait)->drop();
 
@@ -87,7 +92,7 @@ namespace scene
 		{
 			if (IsVisible)
 			{
-				core::list<ISceneNode*>::Iterator it = Children.begin();
+				ISceneNodeList::Iterator it = Children.begin();
 				for (; it != Children.end(); ++it)
 					(*it)->OnRegisterSceneNode();
 			}
@@ -106,16 +111,23 @@ namespace scene
 			{
 				// animate this node with all animators
 
-				core::list<ISceneNodeAnimator*>::Iterator ait = Animators.begin();
-				for (; ait != Animators.end(); ++ait)
-					(*ait)->animateNode(this, timeMs);
+				ISceneNodeAnimatorList::Iterator ait = Animators.begin();
+				while (ait != Animators.end())
+					{
+					// continue to the next node before calling animateNode()
+					// so that the animator may remove itself from the scene
+					// node without the iterator becoming invalid
+					ISceneNodeAnimator* anim = *ait;
+					++ait;
+					anim->animateNode(this, timeMs);
+				}
 
 				// update absolute position
 				updateAbsolutePosition();
 
 				// perform the post render process on all children
 
-				core::list<ISceneNode*>::Iterator it = Children.begin();
+				ISceneNodeList::Iterator it = Children.begin();
 				for (; it != Children.end(); ++it)
 					(*it)->OnAnimate(timeMs);
 			}
@@ -201,20 +213,36 @@ namespace scene
 		}
 
 
-		//! Returns true if the node is visible.
+		//! Returns whether the node should be visible (if all of its parents are visible).
 		/** This is only an option set by the user, but has nothing to
 		do with geometry culling
-		\return The visibility of the node, true means visible. */
+		\return The requested visibility of the node, true means
+		visible (if all parents are also visible). */
 		virtual bool isVisible() const
 		{
 			_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
 			return IsVisible;
 		}
 
+		//! Check whether the node is truly visible, taking into accounts its parents' visibility
+		/** \return true if the node and all its parents are visible,
+		false if this or any parent node is invisible. */
+		virtual bool isTrulyVisible() const
+		{
+			_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+			if(!IsVisible)
+				return false;
+
+			if(!Parent)
+				return true;
+
+			return Parent->isTrulyVisible();
+		}
 
 		//! Sets if the node should be visible or not.
 		/** All children of this node won't be visible either, when set
-		to false.
+		to false. Invisible nodes are not valid candidates for selection by
+		collision manager bounding box methods.
 		\param isVisible If the node shall be visible. */
 		virtual void setVisible(bool isVisible)
 		{
@@ -261,12 +289,14 @@ namespace scene
 
 
 		//! Removes a child from this scene node.
-		/** \param child A pointer to the new child.
+		/** If found in the children list, the child pointer is also
+		dropped and might be deleted if no other grab exists.
+		\param child A pointer to the child which shall be removed.
 		\return True if the child was removed, and false if not,
 		e.g. because it couldn't be found in the children list. */
 		virtual bool removeChild(ISceneNode* child)
 		{
-			core::list<ISceneNode*>::Iterator it = Children.begin();
+			ISceneNodeList::Iterator it = Children.begin();
 			for (; it != Children.end(); ++it)
 				if ((*it) == child)
 				{
@@ -282,9 +312,12 @@ namespace scene
 
 
 		//! Removes all children of this scene node
+		/** The scene nodes found in the children list are also dropped
+		and might be deleted if no other grab exists on them.
+		*/
 		virtual void removeAll()
 		{
-			core::list<ISceneNode*>::Iterator it = Children.begin();
+			ISceneNodeList::Iterator it = Children.begin();
 			for (; it != Children.end(); ++it)
 			{
 				(*it)->Parent = 0;
@@ -295,7 +328,9 @@ namespace scene
 		}
 
 
-		//! Removes this scene node from the scene, deleting it.
+		//! Removes this scene node from the scene
+		/** If no other grab exists for this node, it will be deleted.
+		*/
 		virtual void remove()
 		{
 			if (Parent)
@@ -324,24 +359,30 @@ namespace scene
 
 
 		//! Removes an animator from this scene node.
-		/** \param animator A pointer to the animator to be deleted. */
+		/** If the animator is found, it is also dropped and might be
+		deleted if not other grab exists for it.
+		\param animator A pointer to the animator to be deleted. */
 		virtual void removeAnimator(ISceneNodeAnimator* animator)
 		{
-			core::list<ISceneNodeAnimator*>::Iterator it = Animators.begin();
+			ISceneNodeAnimatorList::Iterator it = Animators.begin();
 			for (; it != Animators.end(); ++it)
+			{
 				if ((*it) == animator)
 				{
 					(*it)->drop();
 					Animators.erase(it);
 					return;
 				}
+			}
 		}
 
 
 		//! Removes all animators from this scene node.
+		/** The animators might also be deleted if no other grab exists
+		for them. */
 		virtual void removeAnimators()
 		{
-			core::list<ISceneNodeAnimator*>::Iterator it = Animators.begin();
+			ISceneNodeAnimatorList::Iterator it = Animators.begin();
 			for (; it != Animators.end(); ++it)
 				(*it)->drop();
 
@@ -359,7 +400,7 @@ namespace scene
 		\return The material at that index. */
 		virtual video::SMaterial& getMaterial(u32 num)
 		{
-			return *((video::SMaterial*)0);
+			return video::IdentityMaterial;
 		}
 
 
@@ -406,8 +447,11 @@ namespace scene
 		}
 
 
-		//! Gets the relative scale of the scene node.
-		/** \return The scale of the scene node. */
+		//! Gets the scale of the scene node relative to its parent.
+		/** This is the scale of this node relative to its parent.
+		If you want the absolute scale, use
+		getAbsoluteTransformation().getScale()
+		\return The scale of the scene node. */
 		virtual const core::vector3df& getScale() const
 		{
 			return RelativeScale;
@@ -415,15 +459,17 @@ namespace scene
 
 
 		//! Sets the relative scale of the scene node.
-		/** \param scale New scale of the node */
+		/** \param scale New scale of the node, relative to its parent. */
 		virtual void setScale(const core::vector3df& scale)
 		{
 			RelativeScale = scale;
 		}
 
 
-		//! Gets the rotation of the node.
+		//! Gets the rotation of the node relative to its parent.
 		/** Note that this is the relative rotation of the node.
+		If you want the absolute rotation, use
+		getAbsoluteTransformation().getRotation()
 		\return Current relative rotation of the scene node. */
 		virtual const core::vector3df& getRotation() const
 		{
@@ -431,7 +477,7 @@ namespace scene
 		}
 
 
-		//! Sets the rotation of the node.
+		//! Sets the rotation of the node relative to its parent.
 		/** This only modifies the relative rotation of the node.
 		\param rotation New rotation of the node in degrees. */
 		virtual void setRotation(const core::vector3df& rotation)
@@ -440,8 +486,9 @@ namespace scene
 		}
 
 
-		//! Gets the position of the node.
-		/** Note that the position is relative to the parent.
+		//! Gets the position of the node relative to its parent.
+		/** Note that the position is relative to the parent. If you want
+		the position in world coordinates, use getAbsolutePosition() instead.
 		\return The current position of the node relative to the parent. */
 		virtual const core::vector3df& getPosition() const
 		{
@@ -449,17 +496,19 @@ namespace scene
 		}
 
 
-		//! Sets the position of the node.
+		//! Sets the position of the node relative to its parent.
 		/** Note that the position is relative to the parent.
-		\param newpos New relative postition of the scene node. */
+		\param newpos New relative position of the scene node. */
 		virtual void setPosition(const core::vector3df& newpos)
 		{
 			RelativeTranslation = newpos;
 		}
 
 
-		//! Gets the abolute position of the node.
-		/** \return The current absolute position of the scene node. */
+		//! Gets the absolute position of the node in world coordinates.
+		/** If you want the position of the node relative to its parent,
+		use getPosition() instead.
+		\return The current absolute position of the scene node. */
 		virtual core::vector3df getAbsolutePosition() const
 		{
 			return AbsoluteTransformation.getTranslation();
@@ -488,7 +537,7 @@ namespace scene
 
 
 		//! Sets if debug data like bounding boxes should be drawn.
-		/** A bitwise OR of the types from @ref irr::scene::E_DEBUG_SCENE_TYPE. 
+		/** A bitwise OR of the types from @ref irr::scene::E_DEBUG_SCENE_TYPE.
 		Please note that not all scene nodes support all debug data types.
 		\param state The debug data visibility state to be used. */
 		virtual void setDebugDataVisible(s32 state)
@@ -497,7 +546,7 @@ namespace scene
 		}
 
 		//! Returns if debug data like bounding boxes are drawn.
-		/** \return A bitwise OR of the debug data values from 
+		/** \return A bitwise OR of the debug data values from
 		@ref irr::scene::E_DEBUG_SCENE_TYPE that are currently visible. */
 		s32 isDebugDataVisible() const
 		{
@@ -553,7 +602,7 @@ namespace scene
 		/** The Selector can be used by the engine for doing collision
 		detection. You can create a TriangleSelector with
 		ISceneManager::createTriangleSelector() or
-		ISceneManager::createOctTreeTriangleSelector and set it with
+		ISceneManager::createOctreeTriangleSelector and set it with
 		ISceneNode::setTriangleSelector(). If a scene node got no triangle
 		selector, but collision tests should be done with it, a triangle
 		selector is created using the bounding box of the scene node.
@@ -569,23 +618,28 @@ namespace scene
 		/** The Selector can be used by the engine for doing collision
 		detection. You can create a TriangleSelector with
 		ISceneManager::createTriangleSelector() or
-		ISceneManager::createOctTreeTriangleSelector(). Some nodes may
+		ISceneManager::createOctreeTriangleSelector(). Some nodes may
 		create their own selector by default, so it would be good to
 		check if there is already a selector in this node by calling
 		ISceneNode::getTriangleSelector().
 		\param selector New triangle selector for this scene node. */
 		virtual void setTriangleSelector(ITriangleSelector* selector)
 		{
-			if (TriangleSelector)
-				TriangleSelector->drop();
+			if (TriangleSelector != selector)
+			{
+				if (TriangleSelector)
+					TriangleSelector->drop();
 
-			TriangleSelector = selector;
-			if (TriangleSelector)
-				TriangleSelector->grab();
+				TriangleSelector = selector;
+				if (TriangleSelector)
+					TriangleSelector->grab();
+			}
 		}
 
 
 		//! Updates the absolute position based on the relative and the parents position
+		/** Note: This does not recursively update the parents absolute positions, so if you have a deeper
+			hierarchy you might want to update the parents first.*/
 		virtual void updateAbsolutePosition()
 		{
 			if (Parent)
@@ -676,6 +730,10 @@ namespace scene
 			return 0; // to be implemented by derived classes
 		}
 
+		//! Retrieve the scene manager for this node.
+		/** \return The node's scene manager. */
+		virtual ISceneManager* getSceneManager(void) const { return SceneManager; }
+
 	protected:
 
 		//! A clone function for the ISceneNode members.
@@ -704,13 +762,13 @@ namespace scene
 
 			// clone children
 
-			core::list<ISceneNode*>::Iterator it = toCopyFrom->Children.begin();
+			ISceneNodeList::Iterator it = toCopyFrom->Children.begin();
 			for (; it != toCopyFrom->Children.end(); ++it)
 				(*it)->clone(this, newManager);
 
 			// clone animators
 
-			core::list<ISceneNodeAnimator*>::Iterator ait = toCopyFrom->Animators.begin();
+			ISceneNodeAnimatorList::Iterator ait = toCopyFrom->Animators.begin();
 			for (; ait != toCopyFrom->Animators.end(); ++ait)
 			{
 				ISceneNodeAnimator* anim = (*ait)->createClone(this, SceneManager);
@@ -728,7 +786,7 @@ namespace scene
 		{
 			SceneManager = newManager;
 
-			core::list<ISceneNode*>::Iterator it = Children.begin();
+			ISceneNodeList::Iterator it = Children.begin();
 			for (; it != Children.end(); ++it)
 				(*it)->setSceneManager(newManager);
 		}
@@ -757,27 +815,28 @@ namespace scene
 		//! List of all animator nodes
 		core::list<ISceneNodeAnimator*> Animators;
 
-		//! ID of the node.
-		s32 ID;
-
 		//! Pointer to the scene manager
 		ISceneManager* SceneManager;
 
 		//! Pointer to the triangle selector
 		ITriangleSelector* TriangleSelector;
 
+		//! ID of the node.
+		s32 ID;
+
 		//! Automatic culling state
 		E_CULLING_TYPE AutomaticCullingState;
-
-		//! Is the node visible?
-		bool IsVisible;
 
 		//! Flag if debug data should be drawn, such as Bounding Boxes.
 		s32 DebugDataVisible;
 
+		//! Is the node visible?
+		bool IsVisible;
+
 		//! Is debug object?
 		bool IsDebugObject;
 	};
+
 
 } // end namespace scene
 } // end namespace irr

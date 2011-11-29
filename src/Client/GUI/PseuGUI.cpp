@@ -100,11 +100,11 @@ void PseuGUI::UseShadows(bool b)
 // if this fuction is called from another thread the device will not work correctly. o_O
 void PseuGUI::_Init(void)
 {
-    _device = createDevice(_driverType,dimension2d<s32>(_xres,_yres),_colordepth,!_windowed,_shadows,_vsync);
+    _device = createDevice(_driverType,dimension2d<u32>(_xres,_yres),_colordepth,!_windowed,_shadows,_vsync);
     if(!_device)
     {
         logerror("PseuGUI: Can't use specified video driver, trying software mode...");
-        _device = createDevice(video::EDT_SOFTWARE,dimension2d<s32>(_xres,_yres),_colordepth,!_windowed,false,false);
+        _device = createDevice(video::EDT_SOFTWARE,dimension2d<u32>(_xres,_yres),_colordepth,!_windowed,false,false);
         if(!_device)
         {
             logerror("ERROR: PseuGUI::_Init() failed, no video driver available!");
@@ -117,7 +117,7 @@ void PseuGUI::_Init(void)
     }
     DEBUG(logdebug("PseuGUI::Init() _device=%X",_device));
     _device->setWindowCaption(L"PseuWoW - Initializing");
-    _device->setResizeAble(true);
+    _device->setResizable(true);
     _driver = _device->getVideoDriver();
     _smgr = _device->getSceneManager();
     _guienv = _device->getGUIEnvironment();

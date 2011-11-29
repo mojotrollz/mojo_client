@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine" and the "irrXML" project.
 // For conditions of distribution and use, see copyright notice in irrlicht.h and irrXML.h
 
@@ -7,6 +7,7 @@
 
 #include "irrTypes.h"
 #include <new>
+// necessary for older compilers
 #include <memory.h>
 
 namespace irr
@@ -106,6 +107,14 @@ public:
 #undef DEBUG_CLIENTBLOCK
 #define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
+
+//! defines an allocation strategy
+enum eAllocStrategy
+{
+	ALLOC_STRATEGY_SAFE    = 0,
+	ALLOC_STRATEGY_DOUBLE  = 1,
+	ALLOC_STRATEGY_SQRT    = 2
+};
 
 
 } // end namespace core

@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -29,8 +29,9 @@ namespace irr
 {
 namespace scene
 {
+namespace
+{
 	// currently supported COLLADA tag names
-
 	const core::stringc colladaSectionName =   "COLLADA";
 	const core::stringc librarySectionName =   "library";
 	const core::stringc libraryNodesSectionName = "library_nodes";
@@ -118,9 +119,11 @@ namespace scene
 	const core::stringc falloffExponentNodeName = "falloff_exponent";
 
 	const core::stringc profileCOMMONSectionName = "profile_COMMON";
+	const core::stringc profileCOMMONAttributeName = "COMMON";
 
 	const char* const inputSemanticNames[] = {"POSITION", "VERTEX", "NORMAL", "TEXCOORD",
 		"UV", "TANGENT", "IMAGE", "TEXTURE", 0};
+}
 
 	//! following class is for holding and creating instances of library
 	//! objects, named prefabs in this loader.
@@ -328,9 +331,9 @@ CColladaFileLoader::~CColladaFileLoader()
 
 //! Returns true if the file maybe is able to be loaded by this class.
 /** This decision should be based only on the file extension (e.g. ".cob") */
-bool CColladaFileLoader::isALoadableFileExtension(const c8* fileName) const
+bool CColladaFileLoader::isALoadableFileExtension(const io::path& filename) const
 {
-	return strstr(fileName, ".xml") || strstr(fileName, ".dae");
+	return core::hasFileExtension ( filename, "xml", "dae" );
 }
 
 
@@ -367,13 +370,15 @@ IAnimatedMesh* CColladaFileLoader::createMesh(io::IReadFile* file)
 	if (!Version)
 		return 0;
 
-
 	// because this loader loads and creates a complete scene instead of
 	// a single mesh, return an empty dummy mesh to make the scene manager
 	// know that everything went well.
 	if (!DummyMesh)
 		DummyMesh = new SAnimatedMesh();
 	scene::IAnimatedMesh* returnMesh = DummyMesh;
+
+	if (Version < 10400)
+		instantiateNode(SceneManager->getRootSceneNode());
 
 	// add the first loaded mesh into the mesh cache too, if more than one
 	// meshes have been loaded from the file
@@ -422,7 +427,7 @@ void CColladaFileLoader::skipSection(io::IXMLReaderUTF8* reader, bool reportSkip
 		{
 			#ifdef COLLADA_READER_DEBUG
 			if (reportSkipping)
-				os::Printer::log("Skipping COLLADA unknown element:", core::stringc(reader->getNodeName()).c_str());
+				os::Printer::log("Skipping COLLADA unknown element", core::stringc(reader->getNodeName()).c_str());
 			#endif // COLLADA_READER_DEBUG
 
 			++tagCounter;
@@ -441,7 +446,7 @@ void CColladaFileLoader::readColladaSection(io::IXMLReaderUTF8* reader)
 		return;
 
 	const f32 version = core::fast_atof(core::stringc(reader->getAttributeValue("version")).c_str());
-	Version = core::floor32(version)*10000+core::ceil32(core::fract(version)*1000.0f);
+	Version = core::floor32(version)*10000+core::round32(core::fract(version)*1000.0f);
 	// Version 1.4 can be checked for by if (Version >= 10400)
 
 	while(reader->read())
@@ -774,7 +779,7 @@ void CColladaFileLoader::readNodeSection(io::IXMLReaderUTF8* reader, scene::ISce
 				if (node && newnode)
 				{
 					// move children from dummy to new node
-					core::list<ISceneNode*>::ConstIterator it = node->getChildren().begin();
+					ISceneNodeList::ConstIterator it = node->getChildren().begin();
 					for (; it != node->getChildren().end(); it = node->getChildren().begin())
 						(*it)->setParent(newnode);
 
@@ -1074,9 +1079,9 @@ core::matrix4 CColladaFileLoader::readTranslateNode(io::IXMLReaderUTF8* reader)
 }
 
 
-//! reads any kind of <instance*> node and creates a scene node from it
-void CColladaFileLoader::readInstanceNode(io::IXMLReaderUTF8* reader, scene::ISceneNode* parent,
-	scene::ISceneNode** outNode, CScenePrefab* p)
+//! reads any kind of <instance*> node
+void CColladaFileLoader::readInstanceNode(io::IXMLReaderUTF8* reader,
+		scene::ISceneNode* parent, scene::ISceneNode** outNode, CScenePrefab* p)
 {
 	#ifdef COLLADA_READER_DEBUG
 	os::Printer::log("COLLADA reading instance");
@@ -1103,10 +1108,20 @@ void CColladaFileLoader::readInstanceNode(io::IXMLReaderUTF8* reader, scene::ISc
 				break;
 		}
 	}
+	instantiateNode(parent, outNode, p, url);
+}
+
+
+void CColladaFileLoader::instantiateNode(scene::ISceneNode* parent,
+		scene::ISceneNode** outNode, CScenePrefab* p, const core::stringc& url)
+{
+	#ifdef COLLADA_READER_DEBUG
+	os::Printer::log("COLLADA instantiate node");
+	#endif
 
 	for (u32 i=0; i<Prefabs.size(); ++i)
 	{
-		if (url == Prefabs[i]->getId())
+		if (url == "" || url == Prefabs[i]->getId())
 		{
 			if (p)
 				p->Childs.push_back(Prefabs[i]);
@@ -1119,7 +1134,7 @@ void CColladaFileLoader::readInstanceNode(io::IXMLReaderUTF8* reader, scene::ISc
 				{
 					*outNode = newNode;
 					if (*outNode)
-						(*outNode)->setName(readId(reader));
+						(*outNode)->setName(url);
 				}
 			}
 			return;
@@ -1474,6 +1489,10 @@ void CColladaFileLoader::readEffect(io::IXMLReaderUTF8* reader, SColladaEffect *
 				readIntsInsideElement(reader,&doubleSided,1);
 				if (doubleSided)
 				{
+					#ifdef COLLADA_READER_DEBUG
+					os::Printer::log("Setting double sided flag for effect.");
+					#endif
+
 					effect->Mat.setFlag(irr::video::EMF_BACK_FACE_CULLING,false);
 				}
 			}
@@ -1724,12 +1743,26 @@ void CColladaFileLoader::readGeometry(io::IXMLReaderUTF8* reader)
 			}
 			else
 			// trifans, and tristrips missing
-			if (extraNodeName == reader->getNodeName())
-				skipSection(reader, false);
-			else
-			if (techniqueCommonSectionName != nodeName) // techniqueCommon must not be skipped
+			if (doubleSidedNodeName == reader->getNodeName())
 			{
-//				os::Printer::log("COLLADA loader warning: Wrong tag usage found", reader->getNodeName(), ELL_WARNING);
+				// read the extra flag for double sided polys
+				s32 doubleSided = 0;
+				readIntsInsideElement(reader,&doubleSided,1);
+				if (doubleSided)
+				{
+					#ifdef COLLADA_READER_DEBUG
+					os::Printer::log("Setting double sided flag for mesh.");
+					#endif
+					amesh->setMaterialFlag(irr::video::EMF_BACK_FACE_CULLING,false);
+				}
+			}
+			else
+			 // techniqueCommon or 'technique profile=common' must not be skipped
+			if ((techniqueCommonSectionName != nodeName) // Collada 1.2/1.3
+				&& (techniqueNodeName != nodeName) // Collada 1.4+
+				&& (extraNodeName != nodeName))
+			{
+				os::Printer::log("COLLADA loader warning: Wrong tag usage found in geometry", reader->getNodeName(), ELL_WARNING);
 				skipSection(reader, true); // ignore all other sections
 			}
 		} // end if node type is element
@@ -1774,7 +1807,7 @@ void CColladaFileLoader::readGeometry(io::IXMLReaderUTF8* reader)
 	amesh->recalculateBoundingBox();
 
 	// create virtual file name
-	core::stringc filename = CurrentlyLoadingMesh;
+	io::path filename = CurrentlyLoadingMesh;
 	filename += '#';
 	filename += id;
 
@@ -1828,6 +1861,8 @@ void CColladaFileLoader::readPolygonSection(io::IXMLReaderUTF8* reader,
 	core::stringc polygonType = reader->getNodeName();
 	const int polygonCount = reader->getAttributeValueAsInt("count"); // Not useful because it only determines the number of primitives, which have arbitrary vertices in case of polygon
 	core::array<SPolygon> polygons;
+	if (polygonType == polygonsSectionName)
+		polygons.reallocate(polygonCount);
 	core::array<int> vCounts;
 	bool parsePolygonOK = false;
 	bool parseVcountOK = false;
@@ -1945,7 +1980,10 @@ void CColladaFileLoader::readPolygonSection(io::IXMLReaderUTF8* reader,
 				data.trim();
 				const c8* p = &data[0];
 				SPolygon& poly = polygons.getLast();
-				poly.Indices.reallocate(polygonCount*(maxOffset+1)*3);
+				if (polygonType == polygonsSectionName)
+					poly.Indices.reallocate((maxOffset+1)*3);
+				else
+					poly.Indices.reallocate(polygonCount*(maxOffset+1)*3);
 
 				if (vCounts.empty())
 				{
@@ -1957,10 +1995,9 @@ void CColladaFileLoader::readPolygonSection(io::IXMLReaderUTF8* reader,
 				}
 				else
 				{
-
 					for (u32 i = 0; i < vCounts.size(); i++)
 					{
-						int polyVCount = vCounts[i];
+						const int polyVCount = vCounts[i];
 
 						core::array<int> polyCorners;
 
@@ -2395,7 +2432,10 @@ void CColladaFileLoader::readColladaInput(io::IXMLReaderUTF8* reader)
 
 	// get source
 	p.Source = reader->getAttributeValue("source");
-	p.Offset = (u32)reader->getAttributeValueAsInt("offset");
+	if (reader->getAttributeValue("offset")) // Collada 1.4+
+		p.Offset = (u32)reader->getAttributeValueAsInt("offset");
+	else // Collada 1.2/1.3
+		p.Offset = (u32)reader->getAttributeValueAsInt("idx");
 	p.Set = (u32)reader->getAttributeValueAsInt("set");
 
 	// add input
@@ -2696,9 +2736,9 @@ video::ITexture* CColladaFileLoader::getTextureFromImage(core::stringc uri)
 			{
 				if (Images[i].Source.size() && Images[i].SourceIsFilename)
 				{
-					if (FileSystem->existFile(Images[i].Source.c_str()))
-						return driver->getTexture(Images[i].Source.c_str());
-					return driver->getTexture((FileSystem->getFileDir(CurrentlyLoadingMesh)+"/"+Images[i].Source).c_str());
+					if (FileSystem->existFile(Images[i].Source))
+						return driver->getTexture(Images[i].Source);
+					return driver->getTexture((FileSystem->getFileDir(CurrentlyLoadingMesh)+"/"+Images[i].Source));
 				}
 				else
 				if (Images[i].Source.size())

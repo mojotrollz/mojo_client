@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -9,7 +9,7 @@
 #ifdef _IRR_WINDOWS_API_
 
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_8_
-#include "d3d8.h"
+#include <d3d8.h>
 #include <d3dx8core.h>
 
 #include "IMaterialRenderer.h"

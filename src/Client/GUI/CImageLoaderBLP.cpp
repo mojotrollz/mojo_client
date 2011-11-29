@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include "common.h"
 #include "irrlicht/irrlicht.h"
 #include "SImage.h"
@@ -12,10 +10,10 @@ namespace video
 
 //! returns true if the file maybe is able to be loaded by this class
 //! based on the file extension (e.g. ".tga")
-bool CImageLoaderBLP::isALoadableFileExtension(const c8* fileName) const
+bool CImageLoaderBLP::isALoadableFileExtension(const io::path& fileName) const
 {
 //  Checking for file extension
-    return strstr(fileName, ".blp")!=0;
+    return core::hasFileExtension ( fileName, "blp" );
 }
 
 
@@ -57,20 +55,14 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
 		return 0;
 
     BLPHeader header;
-//    std::cout<<"Trying to load the image\n";
-//	std::cout<<"Checking Header\n";
 	file->read(&header,sizeof(BLPHeader));
 
-//	std::cout<<"Header data: "<<header.fileID<<"\n Alpha depth:"<<(u32)header.alpha_bitdepth<<"bit\nCompression:"<<(u32)header.compression<<"\n";
-//	std::cout<<"Mystery factor:"<<(u32)header.alpha_unk<<"\n";
-//	std::cout<<"X-Res: "<< header.x_res<<"\nY-Res:"<<header.y_res<<"\n";
     u32 usedMips=0;
     for(u32 i=0;i<16;i++)
         {
             if(header.mip_ofs[i]!=0&&header.mip_size[i]!=0)
                 usedMips++;
         }
- //   std::cout<<"Mip Levels:"<< usedMips<<"\n";
     core::array<PaletteColor> palette;
     PaletteColor tempColor;
     palette.reallocate(256);
@@ -81,11 +73,10 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
         }
 
 
-//    std::cout<<"Loading Mip 0 Length is "<<header.mip_size[0]<<"\n";
     file->seek(header.mip_ofs[0]);
 
     video::IImage* image = 0;
-    image = new SImage(ECF_A8R8G8B8, core::dimension2d<s32>(header.x_res, header.y_res));
+    image = new SImage(ECF_A8R8G8B8, core::dimension2d<u32>(header.x_res, header.y_res));
 
     if(header.compression==2)
     {
@@ -117,7 +108,6 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
             imagedata1.push_back(tempChunk1);
 
         }
-//        std::cout << "Data read\n";
         u32 i=0;
         u32 alpha=255;
         u32 a[8];
@@ -142,15 +132,7 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
                 }
                 else
                 {
-    /*	            std::cout << imagedata1[i].color1 <<","<<imagedata1[i].color2<<"\n";
-    //                f32 rgb=256/31;
-                    r1 = (u32)rgb*(imagedata1[i].color1 & 0xF800) >>11;
-                    g1 = (u32)rgb*(imagedata1[i].color1 & 0x07C0) >>6;
-                    b1 = (u32)rgb*(imagedata1[i].color1 & 0x003E) >>1;
-                    r2 = (u32)rgb*(imagedata1[i].color2 & 0xF800) >>11;
-                    g2 = (u32)rgb*(imagedata1[i].color2 & 0x07C0) >>6;
-                    b2 = (u32)rgb*(imagedata1[i].color2 & 0x003E) >>1;
-      */              transparency_bit=true;
+                    transparency_bit=true;
                 }
 
                 u32 tempbitmap=imagedata1[i].bitmap;
@@ -225,7 +207,6 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
                                 if(transparency_bit==false)
                                     image->setPixel(x+tx,y+ty,video::SColor(alpha,(u32)(0.667f*r1+0.333f*r2),(u32)(0.667f*g1+0.333f*g2),(u32)(0.667f*b1+0.333f*b2)));
                                 else
-                                //image->setPixel(x+tx,y+ty,video::SColor(255,255,0,0));
                                     image->setPixel(x+tx,y+ty,video::SColor(255,(u32)(0.5f*r1+0.5f*r2),(u32)(0.5f*g1+0.5f*g2),(u32)(0.5f*b1+0.5f*b2)));
                                 break;
                             }

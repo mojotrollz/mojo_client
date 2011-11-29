@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -24,7 +24,7 @@ namespace gui
 
 //! constructor
 CGUITable::CGUITable(IGUIEnvironment* environment, IGUIElement* parent,
-						s32 id, core::rect<s32> rectangle, bool clip,
+						s32 id, const core::rect<s32>& rectangle, bool clip,
 						bool drawBack, bool moveOverSelect)
 : IGUITable(environment, parent, id, rectangle), Font(0),
 	VerticalScrollBar(0), HorizontalScrollBar(0),
@@ -78,12 +78,6 @@ void CGUITable::addColumn(const wchar_t* caption, s32 columnIndex)
 	tabHeader.Width = Font->getDimension(caption).Width + (CellWidthPadding * 2) + ARROW_PAD;
 	tabHeader.OrderingMode = EGCO_NONE;
 
-	IGUISkin* skin = Environment->getSkin();
-	if (skin)
-	{
-		tabHeader.TextColor = skin->getColor(EGDC_BUTTON_TEXT);
-	}
-
 	if ( columnIndex < 0 || columnIndex >= (s32)Columns.size() )
 	{
 		Columns.push_back(tabHeader);
@@ -109,6 +103,7 @@ void CGUITable::addColumn(const wchar_t* caption, s32 columnIndex)
 	recalculateWidths();
 }
 
+
 //! remove a column from the table
 void CGUITable::removeColumn(u32 columnIndex)
 {
@@ -126,15 +121,18 @@ void CGUITable::removeColumn(u32 columnIndex)
 	recalculateWidths();
 }
 
+
 s32 CGUITable::getColumnCount() const
 {
 	return Columns.size();
 }
 
+
 s32 CGUITable::getRowCount() const
 {
 	return Rows.size();
 }
+
 
 bool CGUITable::setActiveColumn(s32 idx, bool doOrder )
 {
@@ -162,6 +160,7 @@ bool CGUITable::setActiveColumn(s32 idx, bool doOrder )
 					SEvent event;
 					event.EventType = EET_GUI_EVENT;
 					event.GUIEvent.Caller = this;
+					event.GUIEvent.Element = 0;
 					event.GUIEvent.EventType = EGET_TABLE_HEADER_CHANGED;
 					Parent->OnEvent(event);
 				}
@@ -191,6 +190,7 @@ bool CGUITable::setActiveColumn(s32 idx, bool doOrder )
 		SEvent event;
 		event.EventType = EET_GUI_EVENT;
 		event.GUIEvent.Caller = this;
+		event.GUIEvent.Element = 0;
 		event.GUIEvent.EventType = EGET_TABLE_HEADER_CHANGED;
 		Parent->OnEvent(event);
 	}
@@ -198,15 +198,18 @@ bool CGUITable::setActiveColumn(s32 idx, bool doOrder )
 	return true;
 }
 
+
 s32 CGUITable::getActiveColumn() const
 {
 	return ActiveTab;
 }
 
+
 EGUI_ORDERING_MODE CGUITable::getActiveColumnOrdering() const
 {
 	return CurrentOrdering;
 }
+
 
 void CGUITable::setColumnWidth(u32 columnIndex, u32 width)
 {
@@ -239,10 +242,12 @@ bool CGUITable::hasResizableColumns() const
 }
 
 
-void CGUITable::addRow(u32 rowIndex)
+u32 CGUITable::addRow(u32 rowIndex)
 {
 	if ( rowIndex > Rows.size() )
-		return;
+	{
+		rowIndex = Rows.size();
+	}
 
 	Row row;
 
@@ -251,14 +256,16 @@ void CGUITable::addRow(u32 rowIndex)
 	else
 		Rows.insert(row, rowIndex);
 
+	Rows[rowIndex].Items.reallocate(Columns.size());
 	for ( u32 i = 0 ; i < Columns.size() ; ++i )
 	{
-		Cell cell;
-		Rows[rowIndex].Items.push_back(cell);
+		Rows[rowIndex].Items.push_back(Cell());
 	}
 
 	recalculateHeights();
+	return rowIndex;
 }
+
 
 void CGUITable::removeRow(u32 rowIndex)
 {
@@ -273,8 +280,9 @@ void CGUITable::removeRow(u32 rowIndex)
 	recalculateHeights();
 }
 
+
 //! adds an list item, returns id of item
-void CGUITable::setCellText(u32 rowIndex, u32 columnIndex, const wchar_t* text)
+void CGUITable::setCellText(u32 rowIndex, u32 columnIndex, const core::stringw& text)
 {
 	if ( rowIndex < Rows.size() && columnIndex < Columns.size() )
 	{
@@ -287,23 +295,27 @@ void CGUITable::setCellText(u32 rowIndex, u32 columnIndex, const wchar_t* text)
 	}
 }
 
-void CGUITable::setCellText(u32 rowIndex, u32 columnIndex, const wchar_t* text, video::SColor color)
+void CGUITable::setCellText(u32 rowIndex, u32 columnIndex, const core::stringw& text, video::SColor color)
 {
 	if ( rowIndex < Rows.size() && columnIndex < Columns.size() )
 	{
 		Rows[rowIndex].Items[columnIndex].Text = text;
 		breakText( Rows[rowIndex].Items[columnIndex].Text, Rows[rowIndex].Items[columnIndex].BrokenText, Columns[columnIndex].Width );
 		Rows[rowIndex].Items[columnIndex].Color = color;
+		Rows[rowIndex].Items[columnIndex].IsOverrideColor = true;
 	}
 }
+
 
 void CGUITable::setCellColor(u32 rowIndex, u32 columnIndex, video::SColor color)
 {
 	if ( rowIndex < Rows.size() && columnIndex < Columns.size() )
 	{
 		Rows[rowIndex].Items[columnIndex].Color = color;
+		Rows[rowIndex].Items[columnIndex].IsOverrideColor = true;
 	}
 }
+
 
 void CGUITable::setCellData(u32 rowIndex, u32 columnIndex, void *data)
 {
@@ -312,6 +324,7 @@ void CGUITable::setCellData(u32 rowIndex, u32 columnIndex, void *data)
 		Rows[rowIndex].Items[columnIndex].Data = data;
 	}
 }
+
 
 const wchar_t* CGUITable::getCellText(u32 rowIndex, u32 columnIndex ) const
 {
@@ -323,6 +336,7 @@ const wchar_t* CGUITable::getCellText(u32 rowIndex, u32 columnIndex ) const
 	return 0;
 }
 
+
 void* CGUITable::getCellData(u32 rowIndex, u32 columnIndex ) const
 {
 	if ( rowIndex < Rows.size() && columnIndex < Columns.size() )
@@ -333,9 +347,11 @@ void* CGUITable::getCellData(u32 rowIndex, u32 columnIndex ) const
 	return 0;
 }
 
+
 //! clears the list
 void CGUITable::clear()
 {
+    Selected = -1;
 	Rows.clear();
 	Columns.clear();
 
@@ -348,8 +364,10 @@ void CGUITable::clear()
 	recalculateWidths();
 }
 
+
 void CGUITable::clearRows()
 {
+    Selected = -1;
 	Rows.clear();
 
 	if (VerticalScrollBar)
@@ -358,10 +376,22 @@ void CGUITable::clearRows()
 	recalculateHeights();
 }
 
+
+/*!
+*/
 s32 CGUITable::getSelected() const
 {
 	return Selected;
 }
+
+//! set wich row is currently selected
+void CGUITable::setSelected( s32 index )
+{
+	Selected = -1;
+	if ( index >= 0 && index < (s32) Rows.size() )
+		Selected = index;
+}
+
 
 void CGUITable::recalculateWidths()
 {
@@ -372,6 +402,7 @@ void CGUITable::recalculateWidths()
 	}
 	checkScrollbars();
 }
+
 
 void CGUITable::recalculateHeights()
 {
@@ -395,6 +426,7 @@ void CGUITable::recalculateHeights()
 	TotalItemHeight = ItemHeight * Rows.size();		//  header is not counted, because we only want items
 	checkScrollbars();
 }
+
 
 // automatic enabled/disabling and resizing of scrollbars
 void CGUITable::checkScrollbars()
@@ -483,6 +515,7 @@ void CGUITable::checkScrollbars()
 		}
 	}
 }
+
 
 void CGUITable::refreshControls()
 {
@@ -657,6 +690,7 @@ void CGUITable::swapRows(u32 rowIndexA, u32 rowIndexB)
 
 }
 
+
 bool CGUITable::dragColumnStart(s32 xpos, s32 ypos)
 {
 	if ( !ResizableColumns )
@@ -665,7 +699,7 @@ bool CGUITable::dragColumnStart(s32 xpos, s32 ypos)
 	if ( ypos > ( AbsoluteRect.UpperLeftCorner.Y + ItemHeight ) )
 		return false;
 
-	const s32 CLICK_AREA = 3;	// to left and right of line which can be dragged
+	const s32 CLICK_AREA = 12;	// to left and right of line which can be dragged
 	s32 pos = AbsoluteRect.UpperLeftCorner.X+1;
 
 	if ( HorizontalScrollBar && HorizontalScrollBar->isVisible() )
@@ -691,6 +725,7 @@ bool CGUITable::dragColumnStart(s32 xpos, s32 ypos)
 	return false;
 }
 
+
 bool CGUITable::dragColumnUpdate(s32 xpos)
 {
 	if ( !ResizableColumns || CurrentResizedColumn < 0 || CurrentResizedColumn >= s32(Columns.size()) )
@@ -707,6 +742,7 @@ bool CGUITable::dragColumnUpdate(s32 xpos)
 
 	return false;
 }
+
 
 bool CGUITable::selectColumnHeader(s32 xpos, s32 ypos)
 {
@@ -734,6 +770,7 @@ bool CGUITable::selectColumnHeader(s32 xpos, s32 ypos)
 
 	return false;
 }
+
 
 void CGUITable::orderRows(s32 columnIndex, EGUI_ORDERING_MODE mode)
 {
@@ -813,6 +850,7 @@ void CGUITable::selectNew(s32 ypos, bool onlyHover)
 		SEvent event;
 		event.EventType = EET_GUI_EVENT;
 		event.GUIEvent.Caller = this;
+		event.GUIEvent.Element = 0;
 		event.GUIEvent.EventType = (Selected != oldSelected) ? EGET_TABLE_CHANGED : EGET_TABLE_SELECTED_AGAIN;
 		Parent->OnEvent(event);
 	}
@@ -911,6 +949,8 @@ void CGUITable::draw()
 				}
 				else
 				{
+					if ( !Rows[i].Items[j].IsOverrideColor )	// skin-colors can change
+						Rows[i].Items[j].Color = skin->getColor(EGDC_BUTTON_TEXT);
 					font->draw(Rows[i].Items[j].BrokenText.c_str(), textRect, IsEnabled ? Rows[i].Items[j].Color : skin->getColor(EGDC_GRAY_TEXT), false, true, &clientClip);
 				}
 
@@ -996,7 +1036,7 @@ void CGUITable::breakText(const core::stringw& text, core::stringw& brokenText, 
 	c[1] = L'\0';
 
 	const u32 maxLength = cellWidth - (CellWidthPadding * 2);
-	const s32 maxLengthDots = cellWidth - (CellWidthPadding * 2) - font->getDimension(L"...").Width;
+	const u32 maxLengthDots = cellWidth - (CellWidthPadding * 2) - font->getDimension(L"...").Width;
 	const u32 size = text.size();
 	u32 pos = 0;
 
@@ -1053,8 +1093,6 @@ void CGUITable::serializeAttributes(io::IAttributes* out, io::SAttributeReadWrit
 
 		label = "Column"; label += i; label += "name";
 		out->addString(label.c_str(), Columns[i].Name.c_str() );
-		label = "Column"; label += i; label += "color";
-		out->addColor(label.c_str(), Columns[i].TextColor );
 		label = "Column"; label += i; label += "width";
 		out->addInt(label.c_str(), Columns[i].Width );
 		label = "Column"; label += i; label += "OrderingMode";
@@ -1080,6 +1118,8 @@ void CGUITable::serializeAttributes(io::IAttributes* out, io::SAttributeReadWrit
 			// core::stringw BrokenText;	// can be recalculated
 			label = "Row"; label += i; label += "cell"; label += c; label += "color";
 			out->addColor(label.c_str(), Rows[i].Items[c].Color );
+			label = "Row"; label += i; label += "cell"; label += c; label += "IsOverrideColor";
+			out->addColor(label.c_str(), Rows[i].Items[c].IsOverrideColor );
 			// void *data;	// can't be serialized
 		}
 	}
@@ -1123,8 +1163,6 @@ void CGUITable::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWri
 
 		label = "Column"; label += i; label += "name";
 		column.Name = core::stringw(in->getAttributeAsString(label.c_str()).c_str());
-		label = "Column"; label += i; label += "color";
-		column.TextColor = in->getAttributeAsColor(label.c_str());
 		label = "Column"; label += i; label += "width";
 		column.Width = in->getAttributeAsInt(label.c_str());
 		label = "Column"; label += i; label += "OrderingMode";
@@ -1163,6 +1201,9 @@ void CGUITable::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWri
 			breakText( cell.Text, cell.BrokenText, Columns[c].Width );
 			label = "Row"; label += i; label += "cell"; label += c; label += "color";
 			cell.Color = in->getAttributeAsColor(label.c_str());
+			label = "Row"; label += i; label += "cell"; label += c; label += "IsOverrideColor";
+			cell.IsOverrideColor = in->getAttributeAsBool(label.c_str());
+
 			cell.Data = NULL;
 
 			Rows[Rows.size()-1].Items.push_back(cell);

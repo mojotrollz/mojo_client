@@ -8,6 +8,9 @@ namespace irr
 		CParticleScaleAffector::CParticleScaleAffector(const core::dimension2df& scaleTo)
 			: ScaleTo(scaleTo)
 		{
+			#ifdef _DEBUG
+			setDebugName("CParticleScaleAffector");
+			#endif
 		}
 
 
@@ -23,18 +26,17 @@ namespace irr
 		}
 
 
-		void CParticleScaleAffector::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options)
+		void CParticleScaleAffector::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options) const
 		{
 			out->addFloat("ScaleToWidth", ScaleTo.Width);
 			out->addFloat("ScaleToHeight", ScaleTo.Height);
 		}
 
 
-		s32 CParticleScaleAffector::deserializeAttributes(s32 startIndex, io::IAttributes* in, io::SAttributeReadWriteOptions* options)
+		void CParticleScaleAffector::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
 		{
 			ScaleTo.Width = in->getAttributeAsFloat("ScaleToWidth");
 			ScaleTo.Height = in->getAttributeAsFloat("ScaleToHeight");
-			return 0;
 		}
 
 

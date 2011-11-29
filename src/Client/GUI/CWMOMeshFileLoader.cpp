@@ -34,10 +34,9 @@ CWMOMeshFileLoader::~CWMOMeshFileLoader()
 
 }
 
-
-bool CWMOMeshFileLoader::isALoadableFileExtension(const c8* filename)const
+bool CWMOMeshFileLoader::isALoadableFileExtension(const io::path& filename)const
 {
-	return strstr(filename, ".wmo")!=0;
+    return core::hasFileExtension ( filename, "wmo" );
 }
 
 
@@ -50,7 +49,7 @@ IAnimatedMesh* CWMOMeshFileLoader::createMesh(io::IReadFile* file)
     if(!file)
         return 0;
     MeshFile = file;
-    std::string filename=MeshFile->getFileName();
+    std::string filename=MeshFile->getFileName().c_str();
     Mesh = new scene::CM2Mesh();
 
 	if ( load(true) )//We try loading a root file first!
@@ -274,7 +273,7 @@ for(u32 i=0;i<submeshes.size();i++)//The mesh has to be split into submeshes bec
     {
     if(WMOMTexData[lastindex].textureID!=255)
     {
-        scene::SSkinMeshBuffer *MeshBuffer = Mesh->createBuffer(0);
+        scene::SSkinMeshBuffer *MeshBuffer = Mesh->addMeshBuffer(0);
 
         //Put the Indices and Vertices of the Submesh into a mesh buffer
         for(u32 j=lastindex;j<submeshes[i];j++)

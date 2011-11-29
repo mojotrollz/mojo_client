@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -69,7 +69,7 @@ bool CGUIToolBar::OnEvent(const SEvent& event)
 {
 	if (IsEnabled)
 	{
-		if (event.EventType == EET_MOUSE_INPUT_EVENT && 
+		if (event.EventType == EET_MOUSE_INPUT_EVENT &&
 			event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
 		{
 			if (AbsoluteClippingRect.isPointInside(core::position2di(event.MouseInput.X, event.MouseInput.Y)))
@@ -116,17 +116,31 @@ void CGUIToolBar::updateAbsolutePosition()
 
 //! Adds a button to the tool bar
 IGUIButton* CGUIToolBar::addButton(s32 id, const wchar_t* text,const wchar_t* tooltiptext,
-	video::ITexture* img, video::ITexture* pressed, bool isPushButton, 
+	video::ITexture* img, video::ITexture* pressed, bool isPushButton,
 	bool useAlphaChannel)
 {
 	ButtonX += 3;
 
-	core::rect<s32> rectangle(ButtonX,2,0,0);
+	core::rect<s32> rectangle(ButtonX,2,ButtonX+1,3);
 	if ( img )
 	{
-		const core::dimension2di &size = img->getOriginalSize();
+		const core::dimension2du &size = img->getOriginalSize();
 		rectangle.LowerRightCorner.X = rectangle.UpperLeftCorner.X + size.Width + 8;
 		rectangle.LowerRightCorner.Y = rectangle.UpperLeftCorner.Y + size.Height + 6;
+	}
+	
+	if ( text )
+	{
+		IGUISkin* skin = Environment->getSkin();
+		IGUIFont * font = skin->getFont(EGDF_BUTTON);	
+		if ( font )
+		{
+			core::dimension2d<u32> dim = font->getDimension(text);
+			if ( (s32)dim.Width > rectangle.getWidth() )
+				rectangle.LowerRightCorner.X = rectangle.UpperLeftCorner.X + dim.Width + 8;
+			if ( (s32)dim.Height > rectangle.getHeight() )
+				rectangle.LowerRightCorner.Y = rectangle.UpperLeftCorner.Y + dim.Height + 6;
+		}
 	}
 
 	ButtonX += rectangle.getWidth();
@@ -151,10 +165,10 @@ IGUIButton* CGUIToolBar::addButton(s32 id, const wchar_t* text,const wchar_t* to
 
 	if (useAlphaChannel)
 		button->setUseAlphaChannel(useAlphaChannel);
-	
+
 	return button;
 }
-	
+
 } // end namespace gui
 } // end namespace irr
 

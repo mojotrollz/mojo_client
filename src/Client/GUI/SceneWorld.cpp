@@ -94,7 +94,7 @@ SceneWorld::SceneWorld(PseuGUI *g) : Scene(g)
 
     logdetail("GUI: Using farclip=%.2f fogfar=%.2f fognear=%.2f", farclip, fogfar, fognear);
 
-    driver->setFog(envBasicColor, true, fognear, fogfar, 0.02f);
+    driver->setFog(envBasicColor, video::EFT_FOG_LINEAR, fognear, fogfar, 0.02f);
 
     // setup cursor
     // shlainn: The cursor contrpller is a horrible hack.

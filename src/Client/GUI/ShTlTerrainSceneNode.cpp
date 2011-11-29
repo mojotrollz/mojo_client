@@ -195,12 +195,13 @@ ShTlTerrainSceneNode::ShTlTerrainSceneNode(scene::ISceneManager* smgr,
     bool mmflag = driver->getTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS);
     driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-    CTexture = driver->addTexture(core::dimension2d<s32>(tw, th), "colortexture", video::ECF_A8R8G8B8);
+    CTexture = driver->addTexture(core::dimension2d<u32>(tw, th), "colortexture", video::ECF_A8R8G8B8);
 
     driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, mmflag);
 
     Material[0].TextureLayer[0].Texture = CTexture;
-    Material[0].TextureLayer[0].TextureWrap = video::ETC_CLAMP_TO_EDGE;
+    Material[0].TextureLayer[0].TextureWrapU = video::ETC_CLAMP_TO_EDGE;
+    Material[0].TextureLayer[0].TextureWrapV = video::ETC_CLAMP_TO_EDGE;
 
     // setup UV coordinates of vertices on 2nd texture layer
     f32 ax = (f32)MeshSize.Width / CTexture->getSize().Width / MeshSize.Width;

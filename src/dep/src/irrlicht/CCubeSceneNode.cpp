@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -24,68 +24,36 @@ namespace scene
         |  /      |  /
         |/        | /
         0------11,1/
-       000       100       
+       000       100
 	*/
 
 //! constructor
 CCubeSceneNode::CCubeSceneNode(f32 size, ISceneNode* parent, ISceneManager* mgr,
 		s32 id, const core::vector3df& position,
 		const core::vector3df& rotation, const core::vector3df& scale)
-	: IMeshSceneNode(parent, mgr, id, position, rotation, scale), Size(size)
+	: IMeshSceneNode(parent, mgr, id, position, rotation, scale),
+	Mesh(0), Size(size)
 {
 	#ifdef _DEBUG
 	setDebugName("CCubeSceneNode");
 	#endif
 
-	const u16 u[36] = {   0,2,1,   0,3,2,   1,5,4,   1,2,5,   4,6,7,   4,5,6, 
-            7,3,0,   7,6,3,   9,5,2,   9,8,5,   0,11,10,   0,10,7};
-
-	SMeshBuffer* buf = new SMeshBuffer();
-	Mesh.addMeshBuffer(buf);
-	buf->Indices.set_used(36);
-	for (u32 i=0; i<36; ++i)
-		buf->Indices[i] = u[i];
-	buf->drop();
-
 	setSize();
+}
+
+
+CCubeSceneNode::~CCubeSceneNode()
+{
+	if (Mesh)
+		Mesh->drop();
 }
 
 
 void CCubeSceneNode::setSize()
 {
-	// we are creating the cube mesh here. 
-
-	// nicer texture mapping sent in by Dr Andros C Bragianos 
-	// .. and then improved by jox.
-
-	video::SColor clr(255,255,255,255);
-
-	SMeshBuffer* buf = (SMeshBuffer*)Mesh.getMeshBuffer(0);
-
-	buf->Vertices.reallocate(12);
-	// Start setting vertices from index 0 to deal with this method being called multiple times.
-	buf->Vertices.set_used(0);
-	buf->Vertices.push_back(video::S3DVertex(0,0,0, -1,-1,-1, clr, 0, 1));
-	buf->Vertices.push_back(video::S3DVertex(1,0,0,  1,-1,-1, clr, 1, 1));
-	buf->Vertices.push_back(video::S3DVertex(1,1,0,  1, 1,-1, clr, 1, 0));
-	buf->Vertices.push_back(video::S3DVertex(0,1,0, -1, 1,-1, clr, 0, 0));
-	buf->Vertices.push_back(video::S3DVertex(1,0,1,  1,-1, 1, clr, 0, 1));
-	buf->Vertices.push_back(video::S3DVertex(1,1,1,  1, 1, 1, clr, 0, 0));
-	buf->Vertices.push_back(video::S3DVertex(0,1,1, -1, 1, 1, clr, 1, 0));
-	buf->Vertices.push_back(video::S3DVertex(0,0,1, -1,-1, 1, clr, 1, 1));
-	buf->Vertices.push_back(video::S3DVertex(0,1,1, -1, 1, 1, clr, 0, 1));
-	buf->Vertices.push_back(video::S3DVertex(0,1,0, -1, 1,-1, clr, 1, 1));
-	buf->Vertices.push_back(video::S3DVertex(1,0,1,  1,-1, 1, clr, 1, 0));
-	buf->Vertices.push_back(video::S3DVertex(1,0,0,  1,-1,-1, clr, 0, 0));
-
-	buf->BoundingBox.reset(0,0,0); 
-
-	for (u32 i=0; i<12; ++i)
-	{
-		buf->Vertices[i].Pos -= core::vector3df(0.5f, 0.5f, 0.5f);
-		buf->Vertices[i].Pos *= Size;
-		buf->BoundingBox.addInternalPoint(buf->Vertices[i].Pos);
-	}
+	if (Mesh)
+		Mesh->drop();
+	Mesh = SceneManager->getGeometryCreator()->createCubeMesh(core::vector3df(Size));
 }
 
 
@@ -93,16 +61,78 @@ void CCubeSceneNode::setSize()
 void CCubeSceneNode::render()
 {
 	video::IVideoDriver* driver = SceneManager->getVideoDriver();
-	driver->setMaterial(Mesh.getMeshBuffer(0)->getMaterial());
 	driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-	driver->drawMeshBuffer(Mesh.getMeshBuffer(0));
+
+	// for debug purposes only:
+	bool renderMeshes = true;
+	video::SMaterial mat = Mesh->getMeshBuffer(0)->getMaterial();
+
+	// overwrite half transparency
+	if (DebugDataVisible & scene::EDS_HALF_TRANSPARENCY)
+		mat.MaterialType = video::EMT_TRANSPARENT_ADD_COLOR;
+	else
+		driver->setMaterial(Mesh->getMeshBuffer(0)->getMaterial());
+	driver->setMaterial(mat);
+	driver->drawMeshBuffer(Mesh->getMeshBuffer(0));
+
+	// for debug purposes only:
+	if (DebugDataVisible)
+	{
+		video::SMaterial m;
+		m.Lighting = false;
+		m.AntiAliasing=0;
+		driver->setMaterial(m);
+
+		if (DebugDataVisible & scene::EDS_BBOX)
+		{
+			driver->draw3DBox(Mesh->getMeshBuffer(0)->getBoundingBox(), video::SColor(255,255,255,255));
+		}
+		if (DebugDataVisible & scene::EDS_BBOX_BUFFERS)
+		{
+			driver->draw3DBox(Mesh->getMeshBuffer(0)->getBoundingBox(),
+					video::SColor(255,190,128,128));
+		}
+		if (DebugDataVisible & scene::EDS_NORMALS)
+		{
+			// draw normals
+			core::vector3df normalizedNormal;
+			const f32 DebugNormalLength = SceneManager->getParameters()->getAttributeAsFloat(DEBUG_NORMAL_LENGTH);
+			const video::SColor DebugNormalColor = SceneManager->getParameters()->getAttributeAsColor(DEBUG_NORMAL_COLOR);
+
+			const scene::IMeshBuffer* mb = Mesh->getMeshBuffer(0);
+			const u32 vSize = video::getVertexPitchFromType(mb->getVertexType());
+			const video::S3DVertex* v = ( const video::S3DVertex*)mb->getVertices();
+			const bool normalize = mb->getMaterial().NormalizeNormals;
+
+			for (u32 i=0; i != mb->getVertexCount(); ++i)
+			{
+				normalizedNormal = v->Normal;
+				if (normalize)
+					normalizedNormal.normalize();
+
+				driver->draw3DLine(v->Pos, v->Pos + (normalizedNormal * DebugNormalLength), DebugNormalColor);
+
+				v = (const video::S3DVertex*) ( (u8*) v+vSize );
+			}
+			driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
+		}
+
+		// show mesh
+		if (DebugDataVisible & scene::EDS_MESH_WIRE_OVERLAY)
+		{
+			m.Wireframe = true;
+			driver->setMaterial(m);
+
+			driver->drawMeshBuffer( Mesh->getMeshBuffer(0) );
+		}
+	}
 }
 
 
 //! returns the axis aligned bounding box of this node
 const core::aabbox3d<f32>& CCubeSceneNode::getBoundingBox() const
 {
-	return Mesh.getMeshBuffer(0)->getBoundingBox();
+	return Mesh->getMeshBuffer(0)->getBoundingBox();
 }
 
 
@@ -114,14 +144,10 @@ void CCubeSceneNode::OnRegisterSceneNode()
 }
 
 
-//! returns the material based on the zero based index i. To get the amount
-//! of materials used by this scene node, use getMaterialCount().
-//! This function is needed for inserting the node into the scene hirachy on a
-//! optimal position for minimizing renderstate changes, but can also be used
-//! to directly modify the material of a scene node.
+//! returns the material based on the zero based index i.
 video::SMaterial& CCubeSceneNode::getMaterial(u32 i)
 {
-	return Mesh.getMeshBuffer(0)->getMaterial();
+	return Mesh->getMeshBuffer(0)->getMaterial();
 }
 
 
@@ -144,9 +170,13 @@ void CCubeSceneNode::serializeAttributes(io::IAttributes* out, io::SAttributeRea
 //! Reads attributes of the scene node.
 void CCubeSceneNode::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
 {
-	Size =	in->getAttributeAsFloat("Size");
-	Size = core::max_(Size, 0.0001f);
-	setSize();
+	f32 newSize = in->getAttributeAsFloat("Size");
+	newSize = core::max_(newSize, 0.0001f);
+	if (newSize != Size)
+	{
+		Size = newSize;
+		setSize();
+	}
 
 	ISceneNode::deserializeAttributes(in, options);
 }
@@ -155,16 +185,19 @@ void CCubeSceneNode::deserializeAttributes(io::IAttributes* in, io::SAttributeRe
 //! Creates a clone of this scene node and its children.
 ISceneNode* CCubeSceneNode::clone(ISceneNode* newParent, ISceneManager* newManager)
 {
-	if (!newParent) newParent = Parent;
-	if (!newManager) newManager = SceneManager;
+	if (!newParent)
+		newParent = Parent;
+	if (!newManager)
+		newManager = SceneManager;
 
-	CCubeSceneNode* nb = new CCubeSceneNode(Size, newParent, 
+	CCubeSceneNode* nb = new CCubeSceneNode(Size, newParent,
 		newManager, ID, RelativeTranslation);
 
 	nb->cloneMembers(this, newManager);
 	nb->getMaterial(0) = getMaterial(0);
 
-	nb->drop();
+	if ( newParent )
+		nb->drop();
 	return nb;
 }
 

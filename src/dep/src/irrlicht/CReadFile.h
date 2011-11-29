@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -22,8 +22,7 @@ namespace io
 	{
 	public:
 
-		CReadFile(const wchar_t* fileName);
-		CReadFile(const c8* fileName);
+		CReadFile(const io::path& fileName);
 
 		virtual ~CReadFile();
 
@@ -46,7 +45,7 @@ namespace io
 		virtual long getPos() const;
 
 		//! returns name of file
-		virtual const c8* getFileName() const;
+		virtual const io::path& getFileName() const;
 
 	private:
 
@@ -55,7 +54,7 @@ namespace io
 
 		FILE* File;
 		long FileSize;
-		core::stringc Filename;
+		io::path Filename;
 	};
 
 } // end namespace io

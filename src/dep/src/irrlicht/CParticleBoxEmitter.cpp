@@ -1,4 +1,4 @@
-// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// Copyright (C) 2002-2010 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
@@ -109,6 +109,10 @@ void CParticleBoxEmitter::serializeAttributes(io::IAttributes* out, io::SAttribu
 	b *= 0.5f;
 	out->addVector3d("Box", b);
 	out->addVector3d("Direction", Direction);
+	out->addFloat("MinStartSizeWidth", MinStartSize.Width);
+	out->addFloat("MinStartSizeHeight", MinStartSize.Height);
+	out->addFloat("MaxStartSizeWidth", MaxStartSize.Width);
+	out->addFloat("MaxStartSizeHeight", MaxStartSize.Height); 
 	out->addInt("MinParticlesPerSecond", MinParticlesPerSecond);
 	out->addInt("MaxParticlesPerSecond", MaxParticlesPerSecond);
 	out->addColor("MinStartColor", MinStartColor);
@@ -120,7 +124,7 @@ void CParticleBoxEmitter::serializeAttributes(io::IAttributes* out, io::SAttribu
 
 
 //! Reads attributes of the object.
-s32 CParticleBoxEmitter::deserializeAttributes(s32 startIndex, io::IAttributes* in, io::SAttributeReadWriteOptions* options)
+void CParticleBoxEmitter::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
 {
 	// read data and correct input values here
 
@@ -144,6 +148,11 @@ s32 CParticleBoxEmitter::deserializeAttributes(s32 startIndex, io::IAttributes* 
 	if (Direction.getLength() == 0)
 		Direction.set(0,0.01f,0);
 
+	MinStartSize.Width = in->getAttributeAsFloat("MinStartSizeWidth");
+	MinStartSize.Height = in->getAttributeAsFloat("MinStartSizeHeight");
+	MaxStartSize.Width = in->getAttributeAsFloat("MaxStartSizeWidth");
+	MaxStartSize.Height = in->getAttributeAsFloat("MaxStartSizeHeight"); 
+
 	MinParticlesPerSecond = in->getAttributeAsInt("MinParticlesPerSecond");
 	MaxParticlesPerSecond = in->getAttributeAsInt("MaxParticlesPerSecond");
 
@@ -162,7 +171,6 @@ s32 CParticleBoxEmitter::deserializeAttributes(s32 startIndex, io::IAttributes* 
 	MaxLifeTime = core::max_(MaxLifeTime, MinLifeTime);
 	MinLifeTime = core::min_(MinLifeTime, MaxLifeTime);
 
-	return in->findAttribute("MaxAngleDegrees");
 }
 
 

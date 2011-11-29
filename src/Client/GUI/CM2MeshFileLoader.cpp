@@ -30,9 +30,9 @@ core::quaternion fixQuaternion(core::quaternion q)
 {
         return core::quaternion(q.X, q.Z, q.Y, q.W);
 }
-bool CM2MeshFileLoader::isALoadableFileExtension(const c8* filename)const
+bool CM2MeshFileLoader::isALoadableFileExtension(const io::path& filename)const
 {
-	return strstr(filename, ".m2")!=0;
+    return core::hasFileExtension ( filename, "m2" );
 }
 
 
@@ -282,7 +282,7 @@ for(u32 i=0; i<M2MAnimations.size(); i++)
   use_animfile = (M2MAnimations[i].flags & 0x20) == 0;
   if(use_animfile)
   {
-    std::string AnimName = MeshFile->getFileName();
+    std::string AnimName = MeshFile->getFileName().c_str();
     c8 ext[13];
     sprintf(ext,"%04d-%02d.anim",M2MAnimations[i].animationID,M2MAnimations[i].subanimationID);
     AnimName = AnimName.substr(0, AnimName.length()-3) + ext;
@@ -596,7 +596,7 @@ switch(header.version)
     MeshFile->read((u8*)&header+0x54,24);//nColors - nTransparency
     MeshFile->read((u8*)&header+0x74,sizeof(ModelHeader)-0x74);//nTexAnims - END
 
-    std::string SkinName = MeshFile->getFileName();
+    std::string SkinName = MeshFile->getFileName().c_str();
     SkinName = SkinName.substr(0, SkinName.length()-3) + "00.skin"; // FIX ME if we need more skins
     io::IReadFile* SkinFile = io::IrrCreateIReadFileBasic(Device, SkinName.c_str());
     if (!SkinFile)
@@ -619,7 +619,7 @@ switch(header.version)
   }
   default:
   {
-    logerror("M2: [%s] Wrong header %0X! File version doesn't match or file is not a M2 file.",MeshFile->getFileName(),header.version);
+    logerror("M2: [%s] Wrong header %0X! File version doesn't match or file is not a M2 file.",MeshFile->getFileName().c_str(),header.version);
     return 0;
   }
 }
@@ -649,13 +649,13 @@ for(u32 i=0;i<M2MBones.size();i++)
   {
       ParentJoint=AnimatedMesh->getAllJoints()[M2MBones[i].parentBone];
   }
-  Joint=AnimatedMesh->createJoint(ParentJoint);
+  Joint=AnimatedMesh->addJoint(ParentJoint);
 
   if(M2MBones[i].translation.timestamps.size()>0)
   {
     for(u32 j=0;j<M2MBones[i].translation.timestamps.size();j++)
     {
-      scene::CM2Mesh::SPositionKey* pos=AnimatedMesh->createPositionKey(Joint);
+      scene::CM2Mesh::SPositionKey* pos=AnimatedMesh->addPositionKey(Joint);
       pos->frame=M2MBones[i].translation.timestamps[j];
       pos->position=fixCoordSystem(core::vector3df(M2MBones[i].translation.values[j*3],M2MBones[i].translation.values[j*3+1],M2MBones[i].translation.values[j*3+2]));
     }
@@ -664,7 +664,7 @@ for(u32 i=0;i<M2MBones.size();i++)
   {
     for(u32 j=0;j<M2MBones[i].rotation.timestamps.size();j++)
     {
-      scene::CM2Mesh::SRotationKey* rot=AnimatedMesh->createRotationKey(Joint);
+      scene::CM2Mesh::SRotationKey* rot=AnimatedMesh->addRotationKey(Joint);
       rot->frame=M2MBones[i].rotation.timestamps[j];
       core::quaternion tempQ=core::quaternion(M2MBones[i].rotation.values[j*4+0],M2MBones[i].rotation.values[j*4+1],M2MBones[i].rotation.values[j*4+2],M2MBones[i].rotation.values[j*4+3]);
       tempQ = fixQuaternion(tempQ);
@@ -677,7 +677,7 @@ for(u32 i=0;i<M2MBones.size();i++)
   {
     for(u32 j=0;j<M2MBones[i].scaling.timestamps.size();j++)
     {
-    scene::CM2Mesh::SScaleKey* scale=AnimatedMesh->createScaleKey(Joint);
+    scene::CM2Mesh::SScaleKey* scale=AnimatedMesh->addScaleKey(Joint);
     scale->frame=M2MBones[i].scaling.timestamps[j];
     scale->scale=core::vector3df(M2MBones[i].scaling.values[j*3],M2MBones[i].scaling.values[j*3+1],M2MBones[i].scaling.values[j*3+2]);
     }
@@ -715,7 +715,7 @@ for(u32 i=0;i<M2MVertices.size();i++)
 for(u32 i=0; i < currentView.Submesh.num;i++)//
 {
     //Now, M2MTriangles refers to M2MIndices and not to M2MVertices.
-    scene::SSkinMeshBuffer *MeshBuffer = AnimatedMesh->createBuffer(M2MSubmeshes[i].meshpartId);
+    scene::SSkinMeshBuffer *MeshBuffer = AnimatedMesh->addMeshBuffer(M2MSubmeshes[i].meshpartId);
 
     //Put the Indices and Vertices of the Submesh into a mesh buffer
     //Each Submesh contains only the Indices and Vertices that belong to it.
@@ -735,7 +735,7 @@ for(u32 i=0; i < currentView.Submesh.num;i++)//
             if((M2MVertices[j].weights[k])>0)
             {
             u32 boneIndex = M2MVertices[j].bones[k];
-            scene::CM2Mesh::SWeight* weight = AnimatedMesh->createWeight(AnimatedMesh->getAllJoints()[boneIndex]);
+            scene::CM2Mesh::SWeight* weight = AnimatedMesh->addWeight(AnimatedMesh->getAllJoints()[boneIndex]);
             weight->strength=M2MVertices[j].weights[k];
             weight->vertex_id=MeshBuffer->Vertices_Standard.size()-1;
             weight->buffer_id=i;
