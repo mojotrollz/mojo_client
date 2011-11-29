@@ -703,13 +703,13 @@ int main(int argc, char* argv[])
 	// create device and exit if creation failed
 
 	MyEventReceiver receiver;
-	Device = createDevice(driverType, core::dimension2d<s32>(800, 600),
+	Device = createDevice(driverType, core::dimension2d<u32>(800, 600),
 		16, false, false, false, &receiver);
 
 	if (Device == 0)
 		return 1; // could not create selected driver.
 
-	Device->setResizeAble(true);
+	Device->setResizable(true);
 
 	Device->setWindowCaption(L"Irrlicht Engine - Loading...");
 
