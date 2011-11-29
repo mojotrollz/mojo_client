@@ -3,8 +3,8 @@
 
 #define _COMMON_NO_THREADS
 #include "common.h"
-#include "StormLib/StormLib.h"
-#include "StormLib/SCommon.h"
+#include "StormLib/src/StormLib.h"
+#include "StormLib/src/StormCommon.h"
 
 class MPQFile
 {

@@ -77,7 +77,7 @@ extern "C"
     #endif
 
     /* Initialize the algorithm. */
-    void md5_init(md5_state_t *pms);
+    void md5init(md5_state_t *pms);
 
     /* Append a string to the message. */
     void md5_append(md5_state_t *pms, const md5_byte_t *data, int nbytes);

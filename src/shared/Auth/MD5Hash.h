@@ -10,7 +10,7 @@ class MD5Hash
 public:
     MD5Hash()
     {
-        md5_init(&_state);
+        md5init(&_state);
         memset(_digest,0,MD5_DIGEST_LENGTH);
     }
 

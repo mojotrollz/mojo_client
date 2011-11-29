@@ -1,7 +1,7 @@
 include_directories (${PROJECT_SOURCE_DIR}/src/dep/include ${PROJECT_SOURCE_DIR}/src/shared ${PROJECT_SOURCE_DIR}/src/Client)
 
 set(PSEUWOW_LIBS
-PseuGUI DefScript IrrKlang irrlicht shared zthread StormLib zlib ${OPENSSL_LIBRARIES} ${OPENSSL_EXTRA_LIBRARIES}
+PseuGUI DefScript IrrKlang irrlicht shared zthread StormLib_static zlib ${OPENSSL_LIBRARIES} ${OPENSSL_EXTRA_LIBRARIES}
 )
 
 link_directories (${CMAKE_INSTALL_PREFIX})
@@ -19,7 +19,7 @@ add_subdirectory (GUI)
 
 
 
-add_executable (pseuwow 
+add_executable (pseuwow
 Realm/RealmSession.cpp
 Realm/RealmSocket.cpp
 
@@ -57,6 +57,6 @@ SCPDatabase.cpp
 
 
 # Link the executable to the libraries.
-target_link_libraries (pseuwow ${PSEUWOW_LIBS}) 
+target_link_libraries (pseuwow ${PSEUWOW_LIBS})
 
 install(TARGETS pseuwow DESTINATION ${CMAKE_INSTALL_PREFIX})
