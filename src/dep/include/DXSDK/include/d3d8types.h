@@ -967,7 +967,7 @@ typedef enum _D3DSHADER_PARAM_DSTMOD_TYPE
     D3DSPDM_FORCE_DWORD  = 0x7fffffff,      // force 32-bit size enum
 } D3DSHADER_PARAM_DSTMOD_TYPE;
 
-// destination parameter 
+// destination parameter
 #define D3DSP_DSTSHIFT_SHIFT    24
 #define D3DSP_DSTSHIFT_MASK     0x0F000000
 
@@ -1098,7 +1098,7 @@ typedef enum _D3DSHADER_PARAM_SRCMOD_TYPE
     D3DSPSM_COMP    = 6<<D3DSP_SRCMOD_SHIFT, // complement
     D3DSPSM_X2      = 7<<D3DSP_SRCMOD_SHIFT, // *2
     D3DSPSM_X2NEG   = 8<<D3DSP_SRCMOD_SHIFT, // *2 and negate
-    D3DSPSM_DZ      = 9<<D3DSP_SRCMOD_SHIFT, // divide through by z component 
+    D3DSPSM_DZ      = 9<<D3DSP_SRCMOD_SHIFT, // divide through by z component
     D3DSPSM_DW      = 10<<D3DSP_SRCMOD_SHIFT, // divide through by w component
     D3DSPSM_FORCE_DWORD = 0x7fffffff,        // force 32-bit size enum
 } D3DSHADER_PARAM_SRCMOD_TYPE;

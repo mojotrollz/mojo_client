@@ -166,7 +166,7 @@
             if (pEmitter->pLFECurve == NULL) {
                 pEmitter->pLFECurve = &DefaultCurve;
             }
-    
+
             X3DAudioCalculate(X3DInstance, pListener, pEmitter, X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER | X3DAUDIO_CALCULATE_EMITTER_ANGLE, pDSPSettings);
         }
 

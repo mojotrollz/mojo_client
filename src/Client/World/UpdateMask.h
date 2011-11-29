@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2005,2006,2007 MaNGOS <http://www.mangosproject.org/>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,12 +52,12 @@ class UpdateMask
         inline uint32 GetLength() { return mBlocks << 2; }
         inline uint32 GetCount() { return mCount; }
         inline uint8* GetMask() { return (uint8*)mUpdateMask; }
-		inline void SetMask(uint32 *updateMask) 
-		{ 
+		inline void SetMask(uint32 *updateMask)
+		{
 			if(mUpdateMask)
 				delete [] mUpdateMask;
 
-			mUpdateMask = updateMask; 
+			mUpdateMask = updateMask;
 		}
 
         inline void SetCount (uint32 valuesCount)

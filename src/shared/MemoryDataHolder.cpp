@@ -18,11 +18,11 @@ namespace MemoryDataHolder
     TypeStorage<DataLoaderRunnable> loaders;
     TypeStorage<uint32> refs;
     bool alwaysSingleThreaded = false;
-    
+
     bool loadFromMPQ = false;
     MPQHelper mpq;
 
-    
+
     void Init(void)
     {
         if(!executor)
@@ -37,7 +37,7 @@ namespace MemoryDataHolder
         executor->interrupt(); // interrupt all working threads
         // executor will delete itself automatically
     }
-    
+
     void SetThreadCount(uint32 t)
     {
         // 0 threads used means we use no threading at all
@@ -54,14 +54,14 @@ namespace MemoryDataHolder
             executor->size(t);
         }
     }
-     
+
     void SetUseMPQ(std::string loc)
     {
         loadFromMPQ=true;
         SetLocale(loc.c_str());
         mpq.Init();
     }
-    
+
     void MakeMapFilename(char* fn, uint32 mid, std::string mname, uint32 x, uint32 y)
     {
         if(loadFromMPQ)
@@ -85,7 +85,7 @@ namespace MemoryDataHolder
             NormalizeFilename(fname);
             sprintf(fn,"./data/textures/%s",fname.c_str());
         }
-    }    
+    }
     void MakeModelFilename(char* fn, std::string fname)
     {
         if(fname.find(".mdx")!=std::string::npos)
@@ -99,7 +99,7 @@ namespace MemoryDataHolder
             NormalizeFilename(_PathToFileName(fname));
             sprintf(fn,"./data/model/%s",fname.c_str());
         }
-    }  
+    }
     void MakeWMOFilename(char* fn, std::string fname)
     {
         if(loadFromMPQ)
@@ -109,7 +109,7 @@ namespace MemoryDataHolder
             NormalizeFilename(_PathToFileName(fname));
             sprintf(fn,"./data/wmos/%s",fname.c_str());
         }
-    }  
+    }
 
     bool FileExists(std::string fname)
     {
@@ -118,10 +118,10 @@ namespace MemoryDataHolder
             return mpq.FileExists(fname.c_str());
         else
             return GetFileSize(fname.c_str());
-      
+
     }
-    
-    
+
+
     class DataLoaderRunnable : public ZThread::Runnable
     {
     public:
@@ -140,7 +140,7 @@ namespace MemoryDataHolder
         }
         // the threaded part
         void run()
-        { 
+        {
             memblock *mb = new memblock();
             if(loadFromMPQ)
             {
@@ -166,9 +166,9 @@ namespace MemoryDataHolder
                     return;
                 }
 
-                mb->size=bb.size(); 
+                mb->size=bb.size();
                 mb->alloc(mb->size);
-                
+
                 memcpy((char*)mb->ptr,(char*)bb.contents(),bb.size());
                 {
                     ZThread::Guard<ZThread::FastMutex> g(_mut);
@@ -176,7 +176,7 @@ namespace MemoryDataHolder
                     _loaders->Unlink(_name); // must be unlinked after the file is fully loaded, but before the callbacks are processed!
                 }
                 DEBUG(logdev("DataLoaderRunnable: Done with '%s' (%s)", _name.c_str(), FilesizeFormat(mb->size).c_str()));
-                DoCallbacks(_name, MDH_FILE_OK | MDH_FILE_JUST_LOADED);              
+                DoCallbacks(_name, MDH_FILE_OK | MDH_FILE_JUST_LOADED);
             }
             else
             {
@@ -263,7 +263,7 @@ namespace MemoryDataHolder
        ZThread::FastMutex _mut;
        TypeStorage<memblock> *_storage;
        TypeStorage<DataLoaderRunnable> *_loaders;
-       
+
     };
 
 
@@ -338,7 +338,7 @@ namespace MemoryDataHolder
                 }
             }
             else // if a loader is already existing, add callbacks to that loader.
-            {  
+            {
                 ldr->AddCallback(func,ptr,cond);
                 mutex.release();
             }

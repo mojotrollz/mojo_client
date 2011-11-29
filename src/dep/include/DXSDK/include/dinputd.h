@@ -699,19 +699,19 @@ typedef struct IDirectInputJoyConfig8 *LPDIRECTINPUTJOYCONFIG8;
 #define DIERR_DRIVERLAST                0x800403FFL
 
 /*
- *  Unless the specific driver has been precisely identified, no meaning 
- *  should be attributed to these values other than that the driver 
- *  originated the error.  However, to illustrate the types of error that 
- *  may be causing the failure, the PID force feedback driver distributed 
+ *  Unless the specific driver has been precisely identified, no meaning
+ *  should be attributed to these values other than that the driver
+ *  originated the error.  However, to illustrate the types of error that
+ *  may be causing the failure, the PID force feedback driver distributed
  *  with DirectX 7 could return the following errors:
  *
- *  DIERR_DRIVERFIRST + 1   
+ *  DIERR_DRIVERFIRST + 1
  *      The requested usage was not found.
- *  DIERR_DRIVERFIRST + 2   
+ *  DIERR_DRIVERFIRST + 2
  *      The parameter block couldn't be	downloaded to the device.
- *  DIERR_DRIVERFIRST + 3   
+ *  DIERR_DRIVERFIRST + 3
  *      PID initialization failed.
- *  DIERR_DRIVERFIRST + 4   
+ *  DIERR_DRIVERFIRST + 4
  *      The provided values couldn't be scaled.
  */
 

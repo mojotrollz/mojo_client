@@ -53,7 +53,7 @@ DefReturnResult DefScriptPackage::func_reloaddef(CmdSet& Set){
     }
     if(ppos==std::string::npos || ppos < slashpos) // even if there was neither / nor . they will be equal
         fn+=".def";
-    
+
     result=LoadScriptFromFile(fn);
 
     r.ret=fn;
@@ -127,7 +127,7 @@ DefReturnResult DefScriptPackage::func_set(CmdSet& Set)
 
     variables.Set(vname,vval);
     r.ret=vval;
-    
+
     DefScript *sc = GetScript(Set.myname);
     if(sc && sc->GetDebug())
         printf("VAR: %s = '%s'\n",vname.c_str(),vval.c_str());
@@ -523,7 +523,7 @@ DefReturnResult DefScriptPackage::func_strfind(CmdSet& Set)
     unsigned int pos = Set.defaultarg.find(Set.arg[0],(unsigned int)toNumber(Set.arg[1]));
     if(pos == std::string::npos)
         return "";
-    return toString((uint64)pos);    
+    return toString((uint64)pos);
 }
 
 DefReturnResult DefScriptPackage::func_scriptexists(CmdSet& Set)

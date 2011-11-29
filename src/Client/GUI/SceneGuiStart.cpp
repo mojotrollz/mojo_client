@@ -6,7 +6,7 @@
 
 SceneGuiStart::SceneGuiStart(PseuGUI *gui) : Scene(gui)
 {
-    
+
     irrlogo = guienv->addImage(driver->getTexture("data/misc/irrlichtlogo.png"), core::position2d<s32>(5,5));
     const char *fn;
     switch(gui->_driverType)

@@ -7,8 +7,8 @@
 /* Compiler settings for gameux.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext, robust
-    error checks: allocation ref bounds_check enum stub_data 
-    VC __declspec() decoration level: 
+    error checks: allocation ref bounds_check enum stub_data
+    VC __declspec() decoration level:
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -46,7 +46,7 @@
 #pragma once
 #endif
 
-/* Forward Declarations */ 
+/* Forward Declarations */
 
 #ifndef __IGameExplorer_FWD_DEFINED__
 #define __IGameExplorer_FWD_DEFINED__
@@ -73,18 +73,18 @@ typedef struct GameExplorer GameExplorer;
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 
 /* interface __MIDL_itf_gameux_0000_0000 */
-/* [local] */ 
+/* [local] */
 
 #define ID_GDF_XML __GDF_XML
 #define ID_GDF_THUMBNAIL __GDF_THUMBNAIL
 #define ID_ICON_ICO __ICON_ICO
 #define ID_GDF_XML_STR L"__GDF_XML"
 #define ID_GDF_THUMBNAIL_STR L"__GDF_THUMBNAIL"
-typedef /* [v1_enum] */ 
+typedef /* [v1_enum] */
 enum GAME_INSTALL_SCOPE
     {	GIS_NOT_INSTALLED	= 1,
 	GIS_CURRENT_USER	= 2,
@@ -100,73 +100,73 @@ extern RPC_IF_HANDLE __MIDL_itf_gameux_0000_0000_v0_0_s_ifspec;
 #define __IGameExplorer_INTERFACE_DEFINED__
 
 /* interface IGameExplorer */
-/* [unique][helpstring][uuid][object] */ 
+/* [unique][helpstring][uuid][object] */
 
 
 EXTERN_C const IID IID_IGameExplorer;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
-    
+
     MIDL_INTERFACE("E7B2FB72-D728-49B3-A5F2-18EBF5F1349E")
     IGameExplorer : public IUnknown
     {
     public:
-        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE AddGame( 
+        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE AddGame(
             /* [in] */ __RPC__in BSTR bstrGDFBinaryPath,
             /* [in] */ __RPC__in BSTR bstrGameInstallDirectory,
             /* [in] */ GAME_INSTALL_SCOPE installScope,
             /* [out][in] */ __RPC__inout GUID *pguidInstanceID) = 0;
-        
-        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE RemoveGame( 
+
+        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE RemoveGame(
             /* [in] */ GUID guidInstanceID) = 0;
-        
-        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE UpdateGame( 
+
+        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE UpdateGame(
             /* [in] */ GUID guidInstanceID) = 0;
-        
-        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE VerifyAccess( 
+
+        virtual /* [helpstring] */ HRESULT STDMETHODCALLTYPE VerifyAccess(
             /* [in] */ __RPC__in BSTR bstrGDFBinaryPath,
             /* [out] */ __RPC__out BOOL *pfHasAccess) = 0;
-        
+
     };
-    
+
 #else 	/* C style interface */
 
     typedef struct IGameExplorerVtbl
     {
         BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )(
             IGameExplorer * This,
             /* [in] */ __RPC__in REFIID riid,
-            /* [iid_is][out] */ 
+            /* [iid_is][out] */
             __RPC__deref_out  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+
+        ULONG ( STDMETHODCALLTYPE *AddRef )(
             IGameExplorer * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
+
+        ULONG ( STDMETHODCALLTYPE *Release )(
             IGameExplorer * This);
-        
-        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddGame )( 
+
+        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *AddGame )(
             IGameExplorer * This,
             /* [in] */ __RPC__in BSTR bstrGDFBinaryPath,
             /* [in] */ __RPC__in BSTR bstrGameInstallDirectory,
             /* [in] */ GAME_INSTALL_SCOPE installScope,
             /* [out][in] */ __RPC__inout GUID *pguidInstanceID);
-        
-        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveGame )( 
+
+        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *RemoveGame )(
             IGameExplorer * This,
             /* [in] */ GUID guidInstanceID);
-        
-        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *UpdateGame )( 
+
+        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *UpdateGame )(
             IGameExplorer * This,
             /* [in] */ GUID guidInstanceID);
-        
-        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *VerifyAccess )( 
+
+        /* [helpstring] */ HRESULT ( STDMETHODCALLTYPE *VerifyAccess )(
             IGameExplorer * This,
             /* [in] */ __RPC__in BSTR bstrGDFBinaryPath,
             /* [out] */ __RPC__out BOOL *pfHasAccess);
-        
+
         END_INTERFACE
     } IGameExplorerVtbl;
 
@@ -175,32 +175,32 @@ EXTERN_C const IID IID_IGameExplorer;
         CONST_VTBL struct IGameExplorerVtbl *lpVtbl;
     };
 
-    
+
 
 #ifdef COBJMACROS
 
 
 #define IGameExplorer_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) )
 
 #define IGameExplorer_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
+    ( (This)->lpVtbl -> AddRef(This) )
 
 #define IGameExplorer_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
+    ( (This)->lpVtbl -> Release(This) )
 
 
 #define IGameExplorer_AddGame(This,bstrGDFBinaryPath,bstrGameInstallDirectory,installScope,pguidInstanceID)	\
-    ( (This)->lpVtbl -> AddGame(This,bstrGDFBinaryPath,bstrGameInstallDirectory,installScope,pguidInstanceID) ) 
+    ( (This)->lpVtbl -> AddGame(This,bstrGDFBinaryPath,bstrGameInstallDirectory,installScope,pguidInstanceID) )
 
 #define IGameExplorer_RemoveGame(This,guidInstanceID)	\
-    ( (This)->lpVtbl -> RemoveGame(This,guidInstanceID) ) 
+    ( (This)->lpVtbl -> RemoveGame(This,guidInstanceID) )
 
 #define IGameExplorer_UpdateGame(This,guidInstanceID)	\
-    ( (This)->lpVtbl -> UpdateGame(This,guidInstanceID) ) 
+    ( (This)->lpVtbl -> UpdateGame(This,guidInstanceID) )
 
 #define IGameExplorer_VerifyAccess(This,bstrGDFBinaryPath,pfHasAccess)	\
-    ( (This)->lpVtbl -> VerifyAccess(This,bstrGDFBinaryPath,pfHasAccess) ) 
+    ( (This)->lpVtbl -> VerifyAccess(This,bstrGDFBinaryPath,pfHasAccess) )
 
 #endif /* COBJMACROS */
 
@@ -218,7 +218,7 @@ EXTERN_C const IID IID_IGameExplorer;
 #define __gameuxLib_LIBRARY_DEFINED__
 
 /* library gameuxLib */
-/* [helpstring][version][uuid] */ 
+/* [helpstring][version][uuid] */
 
 
 EXTERN_C const IID LIBID_gameuxLib;
@@ -234,10 +234,10 @@ GameExplorer;
 
 /* Additional Prototypes for ALL interfaces */
 
-unsigned long             __RPC_USER  BSTR_UserSize(     unsigned long *, unsigned long            , BSTR * ); 
-unsigned char * __RPC_USER  BSTR_UserMarshal(  unsigned long *, unsigned char *, BSTR * ); 
-unsigned char * __RPC_USER  BSTR_UserUnmarshal(unsigned long *, unsigned char *, BSTR * ); 
-void                      __RPC_USER  BSTR_UserFree(     unsigned long *, BSTR * ); 
+unsigned long             __RPC_USER  BSTR_UserSize(     unsigned long *, unsigned long            , BSTR * );
+unsigned char * __RPC_USER  BSTR_UserMarshal(  unsigned long *, unsigned char *, BSTR * );
+unsigned char * __RPC_USER  BSTR_UserUnmarshal(unsigned long *, unsigned char *, BSTR * );
+void                      __RPC_USER  BSTR_UserFree(     unsigned long *, BSTR * );
 
 /* end of Additional Prototypes */
 

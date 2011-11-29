@@ -75,7 +75,7 @@ void DrawObjMgr::Update(void)
         uint64 guid = _del.next();
         if(_storage.find(guid) != _storage.end())
         {
-            
+
             DrawObject *o = _storage[guid];
             DEBUG(logdebug("DrawObjMgr: removing DrawObj 0x%X guid "I64FMT" from main storage",o,guid));
             _storage.erase(guid);

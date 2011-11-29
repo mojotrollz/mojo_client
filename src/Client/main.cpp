@@ -38,7 +38,7 @@ void _OnSignal(int s)
         case SIGINT:
         case SIGQUIT:
         case SIGTERM:
-            quitproc();            
+            quitproc();
             break;
         case SIGABRT:
         #ifndef _DEBUG
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
         logcustom(0,GREEN,"Platform: %s",PLATFORM_NAME);
         logcustom(0,GREEN,"Compiler: %s ("COMPILER_VERSION_OUT")",COMPILER_NAME,COMPILER_VERSION);
         logcustom(0,GREEN,"Compiled: %s  %s",__DATE__,__TIME__);
-        
+
         _HookSignals();
         MemoryDataHolder::Init();
 
@@ -116,10 +116,10 @@ int main(int argc, char* argv[])
         raise(SIGABRT);  // this way to terminate is not nice but the only way to quit the CLI thread
         raise(SIGQUIT);
         return 0;
-	} 
+	}
     catch (...)
     {
-        printf("ERROR: Unhandled exception in main thread!\n"); 
+        printf("ERROR: Unhandled exception in main thread!\n");
         raise(SIGABRT);
         return 1;
     }

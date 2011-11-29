@@ -66,7 +66,7 @@ bool DBCFile::openmem(ByteBuffer bb)
 	}
     uint32 hdr;
     bb >> hdr;
-    
+
     if(memcmp(&hdr,"WDBC",4)) // check if its a valid dbc file
     {
         printf("not a valid WDB File??\n");

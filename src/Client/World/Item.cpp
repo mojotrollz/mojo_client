@@ -109,7 +109,7 @@ void WorldSession::_HandleItemQuerySingleResponseOpcode(WorldPacket& recvPacket)
 		recvPacket >> proto->socketBonus;
 		recvPacket >> proto->GemProperties;
 		recvPacket >> proto->RequiredDisenchantSkill;
-		recvPacket >> proto->ArmorDamageModifier; 
+		recvPacket >> proto->ArmorDamageModifier;
         recvPacket >> proto->Duration;
         recvPacket >> proto->ItemLimitCategory;
         recvPacket >> proto->HolidayId;

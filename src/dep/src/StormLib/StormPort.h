@@ -35,9 +35,9 @@
   #define _CRT_NON_CONFORMING_SWPRINTFS
   #endif
 
-  #include <assert.h>      
-  #include <stdio.h>      
-  #include <windows.h>      
+  #include <assert.h>
+  #include <stdio.h>
+  #include <windows.h>
   #define PLATFORM_LITTLE_ENDIAN  1
 
   #ifdef WIN64
@@ -50,12 +50,12 @@
 
 #endif
 
-// Defines for Mac Carbon 
+// Defines for Mac Carbon
 #if !defined(PLATFORM_DEFINED) && defined(__APPLE__)  // Mac Carbon API
 
   // Macintosh using Carbon
   #include <Carbon/Carbon.h> // Mac OS X
-  
+
   #define    PKEXPORT
   #define    __SYS_ZLIB
   #define    __SYS_BZLIB
@@ -66,13 +66,13 @@
   #else
     #define PLATFORM_LITTLE_ENDIAN  1       // Apple is now making Macs with Intel CPUs
   #endif
-  
+
   #ifdef __LP64__
     #define PLATFORM_64BIT
   #else
     #define PLATFORM_32BIT
   #endif
-  
+
   #define PLATFORM_DEFINED                  // The platform is known now
 
 #endif
@@ -128,11 +128,11 @@
   typedef LONG         * PLONG;
   typedef DWORD        * LPDWORD;
   typedef BYTE         * LPBYTE;
-  
+
   typedef struct _FILETIME
-  { 
-      DWORD dwLowDateTime; 
-      DWORD dwHighDateTime; 
+  {
+      DWORD dwLowDateTime;
+      DWORD dwHighDateTime;
   }
   FILETIME, *PFILETIME;
 
@@ -154,7 +154,7 @@
     LONGLONG QuadPart;
   }
   LARGE_INTEGER, *PLARGE_INTEGER;
-  
+
   // Some Windows-specific defines
   #ifndef MAX_PATH
     #define MAX_PATH 1024
@@ -169,21 +169,21 @@
   #endif
 
   #define VOID     void
-  #define WINAPI 
+  #define WINAPI
 
   #define FILE_BEGIN    SEEK_SET
   #define FILE_CURRENT  SEEK_CUR
   #define FILE_END      SEEK_END
-  
+
   #define CREATE_NEW    1
   #define CREATE_ALWAYS 2
   #define OPEN_EXISTING 3
   #define OPEN_ALWAYS   4
-  
+
   #define FILE_SHARE_READ 0x00000001L
   #define GENERIC_WRITE   0x40000000
   #define GENERIC_READ    0x80000000
-  
+
   #define ERROR_SUCCESS                     0
   #define ERROR_INVALID_FUNCTION            1
   #define ERROR_FILE_NOT_FOUND              2
@@ -204,14 +204,14 @@
   #define ERROR_PARAMETER_QUOTA_EXCEEDED 1283
   #define ERROR_FILE_CORRUPT             1392
   #define ERROR_INSUFFICIENT_BUFFER      4999
-  
+
   #define INVALID_HANDLE_VALUE ((HANDLE) -1)
-  
+
   #define _stricmp strcasecmp
   #define _strnicmp strncasecmp
-  
+
   extern int globalerr;
-  
+
   void  SetLastError(int err);
   int   GetLastError();
   char *ErrString(int err);

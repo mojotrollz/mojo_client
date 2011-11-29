@@ -280,7 +280,7 @@ bool DefScriptPackage::LoadScriptFromFile(std::string fn){
         //    line.erase(line.length()-1);
 		if(line.empty())
 			continue;
-		if(line.at(0)=='/' && line.at(1)=='/') 
+		if(line.at(0)=='/' && line.at(1)=='/')
 			continue; // line is comment, proceed with next line
 
         if(line_strip)
@@ -315,7 +315,7 @@ bool DefScriptPackage::LoadScriptFromFile(std::string fn){
             commented = false;
             continue;
         }
-        
+
         // commented lines will not be loaded nor have any #-tags evaluated (except the one above!)
         if(commented)
             continue;
@@ -582,7 +582,7 @@ DefReturnResult DefScriptPackage::RunScript(std::string name, CmdSet *pSet,std::
     std::string line;
 
     for(unsigned int i=0;i<sc->GetLines();i++)
-    {   
+    {
         line=sc->GetLine(i);
         if(line.empty() || line[0] == '#') // skip markers and preload statements if not removed before
             continue;
@@ -765,8 +765,8 @@ void DefScriptPackage::SplitLine(CmdSet& Set,std::string line)
                 curParam++;
             }
             tempLine.clear();
-            
-        } 
+
+        }
         else if( line[i]==' ' && !bracketsOpen)
         {
             if(!cmdDefined){
@@ -777,8 +777,8 @@ void DefScriptPackage::SplitLine(CmdSet& Set,std::string line)
             }
 
             Set.defaultarg=line.substr(i+1,line.length()-i);
-            break;            
-            
+            break;
+
         }
         else if(line[i]=='\\')
         {
@@ -836,7 +836,7 @@ std::string DefScriptPackage::RemoveBracketsFromString(std::string t)
                     t.erase(ob,blen);
                     t.insert(ob,retStr);
                     i=ob-1;
-                    
+
                 }
             isVar=false;
             }
@@ -882,7 +882,7 @@ DefXChgResult DefScriptPackage::ReplaceVars(std::string str, CmdSet *pSet, unsig
         bracketsOpen=0, // amount of brackets opened
         bLen=0; // the lenth of the string in brackets, e.g. ${abc} == 3
 
-    unsigned char 
+    unsigned char
         nextVar=DEFSCRIPT_NONE; // '$' or '?'
     bool
         hasChanged=false, // additional helper. once true, xchg.result will be true later also
@@ -1071,7 +1071,7 @@ std::string DefScriptPackage::_NormalizeVarName(std::string vn, std::string sn)
             break;
     }
 
-    if( (!global) && (vn[0]!='@') )  
+    if( (!global) && (vn[0]!='@') )
         vn=sn+"::"+vn;
 
     return vn;
@@ -1099,7 +1099,7 @@ DefReturnResult DefScriptPackage::Interpret(CmdSet& Set)
         {
             if(_functable[i].escape) // if we are going to use a C++ function, unescape the whole set, if supposed to do so.
                 UnescapeSet(Set);    // it will not have any bad side effects, we leave the func within this block!
-            
+
             result=(this->*(_functable[i].func))(Set);
             if(_functable[i].escape)
                 result.ret = EscapeString(result.ret); // and since we are returning a string into the engine, escape it again, if set.
@@ -1118,7 +1118,7 @@ DefReturnResult DefScriptPackage::Interpret(CmdSet& Set)
 	result=RunScript(Set.cmd, &Set);
     if((!result.ok) /*&& Script[Set.cmd]->GetDebug()*/)
         PRINT_ERROR("Could not execute script command '%s'",Set.cmd.c_str());
-    
+
 
     return result;
 }
@@ -1148,7 +1148,7 @@ std::string DefScriptPackage::SecureString(std::string s)
     return out;
 }
 
-// escapes whole string, which can no longer be parsed & interpreted 
+// escapes whole string, which can no longer be parsed & interpreted
 std::string DefScriptPackage::EscapeString(std::string s)
 {
     std::string out;

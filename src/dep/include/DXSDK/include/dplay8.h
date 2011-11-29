@@ -43,11 +43,11 @@ DEFINE_GUID(CLSID_DirectPlay8Peer,
 // CLSIDs added for DirectX 9
 
 // {FC47060E-6153-4b34-B975-8E4121EB7F3C}
-DEFINE_GUID(CLSID_DirectPlay8ThreadPool, 
+DEFINE_GUID(CLSID_DirectPlay8ThreadPool,
 0xfc47060e, 0x6153, 0x4b34, 0xb9, 0x75, 0x8e, 0x41, 0x21, 0xeb, 0x7f, 0x3c);
 
 // {E4C1D9A2-CBF7-48bd-9A69-34A55E0D8941}
-DEFINE_GUID(CLSID_DirectPlay8NATResolver, 
+DEFINE_GUID(CLSID_DirectPlay8NATResolver,
 0xe4c1d9a2, 0xcbf7, 0x48bd, 0x9a, 0x69, 0x34, 0xa5, 0x5e, 0xd, 0x89, 0x41);
 
 /****************************************************************************
@@ -75,11 +75,11 @@ DEFINE_GUID(IID_IDirectPlay8Peer,
 // IIDs added for DirectX 9
 
 // {0D22EE73-4A46-4a0d-89B2-045B4D666425}
-DEFINE_GUID(IID_IDirectPlay8ThreadPool, 
+DEFINE_GUID(IID_IDirectPlay8ThreadPool,
 0xd22ee73, 0x4a46, 0x4a0d, 0x89, 0xb2, 0x4, 0x5b, 0x4d, 0x66, 0x64, 0x25);
 
 // {A9E213F2-9A60-486f-BF3B-53408B6D1CBB}
-DEFINE_GUID(IID_IDirectPlay8NATResolver, 
+DEFINE_GUID(IID_IDirectPlay8NATResolver,
 0xa9e213f2, 0x9a60, 0x486f, 0xbf, 0x3b, 0x53, 0x40, 0x8b, 0x6d, 0x1c, 0xbb);
 
 /****************************************************************************
@@ -113,7 +113,7 @@ DEFINE_GUID(CLSID_DP8SP_TCPIP,
 
 
 // {995513AF-3027-4b9a-956E-C772B3F78006}
-DEFINE_GUID(CLSID_DP8SP_BLUETOOTH, 
+DEFINE_GUID(CLSID_DP8SP_BLUETOOTH,
 0x995513af, 0x3027, 0x4b9a, 0x95, 0x6e, 0xc7, 0x72, 0xb3, 0xf7, 0x80, 0x6);
 
 
@@ -932,11 +932,11 @@ typedef	struct	_DPNMSG_NAT_RESOLVER_QUERY
 
 
 /*
- * This function is no longer supported.  It is recommended that CoCreateInstance be used to create 
+ * This function is no longer supported.  It is recommended that CoCreateInstance be used to create
  * DirectPlay8 objects.
  *
  * extern HRESULT WINAPI DirectPlay8Create( const CLSID * pcIID, void **ppvInterface, IUnknown *pUnknown );
- * 
+ *
  */
 
 

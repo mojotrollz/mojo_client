@@ -2,7 +2,7 @@
    stand-alone mpaudec library.  Based on mpegaudio.h from libavcodec. */
 
 /* max frame size, in samples */
-#define MPA_FRAME_SIZE 1152 
+#define MPA_FRAME_SIZE 1152
 
 /* max compressed frame size */
 #define MPA_MAX_CODED_FRAME_SIZE 1792

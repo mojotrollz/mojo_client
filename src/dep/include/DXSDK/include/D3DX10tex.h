@@ -27,14 +27,14 @@
 //      from the source image.
 //  D3DX10_FILTER_LINEAR
 //      Each destination pixel is computed by linearly interpolating between
-//      the nearest pixels in the source image.  This filter works best 
+//      the nearest pixels in the source image.  This filter works best
 //      when the scale on each axis is less than 2.
 //  D3DX10_FILTER_TRIANGLE
 //      Every pixel in the source image contributes equally to the
 //      destination image.  This is the slowest of all the filters.
 //  D3DX10_FILTER_BOX
-//      Each pixel is computed by averaging a 2x2(x2) box pixels from 
-//      the source image. Only works when the dimensions of the 
+//      Each pixel is computed by averaging a 2x2(x2) box pixels from
+//      the source image. Only works when the dimensions of the
 //      destination are half those of the source. (as with mip maps)
 //
 // And can be OR'd with any of these optional flags:
@@ -98,7 +98,7 @@ typedef enum D3DX10_FILTER_FLAG
 //  D3DX10_NORMALMAP_MIRROR
 //      Same as specifying D3DX10_NORMALMAP_MIRROR_U | D3DX10_NORMALMAP_MIRROR_V
 //  D3DX10_NORMALMAP_INVERTSIGN
-//      Inverts the direction of each normal 
+//      Inverts the direction of each normal
 //  D3DX10_NORMALMAP_COMPUTE_OCCLUSION
 //      Compute the per pixel Occlusion term and encodes it into the alpha.
 //      An Alpha of 1 means that the pixel is not obscured in anyway, and
@@ -130,7 +130,7 @@ typedef enum D3DX10_NORMALMAP_FLAG
 // D3DX10_CHANNEL_ALPHA
 //     Indicates the alpha channel should be used
 // D3DX10_CHANNEL_LUMINANCE
-//     Indicates the luminaces of the red green and blue channels should be 
+//     Indicates the luminaces of the red green and blue channels should be
 //     used.
 //
 //----------------------------------------------------------------------------
@@ -171,7 +171,7 @@ typedef enum _D3DX10_IMAGE_FILE_FORMAT
 // ---------------
 // This structure is used to return a rough description of what the
 // the original contents of an image file looked like.
-// 
+//
 //  Width
 //      Width of original image in pixels
 //  Height
@@ -222,10 +222,10 @@ extern "C" {
 //----------------------------------------------------------------------------
 // D3DX10_IMAGE_LOAD_INFO:
 // ---------------
-// This structure can be optionally passed in to texture loader APIs to 
+// This structure can be optionally passed in to texture loader APIs to
 // control how textures get loaded. Pass in D3DX10_DEFAULT for any of these
 // to have D3DX automatically pick defaults based on the source file.
-// 
+//
 //  Width
 //      Rescale texture to Width texels wide
 //  Height
@@ -249,10 +249,10 @@ extern "C" {
 //  Filter
 //      Filter the texture using the specified filter (only when resampling)
 //  MipFilter
-//      Filter the texture mip levels using the specified filter (only if 
+//      Filter the texture mip levels using the specified filter (only if
 //      generating mips)
 //  pSrcInfo
-//      (optional) pointer to a D3DX10_IMAGE_INFO structure that will get 
+//      (optional) pointer to a D3DX10_IMAGE_INFO structure that will get
 //      populated with source image information
 //
 //----------------------------------------------------------------------------
@@ -274,7 +274,7 @@ typedef struct _D3DX10_IMAGE_LOAD_INFO
     UINT                       Filter;
     UINT                       MipFilter;
     D3DX10_IMAGE_INFO*         pSrcInfo;
-    
+
 #ifdef __cplusplus
     _D3DX10_IMAGE_LOAD_INFO()
     {
@@ -291,7 +291,7 @@ typedef struct _D3DX10_IMAGE_LOAD_INFO
         Filter = D3DX10_DEFAULT;
         MipFilter = D3DX10_DEFAULT;
         pSrcInfo = NULL;
-    }  
+    }
 #endif
 
 } D3DX10_IMAGE_LOAD_INFO;
@@ -338,7 +338,7 @@ HRESULT WINAPI D3DX10CreateAsyncShaderResourceViewProcessor(ID3D10Device *pDevic
 //  pPump
 //      Optional pointer to a thread pump object to use.
 //  pSrcInfo
-//      Pointer to a D3DX10_IMAGE_INFO structure to be filled in with the 
+//      Pointer to a D3DX10_IMAGE_INFO structure to be filled in with the
 //      description of the data in the source image file.
 //
 //----------------------------------------------------------------------------
@@ -505,8 +505,8 @@ HRESULT WINAPI
         ID3D10Device*            pDevice,
         HMODULE                  hSrcModule,
         LPCSTR                   pSrcResource,
-        D3DX10_IMAGE_LOAD_INFO   *pLoadInfo,  
-        ID3DX10ThreadPump*       pPump,   
+        D3DX10_IMAGE_LOAD_INFO   *pLoadInfo,
+        ID3DX10ThreadPump*       pPump,
         ID3D10Resource**         ppTexture);
 
 HRESULT WINAPI
@@ -533,7 +533,7 @@ HRESULT WINAPI
         LPCVOID                   pSrcData,
         SIZE_T                    SrcDataSize,
         D3DX10_IMAGE_LOAD_INFO    *pLoadInfo,
-        ID3DX10ThreadPump*        pPump,        
+        ID3DX10ThreadPump*        pPump,
         ID3D10ShaderResourceView** ppShaderResourceView);
 
 HRESULT WINAPI
@@ -541,8 +541,8 @@ HRESULT WINAPI
         ID3D10Device*             pDevice,
         LPCVOID                   pSrcData,
         SIZE_T                    SrcDataSize,
-        D3DX10_IMAGE_LOAD_INFO    *pLoadInfo,    
-        ID3DX10ThreadPump*        pPump,    
+        D3DX10_IMAGE_LOAD_INFO    *pLoadInfo,
+        ID3DX10ThreadPump*        pPump,
         ID3D10Resource**          ppTexture);
 
 
@@ -610,7 +610,7 @@ HRESULT WINAPI
 //
 // Parameters
 //  pSrcTexture
-//      Pointer to the source heightmap texture 
+//      Pointer to the source heightmap texture
 //  Flags
 //      D3DX10_NORMALMAP flags
 //  Channel

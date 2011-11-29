@@ -69,10 +69,10 @@ void DrawObject::_Init(void)
             MemoryDataHolder::MakeModelFilename(buf,(cmd ? cmd->GetString(modelid,"mpqfilename") : ""));
             modelfilename = buf;
             logdebug("Unit %s",cmd->GetString(modelid,"mpqfilename"));
-//             if (cdi && strcmp(cdi->GetString(displayid,"name1"), "") != 0) 
+//             if (cdi && strcmp(cdi->GetString(displayid,"name1"), "") != 0)
 //                 texturename = std::string("data/texture/") + cdi->GetString(displayid,"name1");
             opacity = cdi && displayid ? cdi->GetUint32(displayid,"opacity") : 255;
-        } 
+        }
         else if (_obj->IsCorpse())
         {
             uint8 race = (_obj->GetUInt32Value(CORPSE_FIELD_BYTES_1) >> 8)&0xFF;
@@ -92,12 +92,12 @@ void DrawObject::_Init(void)
             modelfilename = buf;
             logdebug("Corpse %s",buf);
 
-        
+
         }
         else if (_obj->IsGameObject())
         {
             GameobjectTemplate* gotempl = _instance->GetWSession()->objmgr.GetGOTemplate(_obj->GetEntry());
-            while (!gotempl) 
+            while (!gotempl)
             {
                 ZThread::Thread::sleep(10);
                 gotempl = _instance->GetWSession()->objmgr.GetGOTemplate(_obj->GetEntry());
@@ -127,7 +127,7 @@ void DrawObject::_Init(void)
                         texturename = buf;
                     }
                 }
-                
+
                 DEBUG(logdebug("GAMEOBJECT: %u - %u", _obj->GetEntry(), displayid));
             } else {
                 DEBUG(logdebug("GAMEOBJECT UNKNOWN: %u", _obj->GetEntry()));
@@ -146,7 +146,7 @@ void DrawObject::_Init(void)
         {
             node = _smgr->addAnimatedMeshSceneNode(mesh);
             scene::IAnimatedMeshSceneNode* aninode = (scene::IAnimatedMeshSceneNode*)node;
-            
+
             aninode->setAnimationSpeed(1000);
             aninode->setM2Animation(0);
             //video::ITexture *tex = _device->getVideoDriver()->getTexture("data/misc/square.jpg");
@@ -163,7 +163,7 @@ void DrawObject::_Init(void)
             if (!texturefile)
                 {
                     logerror("DrawObject: texture file not found: %s", texturename.c_str());
-                }   
+                }
 
             node->setMaterialTexture(0, _device->getVideoDriver()->getTexture(texturefile));
         }

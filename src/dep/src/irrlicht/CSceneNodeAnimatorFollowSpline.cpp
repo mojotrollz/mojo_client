@@ -120,7 +120,7 @@ void CSceneNodeAnimatorFollowSpline::deserializeAttributes(io::IAttributes* in, 
 
 ISceneNodeAnimator* CSceneNodeAnimatorFollowSpline::createClone(ISceneNode* node, ISceneManager* newManager)
 {
-	CSceneNodeAnimatorFollowSpline * newAnimator = 
+	CSceneNodeAnimatorFollowSpline * newAnimator =
 		new CSceneNodeAnimatorFollowSpline(StartTime, Points, Speed, Tightness);
 
 	return newAnimator;

@@ -35,9 +35,9 @@
 //   you KNOW will work.  (ie. have compiled before without this option.)
 //   Shaders are always validated by D3D before they are set to the device.
 //
-// D3DXSHADER_SKIPOPTIMIZATION 
+// D3DXSHADER_SKIPOPTIMIZATION
 //   Instructs the compiler to skip optimization steps during code generation.
-//   Unless you are trying to isolate a problem in your code using this option 
+//   Unless you are trying to isolate a problem in your code using this option
 //   is not recommended.
 //
 // D3DXSHADER_PACKMATRIX_ROWMAJOR
@@ -45,8 +45,8 @@
 //   on input and output from the shader.
 //
 // D3DXSHADER_PACKMATRIX_COLUMNMAJOR
-//   Unless explicitly specified, matrices will be packed in column-major 
-//   order on input and output from the shader.  This is generally more 
+//   Unless explicitly specified, matrices will be packed in column-major
+//   order on input and output from the shader.  This is generally more
 //   efficient, since it allows vector-matrix multiplication to be performed
 //   using a series of dot-products.
 //
@@ -56,16 +56,16 @@
 //
 // D3DXSHADER_FORCE_VS_SOFTWARE_NOOPT
 //   Force compiler to compile against the next highest available software
-//   target for vertex shaders.  This flag also turns optimizations off, 
-//   and debugging on.  
+//   target for vertex shaders.  This flag also turns optimizations off,
+//   and debugging on.
 //
 // D3DXSHADER_FORCE_PS_SOFTWARE_NOOPT
 //   Force compiler to compile against the next highest available software
-//   target for pixel shaders.  This flag also turns optimizations off, 
+//   target for pixel shaders.  This flag also turns optimizations off,
 //   and debugging on.
 //
 // D3DXSHADER_NO_PRESHADER
-//   Disables Preshaders. Using this flag will cause the compiler to not 
+//   Disables Preshaders. Using this flag will cause the compiler to not
 //   pull out static expression for evaluation on the host cpu
 //
 // D3DXSHADER_AVOID_FLOW_CONTROL
@@ -258,7 +258,7 @@ typedef interface ID3DXConstantTable ID3DXConstantTable;
 typedef interface ID3DXConstantTable *LPD3DXCONSTANTTABLE;
 
 // {AB3C758F-093E-4356-B762-4DB18F1B3A01}
-DEFINE_GUID(IID_ID3DXConstantTable, 
+DEFINE_GUID(IID_ID3DXConstantTable,
 0xab3c758f, 0x93e, 0x4356, 0xb7, 0x62, 0x4d, 0xb1, 0x8f, 0x1b, 0x3a, 0x1);
 
 
@@ -314,7 +314,7 @@ typedef interface ID3DXTextureShader ID3DXTextureShader;
 typedef interface ID3DXTextureShader *LPD3DXTEXTURESHADER;
 
 // {3E3D67F8-AA7A-405d-A857-BA01D4758426}
-DEFINE_GUID(IID_ID3DXTextureShader, 
+DEFINE_GUID(IID_ID3DXTextureShader,
 0x3e3d67f8, 0xaa7a, 0x405d, 0xa8, 0x57, 0xba, 0x1, 0xd4, 0x75, 0x84, 0x26);
 
 #undef INTERFACE
@@ -369,7 +369,7 @@ typedef interface ID3DXFragmentLinker ID3DXFragmentLinker;
 typedef interface ID3DXFragmentLinker *LPD3DXFRAGMENTLINKER;
 
 // {1A2C0CC2-E5B6-4ebc-9E8D-390E057811B6}
-DEFINE_GUID(IID_ID3DXFragmentLinker, 
+DEFINE_GUID(IID_ID3DXFragmentLinker,
 0x1a2c0cc2, 0xe5b6, 0x4ebc, 0x9e, 0x8d, 0x39, 0xe, 0x5, 0x78, 0x11, 0xb6);
 
 #undef INTERFACE
@@ -584,7 +584,7 @@ HRESULT WINAPI
 //      Name of the entrypoint function where execution should begin.
 //  pProfile
 //      Instruction set to be used when generating code.  Currently supported
-//      profiles are "vs_1_1", "vs_2_0", "vs_2_a", "vs_2_sw", "ps_1_1", 
+//      profiles are "vs_1_1", "vs_2_0", "vs_2_a", "vs_2_sw", "ps_1_1",
 //      "ps_1_2", "ps_1_3", "ps_1_4", "ps_2_0", "ps_2_a", "ps_2_sw", "tx_1_0"
 //  Flags
 //      See D3DXSHADER_xxx flags.
@@ -701,9 +701,9 @@ HRESULT WINAPI
 
 HRESULT WINAPI
     D3DXDisassembleShader(
-        CONST DWORD*                    pShader, 
-        BOOL                            EnableColorCode, 
-        LPCSTR                          pComments, 
+        CONST DWORD*                    pShader,
+        BOOL                            EnableColorCode,
+        LPCSTR                          pComments,
         LPD3DXBUFFER*                   ppDisassembly);
 
 
@@ -771,7 +771,7 @@ UINT WINAPI
 //----------------------------------------------------------------------------
 // D3DXGetShaderVersion:
 // -----------------------
-// Returns the shader version of a given shader.  Returns zero if the shader 
+// Returns the shader version of a given shader.  Returns zero if the shader
 // function is NULL.
 //
 // Parameters:
@@ -869,13 +869,13 @@ HRESULT WINAPI
 //  pFunction
 //      Pointer to the function DWORD stream
 //  ppTextureShader
-//      Returns a ID3DXTextureShader object which can be used to procedurally 
+//      Returns a ID3DXTextureShader object which can be used to procedurally
 //      fill the contents of a texture using the D3DXFillTextureTX functions.
 //----------------------------------------------------------------------------
 
 HRESULT WINAPI
     D3DXCreateTextureShader(
-        CONST DWORD*                    pFunction, 
+        CONST DWORD*                    pFunction,
         LPD3DXTEXTURESHADER*            ppTextureShader);
 
 
@@ -982,7 +982,7 @@ HRESULT WINAPI
 //----------------------------------------------------------------------------
 // D3DXCreateFragmentLinker:
 // -------------------------
-// Creates a fragment linker with a given cache size.  The interface returned 
+// Creates a fragment linker with a given cache size.  The interface returned
 // can be used to link together shader fragments.  (both HLSL & ASM fragements)
 //
 // Parameters:
@@ -1036,15 +1036,15 @@ HRESULT WINAPI
 //      these are the same messages you will see in your debug output.
 //----------------------------------------------------------------------------
 
-HRESULT WINAPI 
+HRESULT WINAPI
     D3DXPreprocessShaderFromFileA(
         LPCSTR                       pSrcFile,
         CONST D3DXMACRO*             pDefines,
         LPD3DXINCLUDE                pInclude,
         LPD3DXBUFFER*                ppShaderText,
         LPD3DXBUFFER*                ppErrorMsgs);
-                                             
-HRESULT WINAPI 
+
+HRESULT WINAPI
     D3DXPreprocessShaderFromFileW(
         LPCWSTR                      pSrcFile,
         CONST D3DXMACRO*             pDefines,
@@ -1057,8 +1057,8 @@ HRESULT WINAPI
 #else
 #define D3DXPreprocessShaderFromFile D3DXPreprocessShaderFromFileA
 #endif
-                                             
-HRESULT WINAPI 
+
+HRESULT WINAPI
     D3DXPreprocessShaderFromResourceA(
         HMODULE                      hSrcModule,
         LPCSTR                       pSrcResource,
@@ -1067,7 +1067,7 @@ HRESULT WINAPI
         LPD3DXBUFFER*                ppShaderText,
         LPD3DXBUFFER*                ppErrorMsgs);
 
-HRESULT WINAPI 
+HRESULT WINAPI
     D3DXPreprocessShaderFromResourceW(
         HMODULE                      hSrcModule,
         LPCWSTR                      pSrcResource,
@@ -1082,7 +1082,7 @@ HRESULT WINAPI
 #define D3DXPreprocessShaderFromResource D3DXPreprocessShaderFromResourceA
 #endif
 
-HRESULT WINAPI 
+HRESULT WINAPI
     D3DXPreprocessShader(
         LPCSTR                       pSrcData,
         UINT                         SrcDataSize,
@@ -1117,7 +1117,7 @@ typedef struct _D3DXSHADER_CONSTANTTABLE
     DWORD Constants;        // number of constants
     DWORD ConstantInfo;     // D3DXSHADER_CONSTANTINFO[Constants] offset
     DWORD Flags;            // flags shader was compiled with
-    DWORD Target;           // LPCSTR offset 
+    DWORD Target;           // LPCSTR offset
 
 } D3DXSHADER_CONSTANTTABLE, *LPD3DXSHADER_CONSTANTTABLE;
 

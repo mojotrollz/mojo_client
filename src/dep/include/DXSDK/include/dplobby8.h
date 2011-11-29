@@ -23,11 +23,11 @@ extern "C" {
  ****************************************************************************/
 
 // {667955AD-6B3B-43ca-B949-BC69B5BAFF7F}
-DEFINE_GUID(CLSID_DirectPlay8LobbiedApplication, 
+DEFINE_GUID(CLSID_DirectPlay8LobbiedApplication,
 0x667955ad, 0x6b3b, 0x43ca, 0xb9, 0x49, 0xbc, 0x69, 0xb5, 0xba, 0xff, 0x7f);
 
 // {3B2B6775-70B6-45af-8DEA-A209C69559F3}
-DEFINE_GUID(CLSID_DirectPlay8LobbyClient, 
+DEFINE_GUID(CLSID_DirectPlay8LobbyClient,
 0x3b2b6775, 0x70b6, 0x45af, 0x8d, 0xea, 0xa2, 0x9, 0xc6, 0x95, 0x59, 0xf3);
 
 /****************************************************************************
@@ -46,7 +46,7 @@ DEFINE_GUID(IID_IDirectPlay8LobbyClient,
 
 /****************************************************************************
  *
- * DirectPlay8Lobby Interface Pointer 
+ * DirectPlay8Lobby Interface Pointer
  *
  ****************************************************************************/
 
@@ -77,7 +77,7 @@ typedef struct IDirectPlay8LobbyClient		    *PDIRECTPLAY8LOBBYCLIENT;
 //
 #define DPLHANDLE_ALLCONNECTIONS			0xFFFFFFFF
 
-// 
+//
 // The associated game session has suceeded in connecting / hosting
 //
 #define	DPLSESSION_CONNECTED				0x0001
@@ -92,12 +92,12 @@ typedef struct IDirectPlay8LobbyClient		    *PDIRECTPLAY8LOBBYCLIENT;
 #define	DPLSESSION_DISCONNECTED				0x0003
 
 //
-// The associated game session has terminated 
+// The associated game session has terminated
 //
 #define	DPLSESSION_TERMINATED				0x0004
 
-// 
-// The associated game session's host has migrated 
+//
+// The associated game session's host has migrated
 //
 #define DPLSESSION_HOSTMIGRATED				0x0005
 
@@ -120,10 +120,10 @@ typedef struct IDirectPlay8LobbyClient		    *PDIRECTPLAY8LOBBYCLIENT;
 
 //
 // Launch a new instance of the application to connect to
-// 
+//
 #define	DPLCONNECT_LAUNCHNEW				0x0001
 
-// 
+//
 // Launch a new instance of the application if one is not waiting
 //
 #define	DPLCONNECT_LAUNCHNOTFOUND			0x0002
@@ -133,7 +133,7 @@ typedef struct IDirectPlay8LobbyClient		    *PDIRECTPLAY8LOBBYCLIENT;
 //
 #define DPLCONNECTSETTINGS_HOST             0x0001
 
-// 
+//
 // Disable parameter validation
 //
 #define DPLINITIALIZE_DISABLEPARAMVAL		0x0001
@@ -144,14 +144,14 @@ typedef struct IDirectPlay8LobbyClient		    *PDIRECTPLAY8LOBBYCLIENT;
  *
  ****************************************************************************/
 
-// 
+//
 // Information on a registered game
 //
 typedef struct _DPL_APPLICATION_INFO {
 	GUID	guidApplication;            // GUID of the application
 	PWSTR	pwszApplicationName;        // Name of the application
 	DWORD	dwNumRunning;               // # of instances of this application running
-	DWORD	dwNumWaiting;               // # of instances of this application waiting 
+	DWORD	dwNumWaiting;               // # of instances of this application waiting
 	DWORD	dwFlags;                    // Flags
 } DPL_APPLICATION_INFO,  *PDPL_APPLICATION_INFO;
 
@@ -208,7 +208,7 @@ typedef struct  _DPL_PROGRAM_DESC {
  ****************************************************************************/
 
 //
-// A connection was established 
+// A connection was established
 // (DPL_MSGID_CONNECT)
 //
 typedef struct _DPL_MESSAGE_CONNECT
@@ -221,7 +221,7 @@ typedef struct _DPL_MESSAGE_CONNECT
 	PVOID						pvConnectionContext;        // Context value for this connection (user set)
 } DPL_MESSAGE_CONNECT, *PDPL_MESSAGE_CONNECT;
 
-// 
+//
 // Connection settings have been updated
 // (DPL_MSGID_CONNECTION_SETTINGS)
 //
@@ -254,7 +254,7 @@ typedef struct _DPL_MESSAGE_RECEIVE
 	DWORD		dwSize;                                     // Size of this structure
 	DPNHANDLE	hSender;                                    // Handle of the connection that is from
 	BYTE		*pBuffer;                                   // Contents of the message
-	DWORD		dwBufferSize;                               // Size of the message context 
+	DWORD		dwBufferSize;                               // Size of the message context
 	PVOID		pvConnectionContext;                        // Context value for this connection
 } DPL_MESSAGE_RECEIVE, *PDPL_MESSAGE_RECEIVE;
 
@@ -275,10 +275,10 @@ typedef struct _DPL_MESSAGE_SESSION_STATUS
  * DirectPlay8Lobby Create
  *
  ****************************************************************************/
- 
+
 /*
- * This function is no longer supported.  It is recommended that CoCreateInstance be used to create 
- * DirectPlay8 lobby objects. 
+ * This function is no longer supported.  It is recommended that CoCreateInstance be used to create
+ * DirectPlay8 lobby objects.
  *
  * extern HRESULT WINAPI DirectPlay8LobbyCreate( const GUID * pcIID, void **ppvInterface, IUnknown *pUnknown);
  *

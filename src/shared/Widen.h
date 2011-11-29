@@ -40,6 +40,6 @@ public:
         pCType_->widen(pSrcBeg, pSrcBeg + srcLen, &tmp[0]);
         return std::basic_string<E, T, A>(&tmp[0], srcLen);
     }
-}; 
+};
 
 #endif

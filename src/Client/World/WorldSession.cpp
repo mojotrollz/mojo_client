@@ -45,7 +45,7 @@ WorldSession::WorldSession(PseuInstance *in)
 
     _SetupObjectFields();
     MovementInfo::_c=in->GetConf()->client;
-    
+
     in->GetScripts()->RunScriptIfExists("_onworldsessioncreate");
 
     DEBUG(logdebug("WorldSession 0x%X constructor finished",this));
@@ -529,7 +529,7 @@ std::string WorldSession::GetOrRequestPlayerName(uint64 guid)
 
 void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
 {
-    //Read Packet    
+    //Read Packet
     uint32 sp, serverseed;
     if(GetInstance()->GetConf()->client > CLIENT_TBC)
     {
@@ -553,7 +553,7 @@ void WorldSession::_HandleAuthChallengeOpcode(WorldPacket& recvPacket)
     digest.UpdateData((uint8*)&serverseed,sizeof(uint32));
     digest.UpdateBigNumbers(GetInstance()->GetSessionKey(),NULL);
     digest.Finalize();
-    
+
     // Send Reply
     WorldPacket auth;
     if(GetInstance()->GetConf()->client<=CLIENT_TBC)
@@ -1059,7 +1059,7 @@ void WorldSession::_HandleNameQueryResponseOpcode(WorldPacket& recvPacket)
 
     if(GetInstance()->GetConf()->client > CLIENT_TBC)
       recvPacket >> unk;
-    
+
     recvPacket >> pname >> realm;
     if(GetInstance()->GetConf()->client > CLIENT_TBC)
     {
@@ -1134,7 +1134,7 @@ void WorldSession::_HandleSetSpeedOpcode(WorldPacket& recvPacket)
     float speed;
     uint32 movetype;
     MovementInfo mi;
-    
+
     switch(recvPacket.GetOpcode())
     {
     case MSG_MOVE_SET_WALK_SPEED:
@@ -1278,7 +1278,7 @@ void WorldSession::_HandleTelePortAckOpcode(WorldPacket& recvPacket)
       wp << guid;
     wp << (uint32)0 << (uint32)getMSTime(); //First value is some counter
     SendWorldPacket(wp);
-    
+
     _world->GetMoveMgr()->SetFallTime(100);
     _world->GetMoveMgr()->MoveFallLand();
 
@@ -1334,7 +1334,7 @@ void WorldSession::_HandleNewWorldOpcode(WorldPacket& recvPacket)
         my->ClearSpells(); // will be resent by server
         my->SetPosition(x,y,z,o,mapid);
     }
-    
+
     _world->GetMoveMgr()->SetFallTime(100);
     _world->GetMoveMgr()->MoveFallLand();//Must be sent after character was set to new position
 
@@ -1413,7 +1413,7 @@ void WorldSession::_HandleInitialSpellsOpcode(WorldPacket& recvPacket)
               logdebug("Initial Spell: id=%u slot=%u",spellid,not_spellslot);
               GetMyChar()->AddSpell(spellid, not_spellslot);
           }
-          
+
         }
         //TODO: Parse packet completely
 }
@@ -1696,7 +1696,7 @@ void WorldSession::_HandleCreatureQueryResponseOpcode(WorldPacket& recvPacket)
       recvPacket >> unkf;
       recvPacket >> ct->RacialLeader;
       if(GetInstance()->GetConf()->client == CLIENT_WOTLK)
-      {      
+      {
           for(uint32 i = 0; i < 4; i++)
               recvPacket >> ct->questItems[i];
           recvPacket >> ct->movementId;
@@ -1806,7 +1806,7 @@ void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
 {
     uint64 guid;
     guid = recvPacket.readPackGUID();
-    
+
     Object* obj = objmgr.GetObj(guid);
     if (!obj || !obj->IsWorldObject())
         return;
@@ -1816,7 +1816,7 @@ void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
     float x, y, z;
     if(GetInstance()->GetConf()->client > CLIENT_TBC)
       recvPacket >> unk;
-    
+
     recvPacket >> x >> y >> z >> time >> type;
 
     float oldx = ((WorldObject*)obj)->GetX(),
@@ -1825,19 +1825,19 @@ void WorldSession::_HandleMonsterMoveOpcode(WorldPacket& recvPacket)
     // not much good, better than nothing
 
     ((WorldObject*)obj)->SetPosition(x, y, z, o);
-    switch(type) 
+    switch(type)
     {
         case 0: break; // normal packet
         case 1: return; // stop packet
-        case 2: 
+        case 2:
             float unkf;
             recvPacket >> unkf >> unkf >> unkf;
             break;
-        case 3: 
+        case 3:
             uint64 unkguid;
             recvPacket >> unkguid;
             break;
-        case 4: 
+        case 4:
             float angle;
             recvPacket >> angle;
             break;

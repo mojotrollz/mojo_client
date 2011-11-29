@@ -209,7 +209,7 @@ void CSceneNodeAnimatorCameraFPS::animateNode(ISceneNode* node, u32 timeMs)
 		{
 			if(ESNAT_COLLISION_RESPONSE == (*it)->getType())
 			{
-				ISceneNodeAnimatorCollisionResponse * collisionResponse = 
+				ISceneNodeAnimatorCollisionResponse * collisionResponse =
 					static_cast<ISceneNodeAnimatorCollisionResponse *>(*it);
 
 				if(!collisionResponse->isFalling())
@@ -303,7 +303,7 @@ void CSceneNodeAnimatorCameraFPS::setVerticalMovement(bool allow)
 
 ISceneNodeAnimator* CSceneNodeAnimatorCameraFPS::createClone(ISceneNode* node, ISceneManager* newManager)
 {
-	CSceneNodeAnimatorCameraFPS * newAnimator = 
+	CSceneNodeAnimatorCameraFPS * newAnimator =
 		new CSceneNodeAnimatorCameraFPS(CursorControl,	RotateSpeed, MoveSpeed, JumpSpeed,
 											0, 0, NoVerticalMovement);
 	newAnimator->setKeyMap(KeyMap);

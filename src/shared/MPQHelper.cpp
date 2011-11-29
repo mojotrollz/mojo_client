@@ -30,7 +30,7 @@ void MPQHelper::Init()
     _patches.push_front(dir+"terrain"+ext);
     _patches.push_front(dir+"texture"+ext);
     _patches.push_front(dir+"wmo"+ext);
-    
+
     // order goes from last opened to first opened file
     // ok maybe this is a bit too much but should work fine :)
     _patches.push_front(dir+"common"+ext);

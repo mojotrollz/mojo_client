@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // UQ1: warning C4311: 'type cast' : pointer truncation
 #pragma warning(disable:4311)
 
-#endif  
+#endif
 
 Thread::Thread(bool release)
 :m_thread(0)

@@ -261,7 +261,7 @@ DefReturnResult DefScriptPackage::func_lerase(CmdSet& Set)
     unsigned int pos = (unsigned int)toNumber(Set.defaultarg);
     if(pos > l->size()) // if the list is too short to erase at that pos...
         return ""; // ... return nothing
- 
+
     DefList::iterator it = l->begin();
     advance(it,pos);
     r = *it;

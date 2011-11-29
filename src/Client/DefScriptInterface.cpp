@@ -57,7 +57,7 @@ void DefScriptPackage::_InitDefScriptInterface(void)
     AddFunc("getobjectdist",&DefScriptPackage::SCGetObjectDistance);
     AddFunc("getobjectpos",&DefScriptPackage::SCGetPos);
     AddFunc("switchopcodehandler",&DefScriptPackage::SCSwitchOpcodeHandler);
-    AddFunc("opcodedisabled",&DefScriptPackage::SCOpcodeDisabled);    
+    AddFunc("opcodedisabled",&DefScriptPackage::SCOpcodeDisabled);
     AddFunc("spoofworldpacket",&DefScriptPackage::SCSpoofWorldPacket);
     AddFunc("loaddb",&DefScriptPackage::SCLoadDB);
     AddFunc("adddbpath",&DefScriptPackage::SCAddDBPath);
@@ -404,7 +404,7 @@ DefReturnResult DefScriptPackage::SCGetScpValue(CmdSet& Set)
                 {
                     return DefScriptTools::toString(db->GetInt(keyid,(char*)entry.c_str()));
                 }
-                case SCP_TYPE_FLOAT: 
+                case SCP_TYPE_FLOAT:
                 {
                     return DefScriptTools::toString(db->GetFloat(keyid,(char*)entry.c_str()));
                 }

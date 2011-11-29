@@ -463,7 +463,7 @@ void SceneWorld::OnUpdate(s32 timediff)
 
     str += driver->getFPS();
     str += L" FPS";
-    
+
     debugText->setText(str.c_str());
 
 
@@ -642,7 +642,7 @@ void SceneWorld::UpdateTerrain(void)
                               {
                                   logerror("Error! modelfile not found: %s", filename.c_str());
                                   continue;
-                              }    
+                              }
                           mesh = smgr->getMesh(modelfile);
                           modelfile->drop();
                         }
@@ -706,7 +706,7 @@ void SceneWorld::UpdateTerrain(void)
                         {
                             filename= wmo->model.c_str();
                         }
-                        
+
                         scene::IAnimatedMesh *mesh;
                         if(!smgr->getMeshCache()->isMeshLoaded(filename.c_str()))
                         {
@@ -715,7 +715,7 @@ void SceneWorld::UpdateTerrain(void)
                               {
                                   logerror("Error! modelfile not found: %s", filename.c_str());
                                   continue;
-                              }    
+                              }
                           mesh = smgr->getMesh(modelfile);
                           modelfile->drop();
                         }

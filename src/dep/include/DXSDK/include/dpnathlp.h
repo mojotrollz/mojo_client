@@ -61,7 +61,7 @@ DEFINE_GUID(CLSID_DirectPlayNATHelpPAST,
  ****************************************************************************/
 
 // {154940B6-2278-4a2f-9101-9BA9F431F603}
-DEFINE_GUID(IID_IDirectPlayNATHelp, 
+DEFINE_GUID(IID_IDirectPlayNATHelp,
 0x154940b6, 0x2278, 0x4a2f, 0x91, 0x1, 0x9b, 0xa9, 0xf4, 0x31, 0xf6, 0x3);
 
 /****************************************************************************
@@ -160,7 +160,7 @@ typedef DWORD_PTR	DPNHHANDLE,	* PDPNHHANDLE;
  * DirectPlay NAT Helper structures
  *
  ****************************************************************************/
- 
+
 typedef struct _DPNHCAPS
 {
 	DWORD	dwSize;							// size of this structure, must be filled in prior to calling GetCaps
@@ -179,7 +179,7 @@ typedef struct _DPNHCAPS
  ****************************************************************************/
 
 #define DPNHADDRESSTYPE_TCP				0x01	// the mappings are for TCP ports instead of UDP
-#define DPNHADDRESSTYPE_FIXEDPORTS		0x02	// the mappings are for ports which are the same on the Internet gateway 
+#define DPNHADDRESSTYPE_FIXEDPORTS		0x02	// the mappings are for ports which are the same on the Internet gateway
 #define DPNHADDRESSTYPE_SHAREDPORTS		0x04	// the mappings are for shared UDP fixed ports
 #define DPNHADDRESSTYPE_LOCALFIREWALL	0x08	// the addresses are opened on a local firewall
 #define DPNHADDRESSTYPE_GATEWAY			0x10	// the addresses are registered with an Internet gateway

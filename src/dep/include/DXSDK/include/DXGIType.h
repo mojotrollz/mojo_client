@@ -7,8 +7,8 @@
 /* Compiler settings for dxgitype.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
     protocol : dce , ms_ext, c_ext, robust
-    error checks: allocation ref bounds_check enum stub_data 
-    VC __declspec() decoration level: 
+    error checks: allocation ref bounds_check enum stub_data
+    VC __declspec() decoration level:
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
          DECLSPEC_UUID(), MIDL_INTERFACE()
 */
@@ -42,7 +42,7 @@
 #pragma once
 #endif
 
-/* Forward Declarations */ 
+/* Forward Declarations */
 
 /* header files for imported files */
 #include "oaidl.h"
@@ -50,11 +50,11 @@
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 
 /* interface __MIDL_itf_dxgitype_0000_0000 */
-/* [local] */ 
+/* [local] */
 
 #define _FACDXGI    0x87a
 #define MAKE_DXGI_HRESULT( code )    MAKE_HRESULT( 1, _FACDXGI, code )
@@ -84,7 +84,7 @@ extern "C"{
 #define DXGI_USAGE_PRIMARY    ( 1L << (4 + 4) )
 typedef UINT DXGI_USAGE;
 
-typedef 
+typedef
 enum DXGI_FORMAT
     {	DXGI_FORMAT_UNKNOWN	= 0,
 	DXGI_FORMAT_R32G32B32A32_TYPELESS	= 1,
@@ -216,7 +216,7 @@ typedef struct DXGI_RATIONAL
     UINT Denominator;
     } 	DXGI_RATIONAL;
 
-typedef 
+typedef
 enum DXGI_MODE_SCANLINE_ORDER
     {	DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED	= 0,
 	DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE	= 1,
@@ -224,14 +224,14 @@ enum DXGI_MODE_SCANLINE_ORDER
 	DXGI_MODE_SCANLINE_ORDER_LOWER_FIELD_FIRST	= 3
     } 	DXGI_MODE_SCANLINE_ORDER;
 
-typedef 
+typedef
 enum DXGI_MODE_SCALING
     {	DXGI_MODE_SCALING_UNSPECIFIED	= 0,
 	DXGI_MODE_SCALING_CENTERED	= 1,
 	DXGI_MODE_SCALING_STRETCHED	= 2
     } 	DXGI_MODE_SCALING;
 
-typedef 
+typedef
 enum DXGI_MODE_ROTATION
     {	DXGI_MODE_ROTATION_UNSPECIFIED	= 0,
 	DXGI_MODE_ROTATION_IDENTITY	= 1,
@@ -306,7 +306,7 @@ typedef struct DXGI_SHARED_RESOURCE
 
 #define	DXGI_RESOURCE_PRIORITY_MAXIMUM	( 0xc8000000 )
 
-typedef 
+typedef
 enum DXGI_RESIDENCY
     {	DXGI_RESIDENCY_FULLY_RESIDENT	= 1,
 	DXGI_RESIDENCY_RESIDENT_IN_SHARED_MEMORY	= 2,
@@ -321,7 +321,7 @@ typedef struct DXGI_SURFACE_DESC
     DXGI_SAMPLE_DESC SampleDesc;
     } 	DXGI_SURFACE_DESC;
 
-typedef 
+typedef
 enum DXGI_SWAP_EFFECT
     {	DXGI_SWAP_EFFECT_DISCARD	= 0,
 	DXGI_SWAP_EFFECT_COPY	= 1

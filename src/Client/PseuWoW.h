@@ -81,7 +81,7 @@ class PseuInstanceConf
     bool softquit;
     uint8 dataLoaderThreads;
     bool useMPQ;
-    
+
     // gui related
     bool enablegui;
     uint32 terrainsectors;

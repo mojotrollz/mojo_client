@@ -276,7 +276,7 @@ void RealmSession::_HandleRealmList(ByteBuffer& pkt)
         {
           uint32 icon;
           pkt >> icon;
-          _realms[i].icon=icon;          
+          _realms[i].icon=icon;
           _realms[i].locked=0x00; //locked is specified in the RealmFlags
         }
         else
@@ -622,7 +622,7 @@ void RealmSession::_HandleLogonProof(ByteBuffer& pkt)
     {
       pkt.read((uint8*)&lp, sizeof(sAuthLogonProof_S));
     }
-      
+
     //printchex((char*)&lp, sizeof(sAuthLogonProof_S),true);
     if(!memcmp(lp.M2,this->_m2,20))
     {

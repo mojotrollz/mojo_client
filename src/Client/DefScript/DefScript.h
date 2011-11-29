@@ -45,7 +45,7 @@ struct DefXChgResult
     bool changed;
     std::string str;
     DefReturnResult result;
-}; 
+};
 
 typedef std::map<unsigned int,std::string> _CmdSetArgMap;
 
@@ -103,7 +103,7 @@ private:
 	std::string scriptname;
 	unsigned char permission;
     bool debugmode;
-    
+
     DefScriptPackage *_parent;   	
 };
 
@@ -142,7 +142,7 @@ public:
     std::string EscapeString(std::string);
     std::string UnescapeString(std::string);
     std::string GetUnescapedVar(std::string);
-    
+
     std::string scPath;
 
     // Own executor functions

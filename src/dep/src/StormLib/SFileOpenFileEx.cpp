@@ -24,7 +24,7 @@ static BOOL OpenLocalFile(const char * szFileName, HANDLE * phFile)
     if(hFile != INVALID_HANDLE_VALUE)
     {
         // Allocate and initialize file handle
-        size_t nHandleSize = sizeof(TMPQFile) + strlen(szFileName); 
+        size_t nHandleSize = sizeof(TMPQFile) + strlen(szFileName);
         if((hf = (TMPQFile *)ALLOCMEM(char, nHandleSize)) != NULL)
         {
             memset(hf, 0, nHandleSize);
@@ -60,7 +60,7 @@ void FreeMPQFile(TMPQFile *& hf)
 /*****************************************************************************/
 
 //-----------------------------------------------------------------------------
-// SFileEnumLocales enums all locale versions within MPQ. 
+// SFileEnumLocales enums all locale versions within MPQ.
 // Functions fills all available language identifiers on a file into the buffer
 // pointed by plcLocales. There must be enough entries to copy the localed,
 // otherwise the function returns ERROR_INSUFFICIENT_BUFFER.
@@ -259,7 +259,7 @@ BOOL WINAPI SFileOpenFileEx(HANDLE hMPQ, const char * szFileName, DWORD dwSearch
     size_t nHandleSize = 0;             // Memory space necessary to allocate TMPQHandle
     int nError = ERROR_SUCCESS;
 
-#ifdef _DEBUG    
+#ifdef _DEBUG
     // Due to increasing numbers of files in MPQs, I had to change the behavior
     // of opening by file index. Now, the SFILE_OPEN_BY_INDEX value of dwSearchScope
     // must be entered. This check will allow to find code places that are incompatible
@@ -361,13 +361,13 @@ BOOL WINAPI SFileOpenFileEx(HANDLE hMPQ, const char * szFileName, DWORD dwSearch
         hf->pBlock   = pBlock;
         hf->nBlocks  = (hf->pBlock->dwFSize + ha->dwBlockSize - 1) / ha->dwBlockSize;
         hf->pHash    = pHash;
-        
+
         hf->MpqFilePos.HighPart = pBlockEx->wFilePosHigh;
         hf->MpqFilePos.LowPart  = pBlock->dwFilePos;
         hf->RawFilePos.QuadPart = hf->MpqFilePos.QuadPart + ha->MpqPos.QuadPart;
 
         hf->dwHashIndex  = dwHashIndex;
-        hf->dwBlockIndex = dwBlockIndex; 
+        hf->dwBlockIndex = dwBlockIndex;
 
         // Allocate buffers for decompression.
         if(hf->pBlock->dwFlags & MPQ_FILE_COMPRESSED)
@@ -377,11 +377,11 @@ BOOL WINAPI SFileOpenFileEx(HANDLE hMPQ, const char * szFileName, DWORD dwSearch
             // As for newer MPQs, there may be one additional entry in the block table
             // (if the MPQ_FILE_HAS_EXTRA flag is set).
             // Allocate the buffer to include this DWORD as well
-            
+
             if((hf->pdwBlockPos = ALLOCMEM(DWORD, hf->nBlocks + 2)) == NULL)
                 nError = ERROR_NOT_ENOUGH_MEMORY;
         }
-        
+
         // Decrypt file seed. Cannot be used if the file is given by index
         if(dwSearchScope != SFILE_OPEN_BY_INDEX)
         {
@@ -436,7 +436,7 @@ BOOL WINAPI SFileOpenFileEx(HANDLE hMPQ, const char * szFileName, DWORD dwSearch
 BOOL WINAPI SFileCloseFile(HANDLE hFile)
 {
     TMPQFile * hf = (TMPQFile *)hFile;
-    
+
     if(!IsValidFileHandle(hf))
     {
         SetLastError(ERROR_INVALID_PARAMETER);

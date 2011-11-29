@@ -140,7 +140,7 @@ enum ChrRacesEnum
     CHRRACES_NAME_GENERAL, // always the english(?) name (without spaces). used in texture names etc.
     CHRRACES_UNK_9,
     CHRRACES_UNK_10,
-	// the following 8 fields contain either 0 or the race name, depending on the locale. 
+	// the following 8 fields contain either 0 or the race name, depending on the locale.
     CHRRACES_NAME1, // english
     CHRRACES_NAME2, // <need info here>
     CHRRACES_NAME3, // <need info here>
@@ -155,7 +155,7 @@ enum ChrRacesEnum
     CHRRACES_UNK_21,
     CHARRACES_END
 };
-                                     
+
 static const char *ChrRacesFormat = "ixxxiisixxxsxxssssssssssssssssxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxi";
 
 static const char *ChrRacesFieldNames[] =
@@ -204,7 +204,7 @@ enum MapEnum
     MAP_END = 75
 };
 
-static const char *MapFieldNames[] = 
+static const char *MapFieldNames[] =
 {
     "","name_general","","","name","name","name","name","name","name",
     "name","name","","","","","","","","",
@@ -217,7 +217,7 @@ static const char *MapFieldNames[] =
     ""
 };
 
-static const char *MapFormat = 
+static const char *MapFormat =
 {
     "isxxssssss"
     "ssxxxxxxxx"
@@ -269,8 +269,8 @@ enum ItemDisplayInfoEnum
     ITEMDISPLAYINFO_NAME_R = 4, // (internal name?)
     ITEMDISPLAYINFO_ICON = 5, // icon filename
     ITEMDISPLAYINFO_GEOSET_1 = 6, // Geoset, which M2 submeshes this item will cover when equipped, depeding on type
-    ITEMDISPLAYINFO_GEOSET_2 = 7, 
-    ITEMDISPLAYINFO_GEOSET_3 = 8, 
+    ITEMDISPLAYINFO_GEOSET_2 = 7,
+    ITEMDISPLAYINFO_GEOSET_3 = 8,
     ITEMDISPLAYINFO_GEOSET_4 = 9, // some flag? 0, 1 or 2.
     ITEMDISPLAYINFO_FLAG1 = 10, // some flag? mostly 0, sometimes other values (for ex. polearms have 4081 ?!)
     ITEMDISPLAYINFO_ITEMGROUPSOUND = 11, // these is NOT the inventorytype...
@@ -334,7 +334,7 @@ enum CreatureDisplayInfoEnum
     CREATUREDISPLAYINFO_OPACITY = 5, // 0 = 100% tansparent, 255 = 100% solid
     CREATUREDISPLAYINFO_NAME1 = 6, // next 3 fields are some names, not always present
     CREATUREDISPLAYINFO_NAME2 = 7,
-    CREATUREDISPLAYINFO_NAME3 = 8, 
+    CREATUREDISPLAYINFO_NAME3 = 8,
     CREATUREDISPLAYINFO_NPCSOUNDS = 11, // id from NPCSounds
     CREATUREDISPLAYINFO_END = 21
 };
@@ -379,7 +379,7 @@ enum CharSectionsEnum
     CHARSECTIONS_TYPE = 3, // 0=base skin, 1=face, 2=facial traits, 3=hair, 4=underwear
     CHARSECTIONS_SECTION = 4, // depends, see table below
     CHARSECTIONS_COLOR = 5, // skin/hair color
-    CHARSECTIONS_TEXTURE1 = 6, 
+    CHARSECTIONS_TEXTURE1 = 6,
     CHARSECTIONS_TEXTURE2 = 7,
     CHARSECTIONS_TEXTURE3 = 8,
     CHARSECTIONS_IS_SPECIAL_NPC = 9, // 0=player, 1=special npc
@@ -429,7 +429,7 @@ static const char *GameObjectDisplayInfoFormat = {
 
 enum ChrBaseInfoEnum
 {
-    CBI_RACE = 0, 
+    CBI_RACE = 0,
     CBI_CLASS = 1,
     CBI_END = 2
 };

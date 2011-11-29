@@ -121,14 +121,14 @@ void WorldSession::SendCastSpell(uint32 spellid, bool nocheck)
     packet << (uint8)0; // unk
     packet << spellid;
     packet << (uint8)0; // unk
-    
+
     if(target && my->GetTarget() != GetGuid()) // self cast?
     {
         if(target->GetTypeId() == TYPEID_PLAYER || target->GetTypeId() == TYPEID_UNIT)
         {
             flags |= TARGET_FLAG_UNIT;
             temp << (uint8)0xFF << my->GetTarget(); // need to send packed guid?
-        }     
+        }
         if(target->GetTypeId() == TYPEID_OBJECT)
         {
             flags |= TARGET_FLAG_OBJECT;

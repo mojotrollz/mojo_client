@@ -972,7 +972,7 @@ typedef enum _D3DSAMPLER_TEXTURE_TYPE
                                                                 //      "Centroid" is some location within the covered
                                                                 //      region of the pixel.
 
-// destination parameter 
+// destination parameter
 #define D3DSP_DSTSHIFT_SHIFT    24
 #define D3DSP_DSTSHIFT_MASK     0x0F000000
 
@@ -1572,7 +1572,7 @@ typedef enum _D3DCUBEMAP_FACES
 #define D3DLOCK_DISCARD            0x00002000L
 #define D3DLOCK_NOOVERWRITE        0x00001000L
 #define D3DLOCK_NOSYSLOCK          0x00000800L
-#define D3DLOCK_DONOTWAIT          0x00004000L                  
+#define D3DLOCK_DONOTWAIT          0x00004000L
 
 #define D3DLOCK_NO_DIRTY_UPDATE     0x00008000L
 

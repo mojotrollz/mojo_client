@@ -27,7 +27,7 @@ namespace irrklang
 
 		//! Sets the stream mode which should be used for a sound played from this source.
 		/** Note that if this is set to ESM_NO_STREAMING, the engine still might decide
-		to stream the sound if it is too big. The threashold for this can be 
+		to stream the sound if it is too big. The threashold for this can be
 		adjusted using ISoundSource::setForcedStreamingThreshold(). */
 		virtual void setStreamMode(E_STREAM_MODE mode) = 0;
 
@@ -45,7 +45,7 @@ namespace irrklang
 		virtual ik_u32 getPlayLength() = 0;
 
 		//! Returns informations about the sound source: channel count (mono/stereo), frame count, sample rate, etc.
-		/** \return Returns the structure filled with 0 or negative values if not known for this sound for example because 
+		/** \return Returns the structure filled with 0 or negative values if not known for this sound for example because
 		because the file could not be opened or similar.
 		Note: If the sound never has been played before, the sound engine will have to open
 		the file and try to get the play lenght from there, so this call could take a bit depending
@@ -55,23 +55,23 @@ namespace irrklang
 		//! Returns if sounds played from this source will support seeking via ISound::setPlayPosition().
 		/* If a sound is seekable depends on the file type and the audio format. For example MOD files
 		cannot be seeked currently.
-		\return Returns true of the sound source supports setPlayPosition() and false if not. 
+		\return Returns true of the sound source supports setPlayPosition() and false if not.
 		Note: If the sound never has been played before, the sound engine will have to open
 		the file and try to get the information from there, so this call could take a bit depending
 		on the type of file. */
 		virtual bool getIsSeekingSupported() = 0;
 
 		//! Sets the default volume for a sound played from this source.
-		/** The default value of this is 1.0f. 
+		/** The default value of this is 1.0f.
 		Note that the default volume is being multiplied with the master volume
-		of ISoundEngine, change this via ISoundEngine::setSoundVolume(). 
+		of ISoundEngine, change this via ISoundEngine::setSoundVolume().
 		//! \param volume 0 (silent) to 1.0f (full volume). Default value is 1.0f. */
 		virtual void setDefaultVolume(ik_f32 volume=1.0f) = 0;
 
 		//! Returns the default volume for a sound played from this source.
 		/** You can influence this default volume value using setDefaultVolume().
 		Note that the default volume is being multiplied with the master volume
-		of ISoundEngine, change this via ISoundEngine::setSoundVolume(). 
+		of ISoundEngine, change this via ISoundEngine::setSoundVolume().
 		//! \return 0 (silent) to 1.0f (full volume). Default value is 1.0f. */
 		virtual ik_f32 getDefaultVolume() = 0;
 
@@ -103,7 +103,7 @@ namespace irrklang
 		minimal distance (using for example setDefaultMinDistance()) to influence this.
 		See ISound::setMaxDistance() for details about what the max distance is.
 		This method only influences the initial distance value of sounds. For changing the
-		distance while the sound is played, use ISound::setMinDistance() 
+		distance while the sound is played, use ISound::setMinDistance()
 		and ISound::setMaxDistance().
 		\param maxDistance Default maximal distance for 3D sounds from this source. Set it to a negative
 		value to let sounds of this source use the engine level default max distance, which
@@ -136,15 +136,15 @@ namespace irrklang
 		//! Sets the threshold size where irrKlang decides to force streaming a file independent of the user specified setting.
 		/** When specifying ESM_NO_STREAMING for playing back a sound file, irrKlang will
 		ignore this setting if the file is bigger than this threshold and stream the file
-		anyway. Please note that if an audio format loader is not able to return the 
-		size of a sound source and returns -1 as length, this will be ignored as well 
+		anyway. Please note that if an audio format loader is not able to return the
+		size of a sound source and returns -1 as length, this will be ignored as well
 		and streaming has to be forced.
-		\param threshold: New threshold. The value is specified in uncompressed bytes and its default value is 
+		\param threshold: New threshold. The value is specified in uncompressed bytes and its default value is
 		about one Megabyte. Set to 0 or a negative value to disable stream forcing. */
 		virtual void setForcedStreamingThreshold(ik_s32 thresholdBytes) = 0;
 
 		//! Returns the threshold size where irrKlang decides to force streaming a file independent of the user specified setting.
-		/**  The value is specified in uncompressed bytes and its default value is 
+		/**  The value is specified in uncompressed bytes and its default value is
 		about one Megabyte. See setForcedStreamingThreshold() for details. */
 		virtual ik_s32 getForcedStreamingThreshold() = 0;
 
@@ -153,7 +153,7 @@ namespace irrklang
 		exact format can be retrieved using getAudioFormat(). Use getAudioFormat().getSampleDataSize()
 		for getting the amount of bytes. The returned pointer will only be valid as long as the sound
 		source exists.
-		This function will only return a pointer to the data if the 
+		This function will only return a pointer to the data if the
 		audio file is not streamed, namely ESM_NO_STREAMING. Otherwise this function will return 0.
 		Note: If the sound never has been played before, the sound engine will have to open
 		the file and decode audio data from there, so this call could take a bit depending

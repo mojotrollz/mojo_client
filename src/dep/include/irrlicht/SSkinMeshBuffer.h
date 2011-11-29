@@ -19,7 +19,7 @@ namespace scene
 struct SSkinMeshBuffer : public IMeshBuffer
 {
 	//! Default constructor
-	SSkinMeshBuffer(video::E_VERTEX_TYPE vt=video::EVT_STANDARD) : 
+	SSkinMeshBuffer(video::E_VERTEX_TYPE vt=video::EVT_STANDARD) :
 		ChangedID_Vertex(1),ChangedID_Index(1),MappingHint_Vertex(EHM_NEVER),
 		MappingHint_Index(EHM_NEVER),VertexType(vt),BoundingBoxNeedsRecalculated(true)
 	{

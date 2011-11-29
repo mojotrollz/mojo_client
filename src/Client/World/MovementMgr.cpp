@@ -128,7 +128,7 @@ void MovementMgr::Update(bool sendDirect)
         else if(pos.o > 2 * M_PI)
             pos.o -= float(2 * M_PI);
         //pos.z = _instance->GetWSession()->GetWorld()->GetPosZ(pos.x,pos.y);
-        
+
         if(_movemode == MOVEMODE_AUTO)
         {
             _mychar->SetPosition(pos);

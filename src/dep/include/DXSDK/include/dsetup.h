@@ -90,7 +90,7 @@ typedef struct _DSETUP_CB_PROGRESS
     DWORD dwOverallProgress;
 } DSETUP_CB_PROGRESS;
 
- 
+
 enum _DSETUP_CB_PROGRESS_PHASE
 {
     DSETUP_INITIALIZING,

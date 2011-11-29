@@ -93,4 +93,4 @@ uint32 RealmSocket::GetMyIP(void)
 {
     return GetRemoteIP4();
 }
-    
+

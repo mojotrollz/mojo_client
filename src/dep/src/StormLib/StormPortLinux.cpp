@@ -2,7 +2,7 @@
 *
 * Description:  implementation for StormLib - linux port
 *       intended to be used in GLdiablo
-*       
+*
 *   ---->   StormLib was originally developed for Windows by
 *       Ladislav Zezula (www.zezula.net), and he did
 *       a _great_ job! Thanks Ladislav!
@@ -17,9 +17,9 @@
 *
 * Author: Marko Friedemann <marko.friedemann@bmx-chemnitz.de>
 * Created at: Mon Jan 29 19:01:37 CEST 2001
-* Computer: whiplash.flachland-chemnitz.de 
+* Computer: whiplash.flachland-chemnitz.de
 * System: Linux 2.4.0 on i686
-*    
+*
 * Copyright (c) 2001 BMX-Chemnitz.DE All rights reserved.
 *
 ********************************************************************/
@@ -99,15 +99,15 @@ DWORD GetFileSize(HANDLE hFile, DWORD *ulOffSetHigh)
 {
     // Fix by Taiche : removed the hFile == NULL test because the CreateFile function above
     // can return a HANDLE equal to 0 WHICH IS A LEGAL VALUE and does not mean the handle is NULL.
-    if (hFile == INVALID_HANDLE_VALUE) 
+    if (hFile == INVALID_HANDLE_VALUE)
     {
         return 0xffffffff;
     }
 
     struct stat64 fileinfo;
     fstat64((intptr_t)hFile, &fileinfo);
-    
-    // Fix by Ladik: If "ulOffSetHigh" is not NULL, it needs to be set 
+
+    // Fix by Ladik: If "ulOffSetHigh" is not NULL, it needs to be set
     // to higher 32 bits of a file size.
     // TODO: Could some Linux programmer verify this ?
     if(ulOffSetHigh != NULL)

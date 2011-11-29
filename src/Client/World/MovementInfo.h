@@ -92,11 +92,11 @@ enum SplineFlags{
 struct MovementInfo
 {
     static uint8 _c; //Version switch helper
-    
+
     // Read/Write methods
     void Read(ByteBuffer &data);
     void Write(ByteBuffer &data) const;
-    
+
     // common
     uint32  flags;
     uint16  flags2;

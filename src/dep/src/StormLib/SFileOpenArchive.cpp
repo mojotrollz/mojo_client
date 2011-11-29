@@ -73,7 +73,7 @@ static int RelocateMpqTablePositions(TMPQArchive * ha)
     TempSize.QuadPart = ha->ExtBlockTablePos.QuadPart + (pHeader->dwBlockTableSize * sizeof(TMPQBlockEx));
     if(TempSize.QuadPart > ha->MpqSize.QuadPart)
         ha->MpqSize = TempSize;
-    
+
     // MPQ size does not include the bytes before MPQ header
     ha->MpqSize.QuadPart -= ha->MpqPos.QuadPart;
     return ERROR_SUCCESS;
@@ -121,7 +121,7 @@ BOOL SFileOpenArchiveEx(
     DWORD dwBlockTableSize = 0;         // Block table size.
     DWORD dwTransferred;                // Number of bytes read
     DWORD dwBytes = 0;                  // Number of bytes to read
-    int nError = ERROR_SUCCESS;   
+    int nError = ERROR_SUCCESS;
 
     // Check the right parameters
     if(nError == ERROR_SUCCESS)
@@ -141,7 +141,7 @@ BOOL SFileOpenArchiveEx(
         if(hFile == INVALID_HANDLE_VALUE)
             nError = GetLastError();
     }
-    
+
     // Allocate the MPQhandle
     if(nError == ERROR_SUCCESS)
     {
@@ -244,8 +244,8 @@ BOOL SFileOpenArchiveEx(
 				//
 				// Note: the "dwArchiveSize" member in the MPQ header is ignored by Storm.dll
 				// and can contain garbage value ("w3xmaster" protector)
-				// 
-                
+				//
+
                 nError = ERROR_NOT_SUPPORTED;
                 break;
             }
@@ -292,7 +292,7 @@ BOOL SFileOpenArchiveEx(
         // I have found a MPQ which has the block table larger than
         // the hash table. We should avoid buffer overruns caused by that.
         //
-        
+
         if(ha->pHeader->dwBlockTableSize > ha->pHeader->dwHashTableSize)
             ha->pHeader->dwBlockTableSize = ha->pHeader->dwHashTableSize;
         dwBlockTableSize   = ha->pHeader->dwHashTableSize;
@@ -329,11 +329,11 @@ BOOL SFileOpenArchiveEx(
 
         //
         // Check hash table if is correctly decrypted
-        // 
+        //
         // Ladik: Some MPQ protectors corrupt the hash table by rewriting part of it.
         // To be able to open these, we will not check the entire hash table,
         // but will check it at the moment of file opening.
-        // 
+        //
     }
 
     // Now, read the block table
@@ -348,7 +348,7 @@ BOOL SFileOpenArchiveEx(
 
         // I have found a MPQ which claimed 0x200 entries in the block table,
         // but the file was cut and there was only 0x1A0 entries.
-        // We will handle this case properly, even if that means 
+        // We will handle this case properly, even if that means
         // omiting another integrity check of the MPQ
         if(dwTransferred < dwBytes)
             dwBytes = dwTransferred;
@@ -444,7 +444,7 @@ BOOL SFileOpenArchiveEx(
         }
     }
 
-    // If the caller didn't specified otherwise, 
+    // If the caller didn't specified otherwise,
     // include the internal listfile to the TMPQArchive structure
     if(nError == ERROR_SUCCESS)
     {
@@ -459,7 +459,7 @@ BOOL SFileOpenArchiveEx(
         }
     }
 
-    // If the caller didn't specified otherwise, 
+    // If the caller didn't specified otherwise,
     // load the "(attributes)" file
     if(nError == ERROR_SUCCESS && (dwFlags & MPQ_OPEN_NO_ATTRIBUTES) == 0)
     {
@@ -503,7 +503,7 @@ BOOL WINAPI SFileOpenArchive(const char * szMpqName, DWORD dwPriority, DWORD dwF
 BOOL WINAPI SFileFlushArchive(HANDLE hMpq)
 {
     TMPQArchive * ha = (TMPQArchive *)hMpq;
-    
+
     // Do nothing if 'hMpq' is bad parameter
     if(!IsValidMpqHandle(ha))
     {
@@ -531,7 +531,7 @@ BOOL WINAPI SFileFlushArchive(HANDLE hMpq)
 BOOL WINAPI SFileCloseArchive(HANDLE hMPQ)
 {
     TMPQArchive * ha = (TMPQArchive *)hMPQ;
-    
+
     // Flush all unsaved data to the storage
     if(!SFileFlushArchive(hMPQ))
         return FALSE;

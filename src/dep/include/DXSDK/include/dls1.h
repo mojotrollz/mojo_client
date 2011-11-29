@@ -31,7 +31,7 @@
 //               LIST [] 'ins ' [dlid,insh,RGNLIST,ARTLIST,INFOLIST]
 //
 // RGNLIST
-// LIST [] 'lrgn' 
+// LIST [] 'lrgn'
 //               LIST [] 'rgn '  [rgnh,wsmp,wlnk,ARTLIST]
 //               LIST [] 'rgn '  [rgnh,wsmp,wlnk,ARTLIST]
 //               LIST [] 'rgn '  [rgnh,wsmp,wlnk,ARTLIST]
@@ -43,7 +43,7 @@
 //         '3rd1' Possible 3rd party articulation structure 1
 //         '3rd2' Possible 3rd party articulation structure 2 .... and so on
 //
-// WAVEPOOL 
+// WAVEPOOL
 // ptbl [] [pool table]
 // LIST [] 'wvpl'
 //               [path],
@@ -55,7 +55,7 @@
 //               LIST [] 'wave' [dlid,RIFFWAVE]
 //
 // INFOLIST
-// LIST [] 'INFO' 
+// LIST [] 'INFO'
 //               'icmt' 'One of those crazy comments.'
 //               'icop' 'Copyright (C) 1996 Sonic Foundry'
 //
@@ -86,7 +86,7 @@
 #define FOURCC_VERS  mmioFOURCC('v','e','r','s')
 
 /*/////////////////////////////////////////////////////////////////////////
-// Articulation connection graph definitions 
+// Articulation connection graph definitions
 /////////////////////////////////////////////////////////////////////////*/
 
 /* Generic Sources */
@@ -140,7 +140,7 @@ typedef struct _DLSVERSION {
   DWORD    dwVersionMS;
   DWORD    dwVersionLS;
 }DLSVERSION, FAR *LPDLSVERSION;
-                   
+
 
 typedef struct _CONNECTION {
   USHORT   usSource;
@@ -223,7 +223,7 @@ typedef struct _WAVELINK { /* any paths or links are stored right after struct *
 
 #define POOL_CUE_NULL  0xffffffffl
 
-typedef struct _POOLCUE { 
+typedef struct _POOLCUE {
   ULONG    ulOffset;       /* Offset to the entry in the list */
 }POOLCUE, FAR *LPPOOLCUE;
 

@@ -11,7 +11,7 @@ enum UpdateFieldTypes
 
 enum UpdateFieldLimits
 {
-    OBJECT_END                                = 0x0006,  
+    OBJECT_END                                = 0x0006,
     ITEM_END                                  = OBJECT_END + 0x003A,
     CONTAINER_END                             = ITEM_END + 0x004A,
     UNIT_END                                  = OBJECT_END + 0x008E,
@@ -26,13 +26,13 @@ enum UpdateFieldLimits
     GAMEOBJECT_END_8606                       = OBJECT_END + 0x0014,
     DYNAMICOBJECT_END_8606                    = OBJECT_END + 0x000A,
     CORPSE_END_8606                           = OBJECT_END + 0x0022,
-    
+
     ITEM_END_6005                             = OBJECT_END + 0x002A,
     CONTAINER_END_6005                        = ITEM_END_6005 + 0x003A,
     UNIT_END_6005                             = OBJECT_END + 0x00B6,
     PLAYER_END_6005                           = UNIT_END_6005 + 0x0446,
     GAMEOBJECT_END_6005                       = OBJECT_END + 0x0014
-     
+
 };
 
 
@@ -288,7 +288,7 @@ enum UpdateFieldName
     PLAYER_FIELD_MOD_HEALING_DONE_POS,
     PLAYER_FIELD_MOD_HEALING_PCT,
     PLAYER_FIELD_MOD_MANA_REGEN,
-    PLAYER_FIELD_MOD_MANA_REGEN_INTERRUPT,    
+    PLAYER_FIELD_MOD_MANA_REGEN_INTERRUPT,
     PLAYER_FIELD_MOD_TARGET_PHYSICAL_RESISTANCE,
     PLAYER_FIELD_MOD_TARGET_RESISTANCE,
     PLAYER_FIELD_NEGSTAT0,
@@ -582,7 +582,7 @@ enum UpdateFieldName
     PLAYER_VISIBLE_ITEM_19_0,
     PLAYER_VISIBLE_ITEM_19_PROPERTIES,
     PLAYER_VISIBLE_ITEM_19_PAD,
-    
+
     PLAYER_VISIBLE_ITEM_LAST_PROPERTIES,
     PLAYER_XP,
 

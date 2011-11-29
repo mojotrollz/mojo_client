@@ -24,8 +24,8 @@ void MCAL_decompress(uint8 *inbuf, uint8 *outbuf)
         * if set we are in fill mode else we are in copy mode
         * take the 7 lesser bits of the first byte as a count indicator
         o fill mode: read the next byte an fill it by count in resulting alpha map
-        o copy mode: read the next count bytes and copy them in the resulting alpha map 
-        * if the alpha map is complete we are done otherwise start at 1. again 
+        o copy mode: read the next count bytes and copy them in the resulting alpha map
+        * if the alpha map is complete we are done otherwise start at 1. again
     */
     // 21-10-2008 by Flow
     uint32 offI = 0; //offset IN buffer
@@ -71,9 +71,9 @@ bool ADTFile::Load(std::string fn)
     catch (...)
     {
         printf("ADTFile::Load() Exception\n");
-        return false;                
+        return false;
     }
-    
+
 }
 
 bool ADTFile::LoadMem(ByteBuffer& buf)
@@ -87,7 +87,7 @@ bool ADTFile::LoadMem(ByteBuffer& buf)
 
     while(buf.rpos() < buf.size())
     {
-        buf.read(fourcc,4); flipcc(fourcc); 
+        buf.read(fourcc,4); flipcc(fourcc);
         buf.read((uint8*)&size,4);
         DEBUG(printf("ADT: reading '%s' size %u\n",fourcc,size));
 
@@ -224,7 +224,7 @@ bool ADTFile::LoadMem(ByteBuffer& buf)
             bool mcal_compressed = false;
             while(buf.rpos()<endpos)
             {
-                buf.read(mfcc,4); flipcc(mfcc); 
+                buf.read(mfcc,4); flipcc(mfcc);
                 buf.read((uint8*)&msize,4);
 
                 DEBUG(printf("ADT:MCNK[%u]: reading '%s' size %u\n",mcnkid,mfcc,msize));
@@ -358,7 +358,7 @@ bool ADTFile::LoadMem(ByteBuffer& buf)
                         printf("Error loading ADT file (chunk %u error).\n",mcnkid);
                         return false;
                     }
-                        
+
                     buf.rpos(buf.rpos()+msize);
                 }
 

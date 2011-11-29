@@ -29,7 +29,7 @@ void SetLocale(const char *loc)
         char *buf = new char[fs];
         fh.read((char*)buf,fs);
         fh.close();
-        
+
         for(uint32 i=0; i<fs; i++)
         {
             if(buf[i]=='\n')

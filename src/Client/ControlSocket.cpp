@@ -13,7 +13,7 @@ ControlSocket::ControlSocket(SocketHandler& h) : TcpSocket(h)
 void ControlSocket::OnAccept(void)
 {
     logdetail("ControlSocket: Incoming connection from %s:%u [host:%s]",GetRemoteAddress().c_str(),GetRemotePort(),GetRemoteHostname().c_str());
-   
+
     // must perform some crappy ptr conversion here, doesnt want to typecast SocketHandler -> ControlSocketHandler directly
     SocketHandler& hnd = Handler();
     ControlSocketHandler *chnd = static_cast<ControlSocketHandler*>(&hnd);
@@ -33,7 +33,7 @@ void ControlSocket::OnAccept(void)
     if(_instance->GetConf()->rmcontrolpass.size())
     {
         SendTelnetText("Authentication?");
-    } 
+    }
 
     _ok = true;
 }

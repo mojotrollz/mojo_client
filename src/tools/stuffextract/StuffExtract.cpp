@@ -325,7 +325,7 @@ bool ConvertDBC(void)
         if (doModels && classmask[id]) // skip nonplayable races
         {
             // corpse models
-            
+
             modelNames.insert(NameAndAlt("World\\Generic\\PassiveDoodads\\DeathSkeletons\\" + racemap[id] + "MaleDeathSkeleton.m2"));
             modelNames.insert(NameAndAlt("World\\Generic\\PassiveDoodads\\DeathSkeletons\\" + racemap[id] + "FemaleDeathSkeleton.m2"));
         }

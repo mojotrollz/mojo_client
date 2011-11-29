@@ -41,7 +41,7 @@ class AuthCrypt
 
         //2.4.3
         void Init_8606(BigNumber *K);
-        
+
         //1.12.X
         void Init_6005(BigNumber *K);
         void SetKey_6005(uint8 *, size_t);
@@ -59,7 +59,7 @@ class AuthCrypt
         //3.3.5
         SARC4 _decrypt;
         SARC4 _encrypt;
-        
+
         //1.12.2
         std::vector<uint8> _key;
         uint8 _send_i, _send_j, _recv_i, _recv_j;

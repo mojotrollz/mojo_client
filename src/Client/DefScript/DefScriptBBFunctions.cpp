@@ -46,7 +46,7 @@ DefReturnResult DefScriptPackage::func_bbappend(CmdSet& Set)
 
     std::string dtype = DefScriptTools::stringToLower(Set.arg[1]);
 
-    if (dtype == "string") 
+    if (dtype == "string")
     {
         *bb << Set.defaultarg;
         return true;

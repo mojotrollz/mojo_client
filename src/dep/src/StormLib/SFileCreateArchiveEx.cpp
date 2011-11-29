@@ -19,8 +19,8 @@
 
 //-----------------------------------------------------------------------------
 // Local tables
-                        
-static DWORD PowersOfTwo[] = 
+
+static DWORD PowersOfTwo[] =
 {
                0x0000002, 0x0000004, 0x0000008,
     0x0000010, 0x0000020, 0x0000040, 0x0000080,
@@ -240,7 +240,7 @@ static int RecryptFileData(
 //   MPQ_CREATE_ARCHIVE_V1 - Creates MPQ archive version 1
 //   MPQ_CREATE_ARCHIVE_V2 - Creates MPQ archive version 2
 //   MPQ_CREATE_ATTRIBUTES - Will also add (attributes) file with the CRCs
-//   
+//
 // dwHashTableSize - Size of the hash table (only if creating a new archive).
 //        Must be between 2^4 (= 16) and 2^18 (= 262 144)
 //
@@ -285,7 +285,7 @@ BOOL WINAPI SFileCreateArchiveEx(const char * szMpqName, DWORD dwCreationDisposi
         // the file exist, but it is not a MPQ archive.
         if(SFileOpenArchiveEx(szMpqName, 0, 0, phMPQ, GENERIC_READ | GENERIC_WRITE))
             return TRUE;
-        
+
         // If the caller required to open the existing archive,
         // and the file is not MPQ archive, return error
         if(dwCreationDisposition == OPEN_EXISTING)
@@ -312,7 +312,7 @@ BOOL WINAPI SFileCreateArchiveEx(const char * szMpqName, DWORD dwCreationDisposi
         dwHashTableSize = HASH_TABLE_SIZE_MIN;
     if(dwHashTableSize > HASH_TABLE_SIZE_MAX)
         dwHashTableSize = HASH_TABLE_SIZE_MAX;
-    
+
     // Round the hash table size up to the nearest power of two
     for(nIndex = 0; PowersOfTwo[nIndex] != 0; nIndex++)
     {
@@ -442,7 +442,7 @@ BOOL WINAPI SFileCreateArchiveEx(const char * szMpqName, DWORD dwCreationDisposi
         BSWAP_TMPQHEADER(ha->pHeader);
         WriteFile(ha->hFile, ha->pHeader, dwHeaderSize, &dwTransferred, NULL);
         BSWAP_TMPQHEADER(ha->pHeader);
-        
+
         if(dwTransferred != ha->pHeader->dwHeaderSize)
             nError = ERROR_DISK_FULL;
 
@@ -477,7 +477,7 @@ BOOL WINAPI SFileCreateArchiveEx(const char * szMpqName, DWORD dwCreationDisposi
         SetLastError(nError);
         ha = NULL;
     }
-    
+
     // Return the values
     *phMPQ = (HANDLE)ha;
     return (nError == ERROR_SUCCESS);
@@ -557,7 +557,7 @@ BOOL WINAPI SFileAddFileEx(HANDLE hMPQ, const char * szFileName, const char * sz
         SetLastError(nError);
     return (nError == ERROR_SUCCESS);
 }
-                                                                                                                                 
+
 // Adds a data file into the archive
 BOOL WINAPI SFileAddFile(HANDLE hMPQ, const char * szFileName, const char * szArchivedName, DWORD dwFlags)
 {
@@ -575,7 +575,7 @@ BOOL WINAPI SFileAddWave(HANDLE hMPQ, const char * szFileName, const char * szAr
 //
 // This function removes a file from the archive. The file content
 // remains there, only the entries in the hash table and in the block
-// table are updated. 
+// table are updated.
 
 BOOL WINAPI SFileRemoveFile(HANDLE hMPQ, const char * szFileName, DWORD dwSearchScope)
 {

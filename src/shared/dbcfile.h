@@ -79,12 +79,12 @@ public:
 	class Iterator
 	{
 	public:
-		Iterator(DBCFile &file, unsigned char *offset): 
+		Iterator(DBCFile &file, unsigned char *offset):
 			record(file, offset) {}
 		/// Advance (prefix only)
-		Iterator & operator++() { 
+		Iterator & operator++() {
 			record.offset += record.file.recordSize;
-			return *this; 
+			return *this;
 		}	
 		/// Return address of current instance
 		Record const & operator*() const { return record; }

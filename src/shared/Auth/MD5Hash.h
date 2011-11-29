@@ -14,7 +14,7 @@ public:
         memset(_digest,0,MD5_DIGEST_LENGTH);
     }
 
-    
+
     void Update(uint8 *buf,uint32 len)
     {
         md5_append(&_state,buf,len);

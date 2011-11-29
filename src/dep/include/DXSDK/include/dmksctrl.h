@@ -39,8 +39,8 @@
     0x28F54685L, 0x06FD, 0x11D2, 0xB2, 0x7A, 0x00, 0xA0, 0xC9, 0x22, 0x31, 0x96
 #endif /* STATIC_IID_IKsControl */
 
-/* 
- * Warning: This will prevent the rest of ks.h from being pulled in if ks.h is 
+/*
+ * Warning: This will prevent the rest of ks.h from being pulled in if ks.h is
  * included after dmksctrl.h. Make sure you do not include both headers in
  * the same source file.
  */

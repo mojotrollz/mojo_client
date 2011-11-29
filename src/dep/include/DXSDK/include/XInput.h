@@ -19,7 +19,7 @@
     #define XINPUT_DLL XINPUT_DLL_W
 #else
     #define XINPUT_DLL XINPUT_DLL_A
-#endif 
+#endif
 
 //
 // Device types available in XINPUT_CAPABILITIES
@@ -135,7 +135,7 @@ DWORD WINAPI XInputGetCapabilities
 
 void WINAPI XInputEnable
 (
-    BOOL enable     // [in] Indicates weather xinput is enabled or disabled. 
+    BOOL enable     // [in] Indicates weather xinput is enabled or disabled.
 );
 
 

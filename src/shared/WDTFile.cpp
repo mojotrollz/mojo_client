@@ -37,7 +37,7 @@ bool WDTFile::LoadMem(ByteBuffer& buf)
 
     while(buf.rpos() < buf.size())
     {
-        buf.read(fourcc,4); flipcc(fourcc); 
+        buf.read(fourcc,4); flipcc(fourcc);
         buf >> size;
 
         if(!strcmp((char*)fourcc,"MVER"))
@@ -58,7 +58,7 @@ bool WDTFile::LoadMem(ByteBuffer& buf)
             {
                 DEBUG(printf("WDTFile::LoadMem() abort load, MWMO block isnt empty\n"));
                 break;
-            }  
+            }
         }
         else if(!strcmp((char*)fourcc,"MODF"))
         {

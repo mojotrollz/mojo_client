@@ -125,7 +125,7 @@ uint32 SCPDatabase::GetFieldByStringValue(const char *entry, const char *val)
     std::map<std::string,SCPFieldDef>::iterator fi = _fielddefs.find(entry);
     if(fi == _fielddefs.end())
         return SCP_INVALID_INT;
-    
+
     uint32 field_id = _fielddefs[entry].id;
     return GetFieldByStringValue(field_id,val);
 }
@@ -696,7 +696,7 @@ void SCPDatabaseMgr::AddSearchPath(const char *path)
             return;
 #endif
     }
-        
+
     _paths.push_back(p);
 }
 

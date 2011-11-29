@@ -648,7 +648,7 @@ extern "C" {
 float WINAPI D3DXMatrixfDeterminant
     ( const D3DXMATRIX *pM );
 
-// Matrix multiplication.  The result represents the transformation M2 
+// Matrix multiplication.  The result represents the transformation M2
 // followed by the transformation M1.  (Out = M1 * M2)
 D3DXMATRIX* WINAPI D3DXMatrixMultiply
     ( D3DXMATRIX *pOut, const D3DXMATRIX *pM1, const D3DXMATRIX *pM2 );
@@ -829,7 +829,7 @@ D3DXQUATERNION* WINAPI D3DXQuaternionRotationAxis
 D3DXQUATERNION* WINAPI D3DXQuaternionRotationYawPitchRoll
     ( D3DXQUATERNION *pOut, float yaw, float pitch, float roll );
 
-// Quaternion multiplication.  The result represents the rotation Q2 
+// Quaternion multiplication.  The result represents the rotation Q2
 // followed by the rotation Q1.  (Out = Q2 * Q1)
 D3DXQUATERNION* WINAPI D3DXQuaternionMultiply
     ( D3DXQUATERNION *pOut, const D3DXQUATERNION *pQ1,

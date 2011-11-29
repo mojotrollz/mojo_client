@@ -29,7 +29,7 @@ USHORT  wPlatform = 0;                  // File platform
 //-----------------------------------------------------------------------------
 // Compression types
 
-// 
+//
 // Data compressions
 //
 // Can be combination of MPQ_COMPRESSION_PKWARE, MPQ_COMPRESSION_BZIP2
@@ -264,16 +264,16 @@ DWORD DetectFileSeed2(DWORD * pdwBlock, UINT nDwords, ...)
     DWORD saveSeed1;
     DWORD dwTemp;
     DWORD i, j;
-    
+
     // We need at least two DWORDS to detect the seed
     if(nDwords < 0x02 || nDwords > 0x10)
         return 0;
-    
+
     va_start(argList, nDwords);
     for(i = 0; i < nDwords; i++)
         dwDecrypted[i] = va_arg(argList, DWORD);
     va_end(argList);
-    
+
     dwTemp = (*pdwBlock ^ dwDecrypted[0]) - 0xEEEEEEEE;
     for(i = 0; i < 0x100; i++)      // Try all 255 possibilities
     {
@@ -430,7 +430,7 @@ TMPQHash * GetHashEntry(TMPQArchive * ha, const char * szFileName)
     // If filename is given by index, we have to search all hash entries for the right index.
     if(dwIndex <= ha->pHeader->dwBlockTableSize)
     {
-        // Pass all the hash entries and find the one with proper block index 
+        // Pass all the hash entries and find the one with proper block index
         for(pHash = ha->pHashTable; pHash < pHashEnd; pHash++)
         {
             if(pHash->dwBlockIndex == dwIndex)
@@ -444,7 +444,7 @@ TMPQHash * GetHashEntry(TMPQArchive * ha, const char * szFileName)
     dwName1 = DecryptName1(szFileName);
     dwName2 = DecryptName2(szFileName);
     pHash   = pHash0 = ha->pHashTable + dwIndex;
-    
+
     // Look for hash index
     while(pHash->dwBlockIndex != HASH_ENTRY_FREE)
     {
@@ -564,7 +564,7 @@ BOOL IsValidMpqHandle(TMPQArchive * ha)
         return FALSE;
     if(ha->pHeader == NULL || IsBadReadPtr(ha->pHeader, sizeof(TMPQHeader)))
         return FALSE;
-    
+
     return (ha->pHeader->dwID == ID_MPQ);
 }
 
@@ -599,7 +599,7 @@ int AddInternalFile(TMPQArchive * ha, const char * szFileName)
             // locale set by the user.
             pHash->lcLocale = LANG_NEUTRAL;
 
-            // Fill the block table            
+            // Fill the block table
             pBlockEnd = ha->pBlockTable + ha->pHeader->dwBlockTableSize;
             pBlockEx = ha->pExtBlockTable;
             for(pBlock = ha->pBlockTable; pBlock < pBlockEnd; pBlock++, pBlockEx++)
@@ -613,7 +613,7 @@ int AddInternalFile(TMPQArchive * ha, const char * szFileName)
 
             // If the block is out of the available entries, return error
             if(pBlock >= (ha->pBlockTable + ha->pHeader->dwHashTableSize))
-                return ERROR_DISK_FULL;    
+                return ERROR_DISK_FULL;
 
             // If we had to add the file at the end, increment the block table
             if(bFoundFreeEntry == FALSE)
@@ -674,7 +674,7 @@ int AddFileToArchive(
     {
         if(nFileType == SFILE_TYPE_DATA)
             nCmpFirst = nCmpNext = nDataCmp;
-    
+
         if(nFileType == SFILE_TYPE_WAVE)
         {
             nCmpNext  = uWaveCmpType[dwQuality];
@@ -882,7 +882,7 @@ int AddFileToArchive(
 
         memset(hf->pdwBlockPos, 0, dwBlockPosLen);
         hf->pdwBlockPos[0] = dwBlockPosLen;
-        
+
         // Write the block positions. Only swap the first item, rest is zeros.
         BSWAP_ARRAY32_UNSIGNED(hf->pdwBlockPos, 1);
         WriteFile(ha->hFile, hf->pdwBlockPos, dwBlockPosLen, &dwTransferred, NULL);
@@ -899,7 +899,7 @@ int AddFileToArchive(
     {
         crc32_context crc32_ctx;
         md5_context md5_ctx;
-        DWORD nBlock;       
+        DWORD nBlock;
 
         // Initialize CRC32 and MD5 processing
         CRC32_Init(&crc32_ctx);
@@ -960,7 +960,7 @@ int AddFileToArchive(
                 EncryptMPQBlock((DWORD *)pbToWrite, dwOutLength, hf->dwSeed1 + nBlock);
                 BSWAP_ARRAY32_UNSIGNED((DWORD *)pbToWrite, dwOutLength / sizeof(DWORD));
             }
-            
+
             // Write the block
             WriteFile(ha->hFile, pbToWrite, dwOutLength, &dwTransferred, NULL);
             if(dwTransferred != dwOutLength)
@@ -989,10 +989,10 @@ int AddFileToArchive(
         // If file is encrypted, block positions are also encrypted
         if(dwFlags & MPQ_FILE_ENCRYPTED)
             EncryptMPQBlock(hf->pdwBlockPos, dwBlockPosLen, hf->dwSeed1 - 1);
-        
+
         // Set the position back to the block table
         SetFilePointer(ha->hFile, hf->RawFilePos.LowPart, &hf->RawFilePos.HighPart, FILE_BEGIN);
-        
+
         // Write block positions to the archive
         BSWAP_ARRAY32_UNSIGNED(hf->pdwBlockPos, hf->nBlocks);
         WriteFile(ha->hFile, hf->pdwBlockPos, dwBlockPosLen, &dwTransferred, NULL);
@@ -1128,7 +1128,7 @@ int SaveMPQTables(TMPQArchive * ha)
 
         // Encrypt the block table and write it to the file
         EncryptBlockTable((DWORD *)pbBuffer, (BYTE *)"(block table)", dwBytes >> 2);
-        
+
         // Convert to little endian for file save
         BSWAP_ARRAY32_UNSIGNED((DWORD *)pbBuffer, dwBytes / sizeof(DWORD));
         WriteFile(ha->hFile, pbBuffer, dwBytes, &dwWritten, NULL);

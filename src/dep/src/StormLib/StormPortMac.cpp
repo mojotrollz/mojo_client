@@ -343,9 +343,9 @@ BOOL MoveFile(const char * lpFromFileName, const char * lpToFileName)
 	
 	// Convert CFString to Unicode and rename the file
 	UniChar unicodeFileName[256];
-	CFStringGetCharacters(newFileNameCFString, CFRangeMake(0, CFStringGetLength(newFileNameCFString)), 
+	CFStringGetCharacters(newFileNameCFString, CFRangeMake(0, CFStringGetLength(newFileNameCFString)),
 						  unicodeFileName);
-	theErr = FSRenameUnicode(&toFileRef, CFStringGetLength(newFileNameCFString), unicodeFileName, 
+	theErr = FSRenameUnicode(&toFileRef, CFStringGetLength(newFileNameCFString), unicodeFileName,
 							 kTextEncodingUnknown, NULL);
 	if (theErr != noErr)
 	{
@@ -412,9 +412,9 @@ HANDLE CreateFile(	const char *sFileName,			/* file name */
 		CFStringRef filePathCFString = CFStringCreateWithCString(NULL, sFileName, kCFStringEncodingUTF8);
 		CFURLRef fileURL = CFURLCreateWithFileSystemPath(NULL, filePathCFString, kCFURLPOSIXPathStyle, FALSE);
 		CFStringRef fileNameCFString = CFURLCopyLastPathComponent(fileURL);
-		CFStringGetCharacters(fileNameCFString, CFRangeMake(0, CFStringGetLength(fileNameCFString)), 
+		CFStringGetCharacters(fileNameCFString, CFRangeMake(0, CFStringGetLength(fileNameCFString)),
 							  unicodeFileName);
-		theErr = FSCreateFileUnicode(&theParentRef, CFStringGetLength(fileNameCFString), unicodeFileName, 
+		theErr = FSCreateFileUnicode(&theParentRef, CFStringGetLength(fileNameCFString), unicodeFileName,
 									 kFSCatInfoNone, NULL, &theFileRef, NULL);
 		CFRelease(fileNameCFString);
 		CFRelease(filePathCFString);
@@ -688,7 +688,7 @@ BOOL IsBadReadPtr(const void * ptr, int size)
 	return FALSE;
 }
 
-// Returns attributes of a file. Actually, it doesn't, it just checks if 
+// Returns attributes of a file. Actually, it doesn't, it just checks if
 // the file exists, since that's all StormLib uses it for
 DWORD GetFileAttributes(const char * szFileName)
 {

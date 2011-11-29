@@ -233,7 +233,7 @@ ISceneNodeAnimator* CSceneNodeAnimatorCollisionResponse::createClone(ISceneNode*
 {
 	if (!newManager) newManager = SceneManager;
 
-	CSceneNodeAnimatorCollisionResponse * newAnimator = 
+	CSceneNodeAnimatorCollisionResponse * newAnimator =
 		new CSceneNodeAnimatorCollisionResponse(newManager, World, Object, Radius, (Gravity * 1000.0f), Translation,
 													SlidingSpeed);
 

@@ -19,10 +19,10 @@ void WorldSession::_SetupObjectFields()
                 CORPSE_END
             };
             memcpy(Object::maxvalues,mv,sizeof(mv));
-            
+
             Object::updatefields[ OBJECT_FIELD_GUID                         ] = UpdateField(                      0x0000 ,  UF_UINT64 );  // Size:2
-            Object::updatefields[ OBJECT_FIELD_GUID_LOW                     ] = UpdateField(                      0x0000 ,  UF_UINT32 ); 
-            Object::updatefields[ OBJECT_FIELD_GUID_HIGH                    ] = UpdateField(                      0x0001 ,  UF_UINT32 ); 
+            Object::updatefields[ OBJECT_FIELD_GUID_LOW                     ] = UpdateField(                      0x0000 ,  UF_UINT32 );
+            Object::updatefields[ OBJECT_FIELD_GUID_HIGH                    ] = UpdateField(                      0x0001 ,  UF_UINT32 );
             Object::updatefields[ OBJECT_FIELD_TYPE                         ] = UpdateField(                      0x0002 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ OBJECT_FIELD_ENTRY                        ] = UpdateField(                      0x0003 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ OBJECT_FIELD_SCALE_X                      ] = UpdateField(                      0x0004 ,   UF_FLOAT );  // Size:1
@@ -35,10 +35,10 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ ITEM_FIELD_STACK_COUNT                    ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0008 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ ITEM_FIELD_DURATION                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0009 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ ITEM_FIELD_SPELL_CHARGES                  ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000A ,  UF_UINT32 );  // Size:5
-            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_01               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000B ,  UF_UINT32 ); 
-            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_02               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000C ,  UF_UINT32 ); 
-            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_03               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000D ,  UF_UINT32 ); 
-            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_04               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000E ,  UF_UINT32 ); 
+            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_01               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000B ,  UF_UINT32 );
+            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_02               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000C ,  UF_UINT32 );
+            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_03               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000D ,  UF_UINT32 );
+            Object::updatefields[ ITEM_FIELD_SPELL_CHARGES_04               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000E ,  UF_UINT32 );
             Object::updatefields[ ITEM_FIELD_FLAGS                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000F ,  UF_UINT32 );  // Size:1
             Object::updatefields[ ITEM_FIELD_ENCHANTMENT                    ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0010 ,  UF_UINT32 );  // Count=21
             Object::updatefields[ ITEM_FIELD_PROPERTY_SEED                  ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0025 ,  UF_UINT32 );  // Size:1
@@ -50,7 +50,7 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ CONTAINER_FIELD_NUM_SLOTS                 ] = UpdateField(    mv[TYPEID_UNIT] + 0x0000 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ CONTAINER_ALIGN_PAD                       ] = UpdateField(    mv[TYPEID_UNIT] + 0x0001 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ CONTAINER_FIELD_SLOT_1                    ] = UpdateField(    mv[TYPEID_UNIT] + 0x0002 ,  UF_UINT32 );  // Count=56
-            Object::updatefields[ CONTAINER_FIELD_SLOT_LAST                 ] = UpdateField(    mv[TYPEID_UNIT] + 0x0038 ,  UF_UINT32 ); 
+            Object::updatefields[ CONTAINER_FIELD_SLOT_LAST                 ] = UpdateField(    mv[TYPEID_UNIT] + 0x0038 ,  UF_UINT32 );
 
             Object::updatefields[ UNIT_FIELD_CHARM                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64 );  // Size:2
             Object::updatefields[ UNIT_FIELD_SUMMON                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT64 );  // Size:2
@@ -76,27 +76,27 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ UNIT_FIELD_FACTIONTEMPLATE                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001D ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_BYTES_0                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001E ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY            ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001F ,  UF_UINT32 );  // Size:3
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0020 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_02         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0021 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0020 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_02         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0021 ,  UF_UINT32 );
             Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO                    ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0022 ,  UF_UINT32 );  // Size:6
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_01                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0023 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_02                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0024 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_03                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0025 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_04                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0026 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_05                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0027 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_01                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0023 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_02                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0024 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_03                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0025 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_04                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0026 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_05                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0027 ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_FLAGS                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0028 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_AURA                           ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0029 ,  UF_UINT32 );  // Size:48
-            Object::updatefields[ UNIT_FIELD_AURA_LAST                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0058 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_AURA_LAST                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0058 ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_AURAFLAGS                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0059 ,  UF_UINT32 );  // Size:6
-            Object::updatefields[ UNIT_FIELD_AURAFLAGS_01                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005A ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_AURAFLAGS_02                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005B ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_AURAFLAGS_03                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005C ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_AURAFLAGS_04                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005D ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_AURAFLAGS_05                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005E ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_AURAFLAGS_01                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005A ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_AURAFLAGS_02                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005B ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_AURAFLAGS_03                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005C ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_AURAFLAGS_04                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005D ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_AURAFLAGS_05                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005E ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_AURALEVELS                     ] = UpdateField(  mv[TYPEID_OBJECT] + 0x005F ,  UF_UINT32 );  // Size:12
-            Object::updatefields[ UNIT_FIELD_AURALEVELS_LAST                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x006A ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_AURALEVELS_LAST                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x006A ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_AURAAPPLICATIONS               ] = UpdateField(  mv[TYPEID_OBJECT] + 0x006B ,  UF_UINT32 );  // Size:12
-            Object::updatefields[ UNIT_FIELD_AURAAPPLICATIONS_LAST          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0076 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_AURAAPPLICATIONS_LAST          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0076 ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_AURASTATE                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0077 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_BASEATTACKTIME                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0078 ,  UF_UINT64 );  // Size:2
             Object::updatefields[ UNIT_FIELD_OFFHANDATTACKTIME              ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0079 ,  UF_UINT64 );  // Size:2
@@ -128,12 +128,12 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ UNIT_FIELD_STAT3                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0093 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_STAT4                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0094 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_RESISTANCES                    ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0095 ,  UF_UINT32 );  // Size:7
-            Object::updatefields[ UNIT_FIELD_RESISTANCES_01                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0096 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_RESISTANCES_02                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0097 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_RESISTANCES_03                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0098 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_RESISTANCES_04                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0099 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_RESISTANCES_05                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x009A ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_RESISTANCES_06                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x009B ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_RESISTANCES_01                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0096 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_RESISTANCES_02                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0097 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_RESISTANCES_03                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0098 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_RESISTANCES_04                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0099 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_RESISTANCES_05                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x009A ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_RESISTANCES_06                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x009B ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_BASE_MANA                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x009C ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_BASE_HEALTH                    ] = UpdateField(  mv[TYPEID_OBJECT] + 0x009D ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_BYTES_2                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x009E ,  UF_UINT32 );  // Size:1
@@ -146,20 +146,20 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ UNIT_FIELD_MINRANGEDDAMAGE                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00A5 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_MAXRANGEDDAMAGE                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00A6 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER            ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00A7 ,  UF_UINT32 );  // Size:7
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_01         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00A8 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_02         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00A9 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_03         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AA ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_04         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AB ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_05         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AC ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_06         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AD ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_01         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00A8 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_02         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00A9 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_03         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AA ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_04         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AB ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_05         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AC ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER_06         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AD ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AE ,  UF_UINT32 );  // Size:7
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_01       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AF ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_02       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B0 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_03       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B1 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_04       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B2 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_05       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B3 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_06       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B4 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_PADDING                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B5 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_01       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00AF ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_02       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B0 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_03       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B1 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_04       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B2 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_05       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B3 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER_06       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B4 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_PADDING                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00B5 ,  UF_UINT32 );
 
             Object::updatefields[ PLAYER_DUEL_ARBITER                       ] = UpdateField(    mv[TYPEID_UNIT] + 0x0000 ,  UF_UINT64 );  // Size:2
             Object::updatefields[ PLAYER_FLAGS                              ] = UpdateField(    mv[TYPEID_UNIT] + 0x0002 ,  UF_UINT32 );  // Size:1
@@ -171,30 +171,30 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ PLAYER_DUEL_TEAM                          ] = UpdateField(    mv[TYPEID_UNIT] + 0x0008 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_GUILD_TIMESTAMP                    ] = UpdateField(    mv[TYPEID_UNIT] + 0x0009 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_QUEST_LOG_1_1                      ] = UpdateField(    mv[TYPEID_UNIT] + 0x000A ,  UF_UINT32 );  // Count = 20
-            Object::updatefields[ PLAYER_QUEST_LOG_1_2                      ] = UpdateField(    mv[TYPEID_UNIT] + 0x000B ,  UF_UINT32 ); 
-            Object::updatefields[ PLAYER_QUEST_LOG_1_3                      ] = UpdateField(    mv[TYPEID_UNIT] + 0x000C ,  UF_UINT32 ); 
-            Object::updatefields[ PLAYER_QUEST_LOG_LAST_1                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x0043 ,  UF_UINT32 ); 
-            Object::updatefields[ PLAYER_QUEST_LOG_LAST_2                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x0044 ,  UF_UINT32 ); 
-            Object::updatefields[ PLAYER_QUEST_LOG_LAST_3                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x0045 ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_QUEST_LOG_1_2                      ] = UpdateField(    mv[TYPEID_UNIT] + 0x000B ,  UF_UINT32 );
+            Object::updatefields[ PLAYER_QUEST_LOG_1_3                      ] = UpdateField(    mv[TYPEID_UNIT] + 0x000C ,  UF_UINT32 );
+            Object::updatefields[ PLAYER_QUEST_LOG_LAST_1                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x0043 ,  UF_UINT32 );
+            Object::updatefields[ PLAYER_QUEST_LOG_LAST_2                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x0044 ,  UF_UINT32 );
+            Object::updatefields[ PLAYER_QUEST_LOG_LAST_3                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x0045 ,  UF_UINT32 );
             Object::updatefields[ PLAYER_VISIBLE_ITEM_1_CREATOR             ] = UpdateField(    mv[TYPEID_UNIT] + 0x0046 ,  UF_UINT64 );  // Size:2, Count = 19
             Object::updatefields[ PLAYER_VISIBLE_ITEM_1_0                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x0048 ,  UF_UINT64 );  // Size:8
             Object::updatefields[ PLAYER_VISIBLE_ITEM_1_PROPERTIES          ] = UpdateField(    mv[TYPEID_UNIT] + 0x0050 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_VISIBLE_ITEM_1_PAD                 ] = UpdateField(    mv[TYPEID_UNIT] + 0x0051 ,  UF_UINT32 );  // Size:1
-            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_CREATOR          ] = UpdateField(    mv[TYPEID_UNIT] + 0x011E ,  UF_UINT32 ); 
-            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_0                ] = UpdateField(    mv[TYPEID_UNIT] + 0x0120 ,  UF_UINT32 ); 
-            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_PROPERTIES       ] = UpdateField(    mv[TYPEID_UNIT] + 0x0128 ,  UF_UINT32 ); 
-            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_PAD              ] = UpdateField(    mv[TYPEID_UNIT] + 0x0129 ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_CREATOR          ] = UpdateField(    mv[TYPEID_UNIT] + 0x011E ,  UF_UINT32 );
+            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_0                ] = UpdateField(    mv[TYPEID_UNIT] + 0x0120 ,  UF_UINT32 );
+            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_PROPERTIES       ] = UpdateField(    mv[TYPEID_UNIT] + 0x0128 ,  UF_UINT32 );
+            Object::updatefields[ PLAYER_VISIBLE_ITEM_LAST_PAD              ] = UpdateField(    mv[TYPEID_UNIT] + 0x0129 ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FIELD_INV_SLOT_HEAD                ] = UpdateField(    mv[TYPEID_UNIT] + 0x012A ,  UF_UINT32 );  // Size:46
             Object::updatefields[ PLAYER_FIELD_PACK_SLOT_1                  ] = UpdateField(    mv[TYPEID_UNIT] + 0x0158 ,  UF_UINT32 );  // Size:32
-            Object::updatefields[ PLAYER_FIELD_PACK_SLOT_LAST               ] = UpdateField(    mv[TYPEID_UNIT] + 0x0176 ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_FIELD_PACK_SLOT_LAST               ] = UpdateField(    mv[TYPEID_UNIT] + 0x0176 ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FIELD_BANK_SLOT_1                  ] = UpdateField(    mv[TYPEID_UNIT] + 0x0178 ,  UF_UINT32 );  // Size:48
-            Object::updatefields[ PLAYER_FIELD_BANK_SLOT_LAST               ] = UpdateField(    mv[TYPEID_UNIT] + 0x01A6 ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_FIELD_BANK_SLOT_LAST               ] = UpdateField(    mv[TYPEID_UNIT] + 0x01A6 ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FIELD_BANKBAG_SLOT_1               ] = UpdateField(    mv[TYPEID_UNIT] + 0x01A8 ,  UF_UINT32 );  // Size:12
-            Object::updatefields[ PLAYER_FIELD_BANKBAG_SLOT_LAST            ] = UpdateField(    mv[TYPEID_UNIT] + 0x0AB2 ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_FIELD_BANKBAG_SLOT_LAST            ] = UpdateField(    mv[TYPEID_UNIT] + 0x0AB2 ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FIELD_VENDORBUYBACK_SLOT_1         ] = UpdateField(    mv[TYPEID_UNIT] + 0x01B4 ,  UF_UINT32 );  // Size:24
-            Object::updatefields[ PLAYER_FIELD_VENDORBUYBACK_SLOT_LAST      ] = UpdateField(    mv[TYPEID_UNIT] + 0x01CA ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_FIELD_VENDORBUYBACK_SLOT_LAST      ] = UpdateField(    mv[TYPEID_UNIT] + 0x01CA ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FIELD_KEYRING_SLOT_1               ] = UpdateField(    mv[TYPEID_UNIT] + 0x01CC ,  UF_UINT32 );  // Size:64
-            Object::updatefields[ PLAYER_FIELD_KEYRING_SLOT_LAST            ] = UpdateField(    mv[TYPEID_UNIT] + 0x020A ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_FIELD_KEYRING_SLOT_LAST            ] = UpdateField(    mv[TYPEID_UNIT] + 0x020A ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FARSIGHT                           ] = UpdateField(    mv[TYPEID_UNIT] + 0x020C ,  UF_UINT64 );  // Size:2
             Object::updatefields[ PLAYER_FIELD_COMBO_TARGET                 ] = UpdateField(    mv[TYPEID_UNIT] + 0x020E ,  UF_UINT64 );  // Size:2
             Object::updatefields[ PLAYER_XP                                 ] = UpdateField(    mv[TYPEID_UNIT] + 0x0210 ,  UF_UINT32 );  // Size:1
@@ -232,9 +232,9 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ PLAYER_SELF_RES_SPELL                     ] = UpdateField(    mv[TYPEID_UNIT] + 0x040C ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_FIELD_PVP_MEDALS                   ] = UpdateField(    mv[TYPEID_UNIT] + 0x040D ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_FIELD_BUYBACK_PRICE_1              ] = UpdateField(    mv[TYPEID_UNIT] + 0x040E ,  UF_UINT32 );  // Count=12
-            Object::updatefields[ PLAYER_FIELD_BUYBACK_PRICE_LAST           ] = UpdateField(    mv[TYPEID_UNIT] + 0x0419 ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_FIELD_BUYBACK_PRICE_LAST           ] = UpdateField(    mv[TYPEID_UNIT] + 0x0419 ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FIELD_BUYBACK_TIMESTAMP_1          ] = UpdateField(    mv[TYPEID_UNIT] + 0x041A ,  UF_UINT32 );  // Count=12
-            Object::updatefields[ PLAYER_FIELD_BUYBACK_TIMESTAMP_LAST       ] = UpdateField(    mv[TYPEID_UNIT] + 0x0425 ,  UF_UINT32 ); 
+            Object::updatefields[ PLAYER_FIELD_BUYBACK_TIMESTAMP_LAST       ] = UpdateField(    mv[TYPEID_UNIT] + 0x0425 ,  UF_UINT32 );
             Object::updatefields[ PLAYER_FIELD_SESSION_KILLS                ] = UpdateField(    mv[TYPEID_UNIT] + 0x0426 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_FIELD_YESTERDAY_KILLS              ] = UpdateField(    mv[TYPEID_UNIT] + 0x0427 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_FIELD_LAST_WEEK_KILLS              ] = UpdateField(    mv[TYPEID_UNIT] + 0x0428 ,  UF_UINT32 );  // Size:1
@@ -249,47 +249,47 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ PLAYER_FIELD_WATCHED_FACTION_INDEX        ] = UpdateField(    mv[TYPEID_UNIT] + 0x0431 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ PLAYER_FIELD_COMBAT_RATING_1              ] = UpdateField(    mv[TYPEID_UNIT] + 0x0432 ,  UF_UINT32 );  // Size:20
 
-            Object::updatefields[ OBJECT_FIELD_CREATED_BY                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64 ); 
-            Object::updatefields[ GAMEOBJECT_DISPLAYID                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_FLAGS                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0003 ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_ROTATION                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0004 ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_STATE                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0008 ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_POS_X                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0009 ,   UF_FLOAT ); 
-            Object::updatefields[ GAMEOBJECT_POS_Y                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000A ,   UF_FLOAT ); 
-            Object::updatefields[ GAMEOBJECT_POS_Z                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000B ,   UF_FLOAT ); 
-            Object::updatefields[ GAMEOBJECT_FACING                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000C ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_DYN_FLAGS                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000D ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_FACTION                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000E ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_TYPE_ID                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000F ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_LEVEL                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0010 ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_ARTKIT                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0011 ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_ANIMPROGRESS                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0012 ,  UF_UINT32 ); 
-            Object::updatefields[ GAMEOBJECT_PADDING                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0013 ,  UF_UINT32 ); 
+            Object::updatefields[ OBJECT_FIELD_CREATED_BY                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64 );
+            Object::updatefields[ GAMEOBJECT_DISPLAYID                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_FLAGS                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0003 ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_ROTATION                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0004 ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_STATE                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0008 ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_POS_X                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0009 ,   UF_FLOAT );
+            Object::updatefields[ GAMEOBJECT_POS_Y                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000A ,   UF_FLOAT );
+            Object::updatefields[ GAMEOBJECT_POS_Z                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000B ,   UF_FLOAT );
+            Object::updatefields[ GAMEOBJECT_FACING                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000C ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_DYN_FLAGS                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000D ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_FACTION                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000E ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_TYPE_ID                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x000F ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_LEVEL                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0010 ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_ARTKIT                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0011 ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_ANIMPROGRESS                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0012 ,  UF_UINT32 );
+            Object::updatefields[ GAMEOBJECT_PADDING                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0013 ,  UF_UINT32 );
 
-            Object::updatefields[ DYNAMICOBJECT_CASTER                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64 ); 
-            Object::updatefields[ DYNAMICOBJECT_BYTES                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT32 ); 
-            Object::updatefields[ DYNAMICOBJECT_SPELLID                     ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0003 ,  UF_UINT32 ); 
-            Object::updatefields[ DYNAMICOBJECT_RADIUS                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0004 ,  UF_UINT32 ); 
-            Object::updatefields[ DYNAMICOBJECT_POS_X                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0005 ,  UF_UINT32 ); 
-            Object::updatefields[ DYNAMICOBJECT_POS_Y                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0006 ,  UF_UINT32 ); 
-            Object::updatefields[ DYNAMICOBJECT_POS_Z                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0007 ,  UF_UINT32 ); 
-            Object::updatefields[ DYNAMICOBJECT_FACING                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0008 ,  UF_UINT32 ); 
-            Object::updatefields[ DYNAMICOBJECT_PAD                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0009 ,  UF_UINT32 ); 
+            Object::updatefields[ DYNAMICOBJECT_CASTER                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64 );
+            Object::updatefields[ DYNAMICOBJECT_BYTES                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT32 );
+            Object::updatefields[ DYNAMICOBJECT_SPELLID                     ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0003 ,  UF_UINT32 );
+            Object::updatefields[ DYNAMICOBJECT_RADIUS                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0004 ,  UF_UINT32 );
+            Object::updatefields[ DYNAMICOBJECT_POS_X                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0005 ,  UF_UINT32 );
+            Object::updatefields[ DYNAMICOBJECT_POS_Y                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0006 ,  UF_UINT32 );
+            Object::updatefields[ DYNAMICOBJECT_POS_Z                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0007 ,  UF_UINT32 );
+            Object::updatefields[ DYNAMICOBJECT_FACING                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0008 ,  UF_UINT32 );
+            Object::updatefields[ DYNAMICOBJECT_PAD                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0009 ,  UF_UINT32 );
 
-            Object::updatefields[ CORPSE_FIELD_OWNER                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64 ); 
-            Object::updatefields[ CORPSE_FIELD_FACING                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_POS_X                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0003 ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_POS_Y                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0004 ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_POS_Z                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0005 ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_DISPLAY_ID                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0006 ,  UF_UINT32 ); 
+            Object::updatefields[ CORPSE_FIELD_OWNER                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64 );
+            Object::updatefields[ CORPSE_FIELD_FACING                       ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_POS_X                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0003 ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_POS_Y                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0004 ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_POS_Z                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0005 ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_DISPLAY_ID                   ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0006 ,  UF_UINT32 );
             Object::updatefields[ CORPSE_FIELD_ITEM                         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0007 ,  UF_UINT32 );  // 19
-            Object::updatefields[ CORPSE_FIELD_BYTES_1                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001A ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_BYTES_2                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001B ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_GUILD                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001C ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_FLAGS                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001D ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_DYNAMIC_FLAGS                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001E ,  UF_UINT32 ); 
-            Object::updatefields[ CORPSE_FIELD_PAD                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001F ,  UF_UINT32 ); 
-  
+            Object::updatefields[ CORPSE_FIELD_BYTES_1                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001A ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_BYTES_2                      ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001B ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_GUILD                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001C ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_FLAGS                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001D ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_DYNAMIC_FLAGS                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001E ,  UF_UINT32 );
+            Object::updatefields[ CORPSE_FIELD_PAD                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001F ,  UF_UINT32 );
+
             break;
         }
         case CLIENT_TBC: //2.4.3
@@ -307,13 +307,13 @@ void WorldSession::_SetupObjectFields()
             memcpy(Object::maxvalues,mv,sizeof(mv));
 
             Object::updatefields[ OBJECT_FIELD_GUID                       ] = UpdateField(                     0x0000 ,  UF_UINT64);
-            Object::updatefields[ OBJECT_FIELD_GUID_LOW                   ] = UpdateField(                     0x0000 ,  UF_UINT32); 
-            Object::updatefields[ OBJECT_FIELD_GUID_HIGH                  ] = UpdateField(                     0x0001 ,  UF_UINT32); 
+            Object::updatefields[ OBJECT_FIELD_GUID_LOW                   ] = UpdateField(                     0x0000 ,  UF_UINT32);
+            Object::updatefields[ OBJECT_FIELD_GUID_HIGH                  ] = UpdateField(                     0x0001 ,  UF_UINT32);
             Object::updatefields[ OBJECT_FIELD_TYPE                       ] = UpdateField(                     0x0002 ,  UF_UINT32);
             Object::updatefields[ OBJECT_FIELD_ENTRY                      ] = UpdateField(                     0x0003 ,  UF_UINT32);
             Object::updatefields[ OBJECT_FIELD_SCALE_X                    ] = UpdateField(                     0x0004 ,   UF_FLOAT);
             Object::updatefields[ OBJECT_FIELD_PADDING                    ] = UpdateField(                     0x0005 ,  UF_UINT32);
-            
+
             Object::updatefields[ ITEM_FIELD_OWNER                        ] = UpdateField( mv[TYPEID_OBJECT] + 0x0000 ,  UF_UINT64);
             Object::updatefields[ ITEM_FIELD_CONTAINED                    ] = UpdateField( mv[TYPEID_OBJECT] + 0x0002 ,  UF_UINT64);
             Object::updatefields[ ITEM_FIELD_CREATOR                      ] = UpdateField( mv[TYPEID_OBJECT] + 0x0004 ,  UF_UINT64);
@@ -357,14 +357,14 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ UNIT_FIELD_FACTIONTEMPLATE                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001D ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_BYTES_0                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001E ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY            ] = UpdateField(  mv[TYPEID_OBJECT] + 0x001F ,  UF_UINT32 );  // Size:3
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0020 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_02         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0021 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0020 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_02         ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0021 ,  UF_UINT32 );
             Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO                    ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0022 ,  UF_UINT32 );  // Size:6
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_01                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0023 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_02                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0024 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_03                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0025 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_04                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0026 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_05                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0027 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_01                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0023 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_02                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0024 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_03                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0025 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_04                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0026 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_VIRTUAL_ITEM_INFO_05                 ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0027 ,  UF_UINT32 );
             Object::updatefields[ UNIT_FIELD_FLAGS                          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0028 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_FLAGS_2                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x0029 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_AURA                           ] = UpdateField(  mv[TYPEID_OBJECT] + 0x002A ,  UF_UINT32 );  // Size:56
@@ -427,8 +427,8 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ UNIT_FIELD_MAXRANGEDDAMAGE                ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00D3 ,  UF_UINT32 );  // Size:1
             Object::updatefields[ UNIT_FIELD_POWER_COST_MODIFIER            ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00D4 ,  UF_UINT32 );  // Size:7
             Object::updatefields[ UNIT_FIELD_POWER_COST_MULTIPLIER          ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00DB ,  UF_UINT32 );  // Size:7
-            Object::updatefields[ UNIT_FIELD_MAXHEALTHMODIFIER              ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00E2 ,  UF_UINT32 ); 
-            Object::updatefields[ UNIT_FIELD_PADDING                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00E3 ,  UF_UINT32 ); 
+            Object::updatefields[ UNIT_FIELD_MAXHEALTHMODIFIER              ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00E2 ,  UF_UINT32 );
+            Object::updatefields[ UNIT_FIELD_PADDING                        ] = UpdateField(  mv[TYPEID_OBJECT] + 0x00E3 ,  UF_UINT32 );
 
             Object::updatefields[ PLAYER_DUEL_ARBITER                      ] = UpdateField(  mv[TYPEID_UNIT] + 0x0000 ,  UF_UINT32 );  // Size: 2, Type: LONG, Flags: PUBLIC
             Object::updatefields[ PLAYER_FLAGS                             ] = UpdateField(  mv[TYPEID_UNIT] + 0x0002 ,  UF_UINT32 );  // Size: 1, Type: INT, Flags: PUBLIC
@@ -730,10 +730,10 @@ void WorldSession::_SetupObjectFields()
                 CORPSE_END
             };
             memcpy(Object::maxvalues,mv,sizeof(mv));
-          
+
             Object::updatefields[ OBJECT_FIELD_GUID                       ] = UpdateField(                     0x0000 ,  UF_UINT64);
-            Object::updatefields[ OBJECT_FIELD_GUID_LOW                   ] = UpdateField(                     0x0000 ,  UF_UINT32); 
-            Object::updatefields[ OBJECT_FIELD_GUID_HIGH                  ] = UpdateField(                     0x0001 ,  UF_UINT32); 
+            Object::updatefields[ OBJECT_FIELD_GUID_LOW                   ] = UpdateField(                     0x0000 ,  UF_UINT32);
+            Object::updatefields[ OBJECT_FIELD_GUID_HIGH                  ] = UpdateField(                     0x0001 ,  UF_UINT32);
             Object::updatefields[ OBJECT_FIELD_TYPE                       ] = UpdateField(                     0x0002 ,  UF_UINT32);
             Object::updatefields[ OBJECT_FIELD_ENTRY                      ] = UpdateField(                     0x0003 ,  UF_UINT32);
             Object::updatefields[ OBJECT_FIELD_SCALE_X                    ] = UpdateField(                     0x0004 ,   UF_FLOAT);
@@ -1110,8 +1110,8 @@ void WorldSession::_SetupObjectFields()
             Object::updatefields[ CORPSE_FIELD_FLAGS                      ] = UpdateField( mv[TYPEID_OBJECT] + 0x001B ,  UF_UINT32);
             Object::updatefields[ CORPSE_FIELD_DYNAMIC_FLAGS              ] = UpdateField( mv[TYPEID_OBJECT] + 0x001C ,  UF_UINT32);
             Object::updatefields[ CORPSE_FIELD_PAD                        ] = UpdateField( mv[TYPEID_OBJECT] + 0x001D ,  UF_UINT32);
-          
-          
+
+
             break;
         }
     }

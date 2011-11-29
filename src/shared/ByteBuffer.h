@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2005,2006 MaNGOS <http://www.mangosproject.org/>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -309,7 +309,7 @@ class ByteBuffer
                 guid >>= 8;
             }
         }
-        
+
         void put(size_t pos, const uint8 *src, size_t cnt)
         {
             memcpy(&_storage[pos], src, cnt);
@@ -378,7 +378,7 @@ class ByteBuffer
             printf("\n");
 
         }
-        
+
         void print(void)
         {
             uint32 line = 1;

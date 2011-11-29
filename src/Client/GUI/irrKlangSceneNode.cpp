@@ -10,7 +10,7 @@ const char* irrKlangSceneNodeTypeName = "irrKlangSceneNode";
 
 
 
-CIrrKlangSceneNode::CIrrKlangSceneNode(irrklang::ISoundEngine* soundEngine, 
+CIrrKlangSceneNode::CIrrKlangSceneNode(irrklang::ISoundEngine* soundEngine,
 									   scene::ISceneNode* parent,
 									   scene::ISceneManager* mgr, s32 id)
 	: scene::ISceneNode(parent, mgr, id), SoundEngine(soundEngine)
@@ -188,7 +188,7 @@ void CIrrKlangSceneNode::render()
 
 	video::IVideoDriver* driver = SceneManager->getVideoDriver();
 	driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-      
+
 	scene::ICameraSceneNode* camera = SceneManager->getActiveCamera();
 	if (camera)
 	{
@@ -288,7 +288,7 @@ void CIrrKlangSceneNode::stop()
 }
 
 
-//! Sets the play mode to 'play once', a sound file is played once, and 
+//! Sets the play mode to 'play once', a sound file is played once, and
 //! the scene node deletes itself then, if wished.
 void CIrrKlangSceneNode::setPlayOnceMode(bool deleteWhenFinished)
 {
@@ -384,7 +384,7 @@ ISceneNode* CIrrKlangSceneNodeFactory::addSceneNode(ESCENE_NODE_TYPE type, IScen
 	{
 		CIrrKlangSceneNode* node = new CIrrKlangSceneNode(SoundEngine, parent, Manager, -1);
 		node->drop();
-		return node; 
+		return node;
 	}
 
 	return 0;
@@ -415,7 +415,7 @@ ESCENE_NODE_TYPE CIrrKlangSceneNodeFactory::getCreateableSceneNodeType(u32 idx) 
 }
 
 
-//! returns type name of a createable scene node type 
+//! returns type name of a createable scene node type
 const c8* CIrrKlangSceneNodeFactory::getCreateableSceneNodeTypeName(u32 idx) const
 {
 	if (idx==0)
@@ -425,7 +425,7 @@ const c8* CIrrKlangSceneNodeFactory::getCreateableSceneNodeTypeName(u32 idx) con
 }
 
 
-//! returns type name of a createable scene node type 
+//! returns type name of a createable scene node type
 const c8* CIrrKlangSceneNodeFactory::getCreateableSceneNodeTypeName(ESCENE_NODE_TYPE type) const
 {
 	if (type == IRRKLANG_SCENE_NODE_ID)

@@ -1,7 +1,7 @@
 #ifndef _CACHEHANDLER_H
 #define _CACHEHANDLER_H
 
-typedef std::map<uint64,std::string> PlayerNameMap; 
+typedef std::map<uint64,std::string> PlayerNameMap;
 
 class PlayerNameCache
 {

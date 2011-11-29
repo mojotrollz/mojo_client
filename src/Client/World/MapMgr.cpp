@@ -13,7 +13,7 @@ char* MapMgr::MapID2Name(uint32 mid)
   }
   uint32 name_id = mapdb->GetFieldId("name_general");
   return mapdb->GetString(mid,name_id);
-  
+
 }
 
 
@@ -41,7 +41,7 @@ void MapMgr::Update(float x, float y, uint32 m)
         char buf[255];
         std::string mapname = MapID2Name(m);
         MemoryDataHolder::MakeWDTFilename(buf,m,mapname);
-        
+
         // Loading WDT
         MemoryDataHolder::MemoryDataResult mdr = MemoryDataHolder::GetFileBasic(buf);
         if(mdr.flags & MemoryDataHolder::MDH_FILE_OK && mdr.data.size)
@@ -98,7 +98,7 @@ void MapMgr::_LoadNearTiles(uint32 gx, uint32 gy, uint32 m)
 
 void MapMgr::_LoadTile(uint32 gx, uint32 gy, uint32 m)
 {
-    
+
     _mapsLoaded = false;
     std::string mapname = MapID2Name(m);
     logdebug("Mapname: %s",mapname.c_str());

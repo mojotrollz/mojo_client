@@ -5,7 +5,7 @@
 // play back sounds and music in 3D. Just place it into 3d space and set
 // what sound it should play.
 // It uses the free irrKlang sound engine (http://www.ambiera.com/irrklang).
-// This file also contains a sound engine factory, CIrrKlangSceneNodeFactory. Just 
+// This file also contains a sound engine factory, CIrrKlangSceneNodeFactory. Just
 // register this factory in your scene manager, and you will be able to load and
 // save irrKlang scene nodes from and into .irr files:
 //
@@ -32,7 +32,7 @@ scene::ISceneManager* smgr = device->getSceneManager();
 
 // .. other code here
 
-CIrrKlangSceneNode* soundNode = 
+CIrrKlangSceneNode* soundNode =
   new CIrrKlangSceneNode(soundEngine, smgr->getRootSceneNode(), smgr, 666);
 
   soundNode->setSoundFilename("yourfile.wav");
@@ -40,7 +40,7 @@ CIrrKlangSceneNode* soundNode =
   soundNode->setRandomMode(1000, 5000); // plays sound multiple times with random interval
 
   // other modes would be:
-  // soundNode->setLoopingStreamMode() 
+  // soundNode->setLoopingStreamMode()
   // or
   // soundNode->setPlayOnceMode();
 
@@ -57,7 +57,7 @@ public:
 
 	// play modes:
 
-	//! Sets the play mode to 'play once', a sound file is played once, and 
+	//! Sets the play mode to 'play once', a sound file is played once, and
 	//! the scene node deletes itself then, if wished.
 	void setPlayOnceMode(bool deleteWhenFinished=false);
 

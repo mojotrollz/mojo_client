@@ -11,7 +11,7 @@ WorldSocket::WorldSocket(SocketHandler &h, WorldSession *s) : TcpSocket(h)
     _session = s;
     _gothdr = false;
     _ok=false;
-    
+
     //Dummy functions for unencrypted packets on WorldSocket
     pDecryptRecv = &AuthCrypt::DecryptRecvDummy;
     pEncryptSend = &AuthCrypt::EncryptSendDummy;
@@ -120,9 +120,9 @@ void WorldSocket::OnRead()
 
               _remaining = ntohs(hdr.size) - 2;
               _opcode = hdr.cmd;
-              
+
             }
-            
+
             if(_opcode > MAX_OPCODE_ID)
             {
                 logcritical("CRYPT ERROR: opcode=%u, remain=%u",_opcode,_remaining); // this should never be the case!
