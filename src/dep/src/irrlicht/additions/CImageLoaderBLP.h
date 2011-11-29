@@ -1,5 +1,4 @@
-#include <vector>
-#include "irrlicht/IImageLoader.h"
+#include "IImageLoader.h"
 typedef unsigned long long int u64;
 
 namespace irr

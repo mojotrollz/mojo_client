@@ -2,7 +2,6 @@ include_directories (${PROJECT_SOURCE_DIR}/src/dep/include)
 add_library(PseuGUI
 CBoneSceneNode.cpp
 CCursorController.cpp
-CImageLoaderBLP.cpp
 CIrrKlangAudioStreamLoaderMP3.cpp
 CIrrKlangAudioStreamMP3.cpp
 CM2MeshFileLoader.cpp
@@ -20,6 +19,5 @@ SceneGuiStart.cpp
 SceneLogin.cpp
 SceneWorld.cpp
 ShTlTerrainSceneNode.cpp
-SImage.cpp
 CM2Mesh.cpp
 )

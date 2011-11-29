@@ -1,7 +1,9 @@
-#include "common.h"
-#include "irrlicht/irrlicht.h"
-#include "SImage.h"
 #include "CImageLoaderBLP.h"
+
+#include "IReadFile.h"
+#include "irrString.h"
+#include "irrArray.h"
+#include "../CImage.h"
 
 namespace irr
 {
@@ -23,26 +25,26 @@ bool CImageLoaderBLP::isALoadableFileFormat(io::IReadFile* file) const
  //Checking if file is a BLP file
 	if (!file)
 	{
-	    DEBUG(logdebug("No such file: %s",file->getFileName()));
+// 	    logerror("No such file: %s",file->getFileName().c_str());
 		return false;
 	}
-    std::string fileId;
+    core::stringc fileId;
 	// Read the first few bytes of the BLP file
 	if (file->read(&fileId[0], 4) != 4)
     {
-        DEBUG(logdebug("Cannot read BLP file header\n"));
+//         logerror("Cannot read BLP file header\n");
 		return false;
     }
 
 	if(fileId[0]=='B' && fileId[1]=='L' && fileId[2]=='P' && fileId[3]=='2')
     {
-        DEBUG(logdebug("Header is BLP2, file should be loadable"));
+//         logerror("Header is BLP2, file should be loadable");
         return true;
     }
     else
     {
-        DEBUG(logdebug("Header doesn't match, this is no BLP file"));
-        DEBUG(logdebug("Expected:BLP2 Got:%s",fileId.c_str()));
+//         logerror("Header doesn't match, this is no BLP file");
+//         DEBUG(logdebug("Expected:BLP2 Got:%s",fileId.c_str()));
         return false;
     }
 }
@@ -56,7 +58,8 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
 
     BLPHeader header;
 	file->read(&header,sizeof(BLPHeader));
-
+//     logdebug("X: %u Y: %u",header.x_res, header.y_res);
+//     logdebug("Compression: %u ABD %u AU %u",header.compression,header.alpha_bitdepth,header.alpha_unk);
     u32 usedMips=0;
     for(u32 i=0;i<16;i++)
         {
@@ -76,7 +79,7 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
     file->seek(header.mip_ofs[0]);
 
     video::IImage* image = 0;
-    image = new SImage(ECF_A8R8G8B8, core::dimension2d<u32>(header.x_res, header.y_res));
+    image = new CImage(ECF_A8R8G8B8, core::dimension2d<u32>(header.x_res, header.y_res));
 
     if(header.compression==2)
     {
@@ -287,6 +290,10 @@ IImage* CImageLoaderBLP::loadImage(io::IReadFile* file) const
     }
 
 	return image;
+}
+IImageLoader* createImageLoaderBLP()
+{
+        return new CImageLoaderBLP();
 }
 
 }//namespace video

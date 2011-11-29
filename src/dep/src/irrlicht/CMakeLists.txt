@@ -63,12 +63,6 @@ libpng/pngwrite.c
 libpng/pngwtran.c
 libpng/pngwutil.c
 
-# jpeglib/ansi2knr.c
-# # jpeglib/cdjpeg.c
-# jpeglib/cjpeg.c
-# jpeglib/ckconfig.c
-# jpeglib/djpeg.c
-# jpeglib/example.c
 jpeglib/jaricom.c
 jpeglib/jcapimin.c
 jpeglib/jcapistd.c
@@ -110,32 +104,11 @@ jpeglib/jfdctint.c
 jpeglib/jidctflt.c
 jpeglib/jidctfst.c
 jpeglib/jidctint.c
-# jpeglib/jmemansi.c
-# # jpeglib/jmemdos.c
-# # jpeglib/jmemmac.c
 jpeglib/jmemmgr.c
-# jpeglib/jmemname.c
 jpeglib/jmemnobs.c
-# jpeglib/jpegtran.c
 jpeglib/jquant1.c
 jpeglib/jquant2.c
 jpeglib/jutils.c
-# jpeglib/rdbmp.c
-# jpeglib/rdcolmap.c
-# jpeglib/rdgif.c
-# # jpeglib/rdjpgcom.c
-# jpeglib/rdppm.c
-# jpeglib/rdrle.c
-# jpeglib/rdswitch.c
-# jpeglib/rdtarga.c
-# jpeglib/transupp.c
-# jpeglib/wrbmp.c
-# jpeglib/wrgif.c
-# # jpeglib/wrjpgcom.c
-# jpeglib/wrppm.c
-# jpeglib/wrrle.c
-# jpeglib/wrtarga.c
-
 
 C3DSMeshFileLoader.cpp
 CAnimatedMeshMD2.cpp
@@ -348,6 +321,8 @@ Irrlicht-gcc.cbp
 Irrlicht.cpp
 irrXML.cpp
 os.cpp
+
+additions/CImageLoaderBLP.cpp
 )
 if(WIN32)
   SET_TARGET_PROPERTIES (irrlicht PROPERTIES DEFINE_SYMBOL  "IRRLICHT_EXPORTS" )

@@ -18,7 +18,6 @@ tutorial, we use a lot stuff from the gui namespace.
 #include "common.h"
 #include "GUI/CM2MeshFileLoader.h"
 #include "GUI/CWMOMeshFileLoader.h"
-#include "GUI/CImageLoaderBLP.h"
 #include "GUI/MemoryInterface.h"
 #include "MemoryDataHolder.h"
 
@@ -141,6 +140,7 @@ void loadModel(const c8* fn)
 	core::stringc extension;
 	core::getFileNameExtension(extension, filename);
 	extension.make_lower();
+    io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(Device, filename.c_str());
 
 	// if a texture is loaded apply it to the current model..
 	if (extension == ".jpg" || extension == ".pcx" ||
@@ -150,12 +150,12 @@ void loadModel(const c8* fn)
 		extension == ".bmp" || extension == ".wal" || extension == ".blp")
 	{
 		video::ITexture * texture =
-			Device->getVideoDriver()->getTexture( filename.c_str() );
+			Device->getVideoDriver()->getTexture( modelfile );
 		if ( texture && Model )
 		{
 			// always reload texture
 			Device->getVideoDriver()->removeTexture(texture);
-			texture = Device->getVideoDriver()->getTexture( filename.c_str() );
+			texture = Device->getVideoDriver()->getTexture( modelfile );
 
 			Model->setMaterialTexture(0, texture);
 		}
@@ -179,7 +179,6 @@ void loadModel(const c8* fn)
 		Model->remove();
 
 	Model = 0;
-    io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(Device, filename.c_str());
 
 	scene::IAnimatedMesh* m = Device->getSceneManager()->getMesh( modelfile );
 
@@ -719,8 +718,6 @@ int main(int argc, char* argv[])
 	smgr->getParameters()->setAttribute(scene::COLLADA_CREATE_SCENE_INSTANCES, true);
 
     // register external loaders for not supported filetypes
-    video::CImageLoaderBLP* BLPloader = new video::CImageLoaderBLP();
-    driver->addExternalImageLoader(BLPloader);
     scene::CM2MeshFileLoader* m2loader = new scene::CM2MeshFileLoader(Device);
     smgr->addExternalMeshLoader(m2loader);
     scene::CWMOMeshFileLoader* wmoloader = new scene::CWMOMeshFileLoader(Device);
@@ -882,6 +879,8 @@ int main(int argc, char* argv[])
 	img->setAlignment(EGUIA_UPPERLEFT, EGUIA_UPPERLEFT,
 			EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT);
 
+
+    
 	// draw everything
 
 	while(Device->run() && driver)
