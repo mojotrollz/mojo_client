@@ -275,9 +275,9 @@ bool ConvertDBC(void)
     std::map<uint8,std::string> racemap; // needed to extract other dbc files correctly
     std::map<uint8,uint32> classmask; //from CharBaseInfo.dbc
     SCPStorageMap EmoteDataStorage,RaceDataStorage,SoundDataStorage,MapDataStorage,ZoneDataStorage,ItemDisplayInfoStorage,
-        CreatureModelStorage,CreatureDisplayInfoStorage,NPCSoundStorage,CharSectionStorage, GameObjectDisplayInfoStorage, ChrBaseInfoStorage; // will store the converted data from dbc files
+        CreatureModelStorage,CreatureDisplayInfoStorage,NPCSoundStorage,CharSectionStorage, GameObjectDisplayInfoStorage, ChrBaseInfoStorage, LoadingScreenStorage; // will store the converted data from dbc files
     DBCFile EmotesText,EmotesTextData,EmotesTextSound,ChrRaces,SoundEntries,Map,AreaTable,ItemDisplayInfo,
-        CreatureModelData,CreatureDisplayInfo,NPCSounds,CharSections,GameObjectDisplayInfo, ChrBaseInfo;
+        CreatureModelData,CreatureDisplayInfo,NPCSounds,CharSections,GameObjectDisplayInfo, ChrBaseInfo, LoadingScreen;
     printf("Opening DBC archive...\n");
 
 
@@ -296,6 +296,7 @@ bool ConvertDBC(void)
     NPCSounds.openmem(mpq.ExtractFile("DBFilesClient\\NPCSounds.dbc"));
     CharSections.openmem(mpq.ExtractFile("DBFilesClient\\CharSections.dbc"));
     ChrBaseInfo.openmem(mpq.ExtractFile("DBFilesClient\\CharBaseInfo.dbc"));
+    LoadingScreen.openmem(mpq.ExtractFile("DBFilesClient\\LoadingScreens.dbc"));
     //...
     printf("DBC files opened.\n");
     //...
@@ -427,6 +428,21 @@ bool ConvertDBC(void)
                 std::string value = AutoGetDataString(it,MapFormat,field);
                 if(value.size()) // only store if not null
                     MapDataStorage[id].push_back(std::string(MapFieldNames[field]) + "=" + value);
+            }
+        }
+    }
+
+    printf("loadingscreen..");
+    for(DBCFile::Iterator it = LoadingScreen.begin(); it != LoadingScreen.end(); ++it)
+    {
+        uint32 id = it->getUInt(LOADINGSCREEN_ID);
+        for(uint32 field=LOADINGSCREEN_ID; field < LOADINGSCREEN_END; field++)
+        {
+            if(strlen(LoadingScreenFieldNames[field]))
+            {
+                std::string value = AutoGetDataString(it,LoadingScreenFormat,field);
+                if(value.size()) // only store if not null
+                    LoadingScreenStorage[id].push_back(std::string(LoadingScreenFieldNames[field]) + "=" + value);
             }
         }
     }
@@ -627,6 +643,7 @@ bool ConvertDBC(void)
     printf("race.."); OutSCP(SCPDIR "/race.scp",RaceDataStorage, "race");
     printf("sound.."); OutSCP(SCPDIR "/sound.scp",SoundDataStorage, "sound");
     printf("map.."); OutSCP(SCPDIR "/map.scp",MapDataStorage, "map");
+    printf("loadingscreens.."); OutSCP(SCPDIR "/loadingscreens.scp",LoadingScreenStorage, "loadingscreens");
     printf("area.."); OutSCP(SCPDIR "/zone.scp",ZoneDataStorage, "zone");
     printf("itemdisplayinfo.."); OutSCP(SCPDIR "/itemdisplayinfo.scp",ItemDisplayInfoStorage, "itemdisplayinfo");
     printf("creaturemodeldata.."); OutSCP(SCPDIR "/creaturemodeldata.scp",CreatureModelStorage,"creaturemodeldata");

@@ -38,7 +38,7 @@ bool DBCFile::open()
 	f.read((char*)&nb,4); // Number of fields
 	f.read((char*)&es,4); // Size of a record
 	f.read((char*)&ss,4); // String size
-	
+
 	recordSize = es;
 	recordCount = na;
 	fieldCount = nb;
@@ -69,7 +69,7 @@ bool DBCFile::openmem(ByteBuffer bb)
 
     if(memcmp(&hdr,"WDBC",4)) // check if its a valid dbc file
     {
-        printf("not a valid WDB File??\n");
+        printf("not a valid DBC File??\n");
         return false;
     }
 

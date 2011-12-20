@@ -85,7 +85,7 @@ public:
 		Iterator & operator++() {
 			record.offset += record.file.recordSize;
 			return *this;
-		}	
+		}
 		/// Return address of current instance
 		Record const & operator*() const { return record; }
 		const Record* operator->() const {

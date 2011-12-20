@@ -193,7 +193,7 @@ enum MapEnum
 {
     MAP_ID = 0,
     MAP_NAME_GENERAL = 1,
-    MAP_NAME1 = 4,
+    MAP_NAME1 = 5,
     MAP_NAME2,
     MAP_NAME3,
     MAP_NAME4,
@@ -201,32 +201,86 @@ enum MapEnum
     MAP_NAME6,
     MAP_NAME7,
     MAP_NAME8,
-    MAP_END = 75
+    MAP_NAME9,
+    MAP_NAME10,
+    MAP_NAME11,
+    MAP_NAME12,
+    MAP_NAME13,
+    MAP_NAME14,
+    MAP_NAME15,
+    MAP_NAME16,
+    MAP_DESCR_A1 = 23,
+    MAP_DESCR_A2,
+    MAP_DESCR_A3,
+    MAP_DESCR_A4,
+    MAP_DESCR_A5,
+    MAP_DESCR_A6,
+    MAP_DESCR_A7,
+    MAP_DESCR_A8,
+    MAP_DESCR_A9,
+    MAP_DESCR_A10,
+    MAP_DESCR_A11,
+    MAP_DESCR_A12,
+    MAP_DESCR_A13,
+    MAP_DESCR_A14,
+    MAP_DESCR_A15,
+    MAP_DESCR_A16,
+    MAP_DESCR_H1 = 40,
+    MAP_DESCR_H2,
+    MAP_DESCR_H3,
+    MAP_DESCR_H4,
+    MAP_DESCR_H5,
+    MAP_DESCR_H6,
+    MAP_DESCR_H7,
+    MAP_DESCR_H8,
+    MAP_DESCR_H9,
+    MAP_DESCR_H10,
+    MAP_DESCR_H11,
+    MAP_DESCR_H12,
+    MAP_DESCR_H13,
+    MAP_DESCR_H14,
+    MAP_DESCR_H15,
+    MAP_DESCR_H16,
+    MAP_LOADINGSCREEN = 57,
+    MAP_END = 66
 };
 
 static const char *MapFieldNames[] =
 {
-    "","name_general","","","name","name","name","name","name","name",
-    "name","name","","","","","","","","",
-    "","","","","","","","","","",
-    "","","","","","","","","","",
-    "","","","","","","","","","",
-    "","","","","","","","","","",
-    "","","","","","","","","","",
-    "","","","",
-    ""
+    "",      "name_general","",      "",      "",      "name",  "name",  "name",         "name",  "name",
+    "name",  "name",        "name",  "name",  "name",  "name",  "name",  "name",         "name",  "name",
+    "name",  "",            "",      "descrA","descrA","descrA","descrA","descrA",       "descrA","descrA",
+    "descrA","descrA",      "descrA","descrA","descrA","descrA","descrA","descrA",       "descrA","",
+    "descrH","descrH",      "descrH","descrH","descrH","descrH","descrH","descrH",       "descrH","descrH",
+    "descrH","descrH",      "descrH","descrH","descrH","descrH","",      "loadingscreen","",      "",
+    "",      "",            "",      "",      "",      ""
 };
 
 static const char *MapFormat =
 {
-    "isxxssssss"
-    "ssxxxxxxxx"
-    "xxxxxxxxxx"
-    "xxxxxxxxxx"
-    "xxxxxxxxxx"
-    "xxxxxxxxxx"
-    "xxxxxxxxxx"
-    "xxxxx"
+    "isxxxsssss"
+    "ssssssssss"
+    "sxxsssssss"
+    "sssssssssx"
+    "ssssssssss"
+    "ssssssxixx"
+    "xxxxxx"
+};
+
+enum LoadingScreenEnum
+{
+    LOADINGSCREEN_ID = 0,
+    LOADINGSCREEN_MAPNAME,
+    LOADINGSCREEN_FILE,
+    LOADINGSCREEN_END
+};
+
+static const char *LoadingScreenFieldNames[] = {
+    "","mapname","loadingscreen"
+};
+
+static const char *LoadingScreenFormat = {
+    "iss"
 };
 
 enum AreaTableEnum
