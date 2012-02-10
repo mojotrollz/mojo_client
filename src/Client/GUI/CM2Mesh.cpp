@@ -151,7 +151,9 @@ void CM2Mesh::buildAllAnimatedMatrices(SJoint *joint, SJoint *parentJoint)
         }
         else
         {
-        //If this joint has no animation we don't care. I think. --shlainn
+        //If this joint has no animation we care a lot! Set it to starting position. --shlainn
+          joint->GlobalAnimatedMatrix=core::matrix4();
+          joint->GlobalAnimatedMatrix.setTranslation(joint->LocalMatrix.getTranslation());
         }
 
         if(parentJoint)
