@@ -39,9 +39,10 @@ core::stringw MessageText;
 core::stringw Caption;
 scene::ISceneNode* Model = 0;
 scene::ISceneNode* SkyBox = 0;
+gui::IGUITreeView* TreeView = 0;
 bool Octree=false;
 
-scene::ICameraSceneNode* Camera[2] = {0, 0};
+scene::ICameraSceneNode* Camera[3] = {0, 0, 0};
 
 // Values used to identify individual GUI elements
 enum
@@ -81,6 +82,7 @@ enum
 
 	GUI_ID_CAMERA_MAYA,
 	GUI_ID_CAMERA_FIRST_PERSON,
+    GUI_ID_CAMERA_FIXED,
 
 	GUI_ID_POSITION_TEXT,
 
@@ -192,12 +194,49 @@ void loadModel(const c8* fn)
 			L"Maybe it is not a supported file format.");
 		return;
 	}
-    IGUIElement* root = Device->getGUIEnvironment()->getRootGUIElement();
-    IGUIElement* e = root->getElementFromId(GUI_ID_TREE_VIEW, true);
-    core::stringw str(L"");
-    str += L"Submeshes: ";
-    str.append(core::stringw(m->getMeshBufferCount()));
-    e->setText(str.c_str());
+
+	IGUITreeViewNode* treeroot = TreeView->getRoot();
+    treeroot->clearChilds();
+    treeroot=treeroot->addChildBack(core::stringw(filename).c_str());
+    treeroot->setExpanded(true);
+    for(u32 i=0;i<m->getMeshBufferCount();i++)
+    {
+      core::stringw nodename(L"Submesh ");
+      nodename += i;
+      IGUITreeViewNode* treenode = treeroot->addChildBack(nodename.c_str());
+      treenode->setExpanded(true);
+      nodename = L"Texture: ";
+      if(m->getMeshBuffer(i)->getMaterial().getTexture(0))
+        nodename+= m->getMeshBuffer(i)->getMaterial().getTexture(0)->getName();
+      else
+        nodename += L"none";
+      treenode->addChildBack(nodename.c_str());
+      nodename = L"Material Type: ";
+      switch(m->getMeshBuffer(i)->getMaterial().MaterialType)
+      {
+        case video::EMT_SOLID:
+          nodename += "SOLID";
+          break;
+        case video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF:
+          nodename += "ALPHA_REF";
+          break;
+        case video::EMT_ONETEXTURE_BLEND:
+          nodename += "BLEND";
+          break;
+      }
+      treenode->addChildBack(nodename.c_str());
+      nodename = L"FogEnable: ";
+      nodename+= m->getMeshBuffer(i)->getMaterial().FogEnable?"true":"false";
+      treenode->addChildBack(nodename.c_str());
+      nodename = L"BackfaceCulling: ";
+      nodename+= m->getMeshBuffer(i)->getMaterial().BackfaceCulling?"true":"false";
+      treenode->addChildBack(nodename.c_str());
+    }
+//     IGUIElement* e = root->getElementFromId(GUI_ID_TREE_VIEW, true);
+//     core::stringw str(L"");
+//     str += L"Submeshes: ";
+//     str.append(core::stringw(m->getMeshBufferCount()));
+//     e->setText(str.c_str());
 	// set default material properties
 
 	if (Octree)
@@ -209,8 +248,6 @@ void loadModel(const c8* fn)
         animModel->setM2Animation(0);
 		Model = animModel;
 	}
-	Model->setMaterialFlag(video::EMF_LIGHTING, true);
-    //	Model->setMaterialFlag(video::EMF_BACK_FACE_CULLING, false);
 	Model->setDebugDataVisible(scene::EDS_OFF);
 	// we need to uncheck the menu entries. would be cool to fake a menu event, but
 	// that's not so simple. so we do it brute force
@@ -290,9 +327,8 @@ void createToolBox()
 
     IGUITab* t2 = tab->addTab(L"Info");
     // add some edit boxes and a button to tab one
-    env->addStaticText(L"Submeshes:",
-            core::rect<s32>(10,20,150,45), false, false, t2);
-    env->addStaticText(L"",core::rect<s32>(10,48,150,280),true,true, t2, GUI_ID_TREE_VIEW);
+    env->addStaticText(L"Submeshes:",core::rect<s32>(10,20,150,45), false, false, t2);
+    TreeView = env->addTreeView(core::rect<s32>(10,48,190,470), t2, GUI_ID_TREE_VIEW,true,true,true);
 
 
     IGUITab* t3 = tab->addTab(L"Lights");
@@ -447,7 +483,7 @@ public:
 						break;
 					case GUI_ID_MODEL_MATERIAL_TRANSPARENT: // View -> Material -> Transparent
 						if (Model)
-							Model->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+							Model->setMaterialType(video::EMT_TRANSPARENT_ALPHA_CHANNEL);
 						break;
 					case GUI_ID_MODEL_MATERIAL_REFLECTION: // View -> Material -> Reflection
 						if (Model)
@@ -457,9 +493,12 @@ public:
 					case GUI_ID_CAMERA_MAYA:
 						setActiveCamera(Camera[0]);
 						break;
-					case GUI_ID_CAMERA_FIRST_PERSON:
-						setActiveCamera(Camera[1]);
-						break;
+                    case GUI_ID_CAMERA_FIRST_PERSON:
+                        setActiveCamera(Camera[1]);
+                        break;
+                    case GUI_ID_CAMERA_FIXED:
+                        setActiveCamera(Camera[2]);
+                        break;
 
 					}
 				break;
@@ -625,8 +664,9 @@ public:
                     break;
                 case GUI_ID_FRAME_SET_SUBMESH:
                 {
+                    u32 submesh_id = atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_SUBMESH,true)->getText()).c_str());
                     if(Model)
-                      ((scene::CM2Mesh*)((scene::IAnimatedMeshSceneNode*)Model)->getMesh())->setGeoSetRender(atoi(core::stringc(env->getRootGUIElement()->getElementFromId(GUI_ID_FRAME_SUBMESH,true)->getText()).c_str()),true);
+                      ((scene::CM2Mesh*)((scene::IAnimatedMeshSceneNode*)Model)->getMesh())->setMBRender(submesh_id,!((scene::CM2Mesh*)((scene::IAnimatedMeshSceneNode*)Model)->getMesh())->getGeoSetRender(submesh_id));
                 }
                     break;
                 case GUI_ID_LOAD_BUTTON:
@@ -671,6 +711,7 @@ int main(int argc, char* argv[])
   {
     log("Loading last used mesh");
     c8 buffer[255];
+    memset(buffer,0,255);
     fseek(f,0,SEEK_SET);
     fread(&buffer,1,255,f);
     StartUpModelFile = buffer;
@@ -769,7 +810,8 @@ int main(int argc, char* argv[])
 
 	submenu = menu->getSubMenu(2);
 	submenu->addItem(L"Maya Style", GUI_ID_CAMERA_MAYA);
-	submenu->addItem(L"First Person", GUI_ID_CAMERA_FIRST_PERSON);
+    submenu->addItem(L"First Person", GUI_ID_CAMERA_FIRST_PERSON);
+    submenu->addItem(L"Fixed Camera", GUI_ID_CAMERA_FIXED);
 
 
 	/*
@@ -867,8 +909,13 @@ int main(int argc, char* argv[])
 	Camera[1]->setFarValue(20000.f);
 	Camera[1]->setPosition(core::vector3df(0,0,-70));
 	Camera[1]->setTarget(core::vector3df(0,0,0));
+    //Fixed camera set to the position of the cam in WOTLK Login
+    Camera[2] = smgr->addCameraSceneNode(0,core::vector3df(11.11f,2.44f,-0.03f),core::vector3df(-10.28f,2.44f,-0.04f));
+    Camera[2]->setFarValue(2777.7f);
+    Camera[2]->setNearValue(0.222f);
 
-	setActiveCamera(Camera[0]);
+
+	setActiveCamera(Camera[2]);
 
 	// load the irrlicht engine logo
 	IGUIImage *img =
@@ -880,7 +927,7 @@ int main(int argc, char* argv[])
 			EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT);
 
 
-    
+
 	// draw everything
 
 	while(Device->run() && driver)
