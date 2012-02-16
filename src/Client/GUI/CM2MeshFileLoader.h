@@ -10,6 +10,12 @@ namespace irr
 namespace scene
 {
 
+enum ABlockDatatype{
+  ABDT_FLOAT,
+  ABDT_SHORT,
+  ABDT_INT
+};
+
 struct numofs {
     u32 num;
     u32 ofs;
@@ -182,6 +188,24 @@ struct Bone{
     core::vector3df PivotPoint;
 };
 
+struct VertexColor{
+    AnimBlock Colors;
+    AnimBlock Alpha;
+};
+
+
+struct Light{
+    u16 Type;
+    s16 Bone;
+    core::vector3df Position;
+    AnimBlock AmbientColor;
+    AnimBlock AmbientIntensity;
+    AnimBlock DiffuseColor;
+    AnimBlock DiffuseIntensity;
+    AnimBlock AttenuationStart;
+    AnimBlock AttenuationEnd;
+    AnimBlock Unknown;
+};
 
 class CM2MeshFileLoader : public IMeshLoader
 {
@@ -206,11 +230,13 @@ private:
 
 	bool load();
     void ReadBones();
-    void ReadBonesWOTLK();
+	void ReadColors();
+	void ReadLights();
     void ReadVertices();
     void ReadTextureDefinitions();
     void ReadAnimationData();
     void ReadViewData(io::IReadFile* file);
+    void ReadABlock(AnimBlock &ABlock, u8 datatype, u8 datanum);
 
 	IrrlichtDevice *Device;
     core::stringc Texdir;
@@ -227,6 +253,8 @@ private:
     SMesh* Mesh;
     //SSkinMeshBuffer* MeshBuffer;
     //Taken from the Model file, thus m2M*
+	core::array<Light> M2MLights;
+	core::array<VertexColor> M2MVertexColor;
     core::array<ModelVertex> M2MVertices;
     core::array<u16> M2MIndices;
     core::array<u16> M2MTriangles;
@@ -238,6 +266,8 @@ private:
     core::array<RenderFlags> M2MRenderFlags;
     core::array<u32> M2MGlobalSequences;
     core::array<Animation> M2MAnimations;
+    core::array<io::IReadFile*> M2MAnimfiles;//Stores pointers to *.anim files in WOTLK
+
     core::array<s16> M2MAnimationLookup;
     core::array<Bone> M2MBones;
     core::array<u16> M2MBoneLookupTable;
