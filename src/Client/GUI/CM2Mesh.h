@@ -153,6 +153,7 @@ namespace scene
         void newAnimation(u32 id, s32 start, s32 end, f32 probability);
         //Retrieve geoset rendering information
         void setGeoSetRender(u32 id, bool render);
+        void setMBRender(u32 id, bool render);
         bool getGeoSetRender(u32 meshbufferNumber);
 private:
 
