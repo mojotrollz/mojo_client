@@ -386,7 +386,7 @@ void CAnimatedMeshSceneNode::render()
 			driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 		}
 
-		debug_mat.ZBuffer = video::ECFN_NEVER;
+		debug_mat.ZBuffer = video::ECFN_ALWAYS;
 		debug_mat.Lighting = false;
 		driver->setMaterial(debug_mat);
 
