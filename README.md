@@ -18,4 +18,4 @@ To run PseuWoW please execute
 
     ./pseuwow
 
-The model viewer is strictly a debugging tool. It is not user friendly. The viewer expects to find MPQ files in ./Data and uses only textures from MPQ files. Models have to be extracted to be viewed. The viewer cannot browse MPQ files.
+The model viewer is strictly a debugging tool. It is not user friendly. The viewer expects to find MPQ files in ./Data and uses models and textures from MPQ files. The viewer cannot browse MPQ files.
