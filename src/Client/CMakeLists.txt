@@ -10,7 +10,7 @@ if(WIN32)
   set(PSEUWOW_LIBS ${PSEUWOW_LIBS} Winmm)
 endif()
 if(UNIX)
-  set(EXECUTABLE_LINK_FLAGS "-pthread")
+  set(EXECUTABLE_LINK_FLAGS "-pthread" ${EXECUTABLE_LINK_FLAGS})
   set(PSEUWOW_LIBS ${PSEUWOW_LIBS} GL Xxf86vm bz2)
 endif()
 
@@ -59,4 +59,7 @@ SCPDatabase.cpp
 # Link the executable to the libraries.
 target_link_libraries (pseuwow ${PSEUWOW_LIBS})
 
+set_target_properties(pseuwow PROPERTIES LINK_FLAGS
+  "${EXECUTABLE_LINK_FLAGS}"
+)
 install(TARGETS pseuwow DESTINATION ${CMAKE_INSTALL_PREFIX})

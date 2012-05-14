@@ -14,11 +14,12 @@ ${PROJECT_SOURCE_DIR}/src/Client/GUI/CM2Mesh.cpp
 set(VIEWER_LIBS shared irrlicht StormLib_static zthread zlib)
 if(UNIX)
   list(APPEND VIEWER_LIBS GL Xxf86vm bz2)
+  set(EXECUTABLE_LINK_FLAGS "-pthread" ${EXECUTABLE_LINK_FLAGS})
 endif()
 if(WIN32)
   list(APPEND VIEWER_LIBS Winmm)
 endif()
 
 target_link_libraries (viewer ${VIEWER_LIBS} )
-
+set_target_properties (viewer PROPERTIES LINK_FLAGS "${EXECUTABLE_LINK_FLAGS}")
 install(TARGETS viewer DESTINATION ${CMAKE_INSTALL_PREFIX})
