@@ -138,7 +138,7 @@ void PseuGUI::_Init(void)
     // initialize the sound engine
     if(_usesound)
     {
-        _soundengine = createIrrKlangDevice();
+		_soundengine = NULL; // createIrrKlangDevice();
         if(_soundengine)
         {
             logdetail("PseuGUI: Sound Driver: %s",_soundengine->getDriverName());

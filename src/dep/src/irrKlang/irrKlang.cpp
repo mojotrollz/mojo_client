@@ -258,32 +258,32 @@ namespace irrklang
       };
 */
 
-    IRRKLANG_API ISoundEngine*
-    IRRKLANGCALLCONV createIrrKlangDevice(E_SOUND_OUTPUT_DRIVER driver, int options,
-        const char* deviceID, const char* sdk_version_do_not_use)
-      {
+	IRRKLANG_API ISoundEngine*
+	IRRKLANGCALLCONV createIrrKlangDevice(E_SOUND_OUTPUT_DRIVER driver, int options,
+		const char* deviceID, const char* sdk_version_do_not_use);
+      /*{
         return 0;
-      }
+      }*/
 
-    IRRKLANG_API ISoundDeviceList*
-    IRRKLANGCALLCONV createSoundDeviceList(E_SOUND_OUTPUT_DRIVER driver, const char* sdk_version_do_not_use)
-      {
+	IRRKLANG_API ISoundDeviceList*
+	IRRKLANGCALLCONV createSoundDeviceList(E_SOUND_OUTPUT_DRIVER driver, const char* sdk_version_do_not_use);
+    /*  {
         return 0;
-      }
+      }*/
 
-    IRRKLANG_API IAudioRecorder*
-    IRRKLANGCALLCONV createIrrKlangAudioRecorder(
-        ISoundEngine* irrKlangDeviceForPlayback, E_SOUND_OUTPUT_DRIVER driver, const char* deviceID,
-        const char* sdk_version_do_not_use)
-      {
+	IRRKLANG_API IAudioRecorder*
+	IRRKLANGCALLCONV createIrrKlangAudioRecorder(
+		ISoundEngine* irrKlangDeviceForPlayback, E_SOUND_OUTPUT_DRIVER driver, const char* deviceID,
+		const char* sdk_version_do_not_use);
+      /*{
         return 0;
-      }
+      }*/
 
-    IRRKLANG_API ISoundDeviceList*
-    IRRKLANGCALLCONV createAudioRecorderDeviceList(
-        E_SOUND_OUTPUT_DRIVER drive, const char* sdk_version_do_not_use)
-      {
+	IRRKLANG_API ISoundDeviceList*
+	IRRKLANGCALLCONV createAudioRecorderDeviceList(
+		E_SOUND_OUTPUT_DRIVER drive, const char* sdk_version_do_not_use);
+      /*{
         return 0;
-      }
+      }*/
 
   }
