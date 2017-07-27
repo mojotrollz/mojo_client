@@ -1,9 +1,15 @@
+!pseuwow.exe
+!stuffextract.exe
+!viewer.exe
+!irrlicht.dll
+!libcrypto-1_1.dll
+
 # Compiled source #
 ###################
 *.com
 *.class
-*.dll
-*.exe
+#*.dll
+#*.exe
 *.o
 *.a
 *.so
@@ -23,9 +29,9 @@ build
 
 # linux binaries #
 ##################
-bin/pseuwow
-bin/stuffextract
-bin/viewer
+#bin/pseuwow
+#bin/stuffextract
+#bin/viewer
 
 # Packages #
 ############
