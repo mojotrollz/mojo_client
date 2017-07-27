@@ -7,6 +7,7 @@
 #include "PseuWoW.h"
 #include "Scene.h"
 #include "PseuGUI.h"
+#include "irrklang/irrKlang.h"
 
 PseuGUIRunnable::PseuGUIRunnable()
 {
@@ -138,7 +139,7 @@ void PseuGUI::_Init(void)
     // initialize the sound engine
     if(_usesound)
     {
-		_soundengine = NULL; // createIrrKlangDevice();
+		_soundengine = createIrrKlangDevice();
         if(_soundengine)
         {
             logdetail("PseuGUI: Sound Driver: %s",_soundengine->getDriverName());

@@ -449,7 +449,7 @@ ITexture* CNullDriver::getTexture(io::IReadFile* file)
 	}
 
 	if (!texture)
-		os::Printer::log("Could not load texture", file->getFileName(), ELL_WARNING);
+		os::Printer::log("Could not load texture", file ? file->getFileName() : "", ELL_WARNING);
 
 	return texture;
 }

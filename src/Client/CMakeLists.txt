@@ -54,7 +54,7 @@ RemoteController.cpp
 SCPDatabase.cpp
 )
 
-
+set_property(DIRECTORY "${PROJECT_SOURCE_DIR}/src/Client" PROPERTY VS_STARTUP_PROJECT pseuwow)
 
 # Link the executable to the libraries.
 target_link_libraries (pseuwow ${PSEUWOW_LIBS})

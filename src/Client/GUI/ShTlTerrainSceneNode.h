@@ -76,7 +76,7 @@ class ShTlTerrainSceneNode : public scene::ISceneNode
     array2d<TlTTile> Tile;
 
     // size of vissible terrain mesh
-    core::dimension2d<s32> MeshSize;
+    core::dimension2d<u32> MeshSize;
 
     // position of vissible terrain mesh relative to whole terrain in tiles
     core::vector2d<s32> MeshPosition;
@@ -167,7 +167,7 @@ public:
     virtual void setTileSize(f32 newsize);
 
     // returns dimension of rendered mesh in tiles
-    virtual core::dimension2d<s32> getRenderedSize();
+    virtual core::dimension2d<u32> getRenderedSize();
 
     // return number of sectors into which terrain mesh is divided
     virtual s32 getSectorCount();

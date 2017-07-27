@@ -160,8 +160,8 @@ ShTlTerrainSceneNode::ShTlTerrainSceneNode(scene::ISceneManager* smgr,
 
     // set color of mesh vertices to white
     // vertex color is not used, 2nd texture layer is used to render tile colors
-    for(s32 j=0; j<MeshSize.Height; j++)
-        for(s32 i=0; i<MeshSize.Width; i++)
+    for(u32 j=0; j<MeshSize.Height; j++)
+        for(u32 i=0; i<MeshSize.Width; i++)
         {
             Tile(i,j).Vertex[0]->Color = video::SColor(255,255,255,255);
             Tile(i,j).Vertex[1]->Color = video::SColor(255,255,255,255);
@@ -183,9 +183,9 @@ ShTlTerrainSceneNode::ShTlTerrainSceneNode(scene::ISceneManager* smgr,
     // create 2nd texture layer
 
     // find size of texture, must be power of two
-    s32 tw = 2;
+    u32 tw = 2;
     while(tw < MeshSize.Width) tw = tw + tw;
-    s32 th = 2;
+    u32 th = 2;
     while(th < MeshSize.Height) th = th + th;
 
     // create texture
@@ -209,9 +209,9 @@ ShTlTerrainSceneNode::ShTlTerrainSceneNode(scene::ISceneManager* smgr,
     f32 ry = 1.0f - (f32)MeshSize.Height/ CTexture->getSize().Height;
 
     s32 n = MeshSize.Height-1;
-    for(s32 j=0; j<MeshSize.Height; j++)
+    for(u32 j=0; j<MeshSize.Height; j++)
     {
-        for(s32 i=0; i<MeshSize.Width; i++)
+        for(u32 i=0; i<MeshSize.Width; i++)
         {
             Tile(i,n).Vertex[0]->TCoords = core::vector2d<f32>(i*ax, ry+(j+1)*ay);
             Tile(i,n).Vertex[1]->TCoords = core::vector2d<f32>(i*ax, ry+j*ay);
@@ -506,7 +506,7 @@ void ShTlTerrainSceneNode::setTileSize(f32 newsize)
 
 
 // returns dimension of rendered mesh in tiles
-core::dimension2d<s32> ShTlTerrainSceneNode::getRenderedSize()
+core::dimension2d<u32> ShTlTerrainSceneNode::getRenderedSize()
 {
     return MeshSize;
 }

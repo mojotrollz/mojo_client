@@ -14,7 +14,6 @@ Object::Object()
 
 Object::~Object()
 {
-    ASSERT(_valuescount > 0);
     DEBUG(logdebug("~Object() GUID=%016I64X",GetGUID()));
     if(_uint32values)
         delete [] _uint32values;

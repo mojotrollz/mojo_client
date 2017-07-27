@@ -337,7 +337,6 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
             uint8 spline_mode;
             float facing_angle,facing_x,facing_y,facing_z, duration_mod, duration_next, vertical_acceleration;
             float x,y,z;
-            uint64 facing_target;
             recvPacket >> splineflags;
             if(splineflags & SF_Final_Angle)
               recvPacket >> facing_angle;

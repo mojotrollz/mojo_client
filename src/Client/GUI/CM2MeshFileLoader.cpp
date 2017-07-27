@@ -1,4 +1,3 @@
-#define _DEBUG 1
 #include <iostream>
 #include "MemoryDataHolder.h"
 #include "MemoryInterface.h"
@@ -650,14 +649,14 @@ for(u32 i=0; i < currentView.Submesh.num;i++)//
     //Put the Indices and Vertices of the Submesh into a mesh buffer
     //Each Submesh contains only the Indices and Vertices that belong to it.
     //Because of this the Index values for the Submeshes must be corrected by the Vertex offset of the Submesh
-    for(u32 j=M2MSubmeshes[i].ofsTris;j<M2MSubmeshes[i].ofsTris+M2MSubmeshes[i].nTris;j++)
+    for(s32 j=M2MSubmeshes[i].ofsTris;j<M2MSubmeshes[i].ofsTris+M2MSubmeshes[i].nTris;j++)
     {
         MeshBuffer->Indices.push_back(M2MIndices[M2MTriangles[j]]-M2MSubmeshes[i].ofsVertex);
         if(M2MIndices[M2MTriangles[j]]<M2MSubmeshes[i].ofsVertex)
           logerror("Index %u < ofsVertex %u",M2MIndices[M2MTriangles[j]],M2MSubmeshes[i].ofsVertex);
     }
 
-    for(u32 j=M2MSubmeshes[i].ofsVertex;j<M2MSubmeshes[i].ofsVertex+M2MSubmeshes[i].nVertex;j++)
+    for(s32 j=M2MSubmeshes[i].ofsVertex;j<M2MSubmeshes[i].ofsVertex+M2MSubmeshes[i].nVertex;j++)
     {
         MeshBuffer->Vertices_Standard.push_back(M2Vertices[j]);
         for(u32 k=0; k<4; k++)
@@ -685,8 +684,8 @@ for(u32 i=0; i < currentView.Submesh.num;i++)//
             s16 vColIndex = M2MTextureUnit[j].colorIndex;
             if(vColIndex != -1)
             {
-                DEBUG(logdebug("Applying color %f %f %f %f",M2MVertexColor[vColIndex].Colors.values[0],M2MVertexColor[vColIndex].Colors.values[1],M2MVertexColor[vColIndex].Colors.values[2],M2MVertexColor[vColIndex].Alpha.values[0]));
-                video::SColor color = video::SColorf(M2MVertexColor[vColIndex].Colors.values[0],M2MVertexColor[vColIndex].Colors.values[1],M2MVertexColor[vColIndex].Colors.values[2],M2MVertexColor[vColIndex].Alpha.values[0]).toSColor();
+                //DEBUG(logdebug("Applying color %f %f %f %f",M2MVertexColor[vColIndex].Colors.values[0],M2MVertexColor[vColIndex].Colors.values[1],M2MVertexColor[vColIndex].Colors.values[2],M2MVertexColor[vColIndex].Alpha.values[0]));
+                //video::SColor color = video::SColorf(M2MVertexColor[vColIndex].Colors.values[0],M2MVertexColor[vColIndex].Colors.values[1],M2MVertexColor[vColIndex].Colors.values[2],M2MVertexColor[vColIndex].Alpha.values[0]).toSColor();
 //                 Device->getSceneManager()->getMeshManipulator()->apply(scene::SVertexColorSetManipulator(color), MeshBuffer);//
             //MeshBuffer->getMaterial().DiffuseColor = color; // if we want to set diffuse instead of vertex color
             }
