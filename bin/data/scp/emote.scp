@@ -1,0 +1,2198 @@
+#dbname=emote
+[1]
+name=AGREE
+anim=0
+OneToOne=%s stimmt %s zu.
+OneToMe=%s stimmt Euch zu.
+MeToOne=Ihr stimmt %s zu.
+OneGeneral=%s stimmt zu.
+MeGeneral=Ihr stimmt zu.
+
+[2]
+name=AMAZE
+anim=0
+OneToOne=%s wundert sich über %s!
+OneToMe=%s wundert sich über Euch!
+MeToOne=Ihr wundert Euch über %s!
+OneGeneral=%s wundert sich!
+MeGeneral=Ihr wundert Euch!
+
+[3]
+name=ANGRY
+anim=14
+OneToOne=%s erhebt erbost seine Faust gegen %s.
+OneToMe=%s erhebt erbost seine Faust gegen Euch.
+MeToOne=Ihr erhebt erbost Eure Faust gegen %s.
+OneGeneral=%s erhebt erbost seine Faust.
+MeGeneral=Ihr erhebt erbost Eure Faust.
+OneToOneFemale=%s erhebt erbost ihre Faust gegen %s.
+OneToMeFemale=%s erhebt erbost ihre Faust gegen Euch.
+OneGeneralFemale=%s erhebt erbost ihre Faust.
+
+[4]
+name=APOLOGIZE
+anim=0
+OneToOne=%s entschuldigt sich bei %s. Tut mir leid!
+OneToMe=%s entschuldigt sich bei Euch. Tut mir leid!
+MeToOne=Ihr entschuldigt Euch bei %s. Tut mir leid!
+OneGeneral=%s entschuldigt sich bei allen. Tut mir leid!
+MeGeneral=Ihr entschuldigt Euch bei allen. Tut mir leid!
+
+[5]
+name=APPLAUD
+anim=21
+OneToOne=%s applaudiert %s. Bravo!
+OneToMe=%s applaudiert Euch. Bravo!
+MeToOne=Ihr applaudiert %s. Bravo!
+OneGeneral=%s applaudiert. Bravo!
+MeGeneral=Ihr applaudiert. Bravo!
+
+[6]
+name=BASHFUL
+anim=24
+OneToOne=%s ist so schüchtern... zu schüchtern, um die Aufmerksamkeit von %s zu erregen.
+OneToMe=%s ist so schüchtern... zu schüchtern, um Eure Aufmerksamkeit zu erregen.
+MeToOne=Ihr seid so schüchtern... zu schüchtern, um die Aufmerksamkeit von %s zu erregen.
+OneGeneral=%s ist schüchtern.
+MeGeneral=Ihr seid schüchtern.
+
+[7]
+name=BECKON
+anim=0
+OneToOne=%s winkt %s herüber.
+OneToMe=%s winkt Euch herüber.
+MeToOne=Ihr winkt %s herüber.
+OneGeneral=%s winkt alle herüber.
+MeGeneral=Ihr winkt alle zu Euch herüber.
+
+[8]
+name=BEG
+anim=20
+OneToOne=%s fleht %s an. Wie erbärmlich!
+OneToMe=%s fleht Euch an. Wie erbärmlich!
+MeToOne=Ihr fleht %s an. Wie erbärmlich!
+OneGeneral=%s fleht alle um sich herum an. Wie erbärmlich!
+MeGeneral=Ihr fleht alle um Euch herum an. Wie erbärmlich!
+OneGeneralFemale=%s fleht alle um sich herum an. Wie erbärmlich!
+
+[9]
+name=BITE
+anim=0
+OneToOne=%s beißt %s. Autsch!
+OneToMe=%s beißt Euch. Autsch!
+MeToOne=Ihr beißt %s. Autsch!
+OneGeneral=%s sieht sich um, ob es jemanden zum Beißen gibt.
+MeGeneral=Ihr seht Euch um, ob es jemanden zum Beißen gibt.
+
+[10]
+name=BLEED
+anim=0
+OneGeneral=Blut quillt aus den Wunden von %s.
+MeGeneral=Blut quillt aus Euren Wunden.
+
+[11]
+name=BLINK
+anim=0
+OneToOne=%s zwinkert %s zu.
+OneToMe=%s zwinkert Euch zu.
+MeToOne=Ihr zwinkert %s zu.
+OneGeneral=%s zwinkert.
+MeGeneral=Ihr zwinkert mit den Augen.
+
+[12]
+name=BLUSH
+anim=24
+OneToOne=%s errötet in Gegenwart von %s.
+OneToMe=%s sieht Euch an und errötet.
+MeToOne=Ihr seht %s an und errötet.
+OneGeneral=%s errötet.
+MeGeneral=Ihr errötet.
+
+[13]
+name=BONK
+anim=0
+OneToOne=%s haut %s kräftig auf den Schädel. Ätsch!
+OneToMe=%s haut Euch kräftig auf den Schädel. Ätsch!
+MeToOne=Ihr haut %s kräftig auf den Schädel. Ätsch!
+OneGeneral=%s haut sich selbst kräftig auf den Schädel. Ätsch!
+MeGeneral=Ihr haut Euch selbst kräftig auf den Schädel. Ätsch!
+OneGeneralFemale=%s haut sich selbst kräftig auf den Schädel. Ätsch!
+
+[14]
+name=BORED
+anim=0
+OneToOne=%s ist schrecklich gelangweilt von %s.
+OneToMe=%s ist schrecklich gelangweilt von Euch.
+MeToOne=Ihr seid schrecklich gelangweilt von %s.
+OneGeneral=%s stirbt fast vor Langeweile. Das Leben ist ja sooo hart!
+MeGeneral=Ihr sterbt fast vor Langeweile. Das Leben ist ja sooo hart!
+SoundHumanFemale=7951
+SoundHumanMale=7952
+SoundDwarfFemale=7947
+SoundDwarfMale=7948
+SoundNightElfFemale=7953
+SoundNightElfMale=7954
+SoundGnomeFemale=7949
+SoundGnomeMale=7950
+SoundOrcFemale=7955
+SoundOrcMale=7956
+SoundScourgeFemale=7962
+SoundScourgeMale=7961
+SoundTaurenFemale=7957
+SoundTaurenMale=7958
+SoundTrollFemale=7959
+SoundTrollMale=7960
+SoundBloodElfFemale=10025
+SoundBloodElfMale=10026
+SoundDraeneiFemale=10027
+SoundDraeneiMale=10029
+
+[15]
+name=BOUNCE
+anim=0
+OneToOne=%s hüpft vor %s auf und ab.
+OneToMe=%s hüpft vor Euch auf und ab.
+MeToOne=Ihr hüpft vor %s auf und ab.
+OneGeneral=%s hüpft auf und ab.
+MeGeneral=Ihr hüpft auf und ab.
+
+[16]
+name=BRB
+anim=0
+OneToOne=%s kommt gleich zurück. Bleibt wo Ihr seid, %s.
+OneToMe=%s kommt gleich zurück. Bleibt, wo Ihr seid.
+MeToOne=Ihr teilt %s mit, dass Ihr gleich zurück seid.
+OneGeneral=%s kommt gleich zurück.
+MeGeneral=Ihr teilt allen mit, dass Ihr gleich zurück seid.
+
+[17]
+name=BOW
+anim=2
+OneToOne=%s verbeugt sich vor %s.
+OneToMe=%s verbeugt sich vor Euch.
+MeToOne=Ihr verbeugt Euch vor %s.
+OneGeneral=%s verbeugt sich huldvoll.
+MeGeneral=Ihr verbeugt Euch huldvoll.
+
+[18]
+name=BURP
+anim=0
+OneToOne=%s rülpst %s geradewegs ins Gesicht.
+OneToMe=%s rülpst Euch geradewegs ins Gesicht.
+MeToOne=Ihr rülpst %s geradewegs ins Gesicht.
+OneGeneral=%s entfährt ein lauter Rülpser.
+MeGeneral=Euch entfährt ein lauter Rülpser.
+
+[19]
+name=BYE
+anim=3
+OneToOne=%s winkt %s zum Abschied. Lebt wohl!
+OneToMe=%s winkt Euch zum Abschied. Lebt wohl!
+MeToOne=Ihr winkt %s zum Abschied. Lebt wohl!
+OneGeneral=%s winkt allen zum Abschied. Lebt wohl!
+MeGeneral=Ihr winkt allen zum Abschied. Lebt wohl!
+SoundHumanMale=6163
+SoundHumanFemale=6135
+SoundOrcMale=6361
+SoundOrcFemale=6352
+SoundDwarfMale=6108
+SoundDwarfFemale=6095
+SoundNightElfMale=6181
+SoundNightElfFemale=6172
+SoundScourgeMale=6415
+SoundScourgeFemale=6406
+SoundTaurenMale=6379
+SoundTaurenFemale=6370
+SoundGnomeMale=6126
+SoundGnomeFemale=6117
+SoundTrollMale=6397
+SoundTrollFemale=6388
+SoundBloodElfFemale=9636
+SoundBloodElfMale=9654
+SoundDraeneiFemale=9679
+SoundDraeneiMale=9704
+
+[20]
+name=CACKLE
+anim=11
+OneToOne=%s kichert %s angesichts der Situation wie irre an.
+OneToMe=%s kichert Euch angesichts der Situation wie irre an.
+MeToOne=Ihr kichert %s angesichts der Situation wie irre an.
+OneGeneral=%s kichert angesichts der Situation wie irre.
+MeGeneral=Ihr kichert angesichts der Situation wie irre.
+
+[21]
+name=CHEER
+anim=4
+OneToOne=%s bejubelt %s!
+OneToMe=%s bejubelt Euch.
+MeToOne=Ihr bejubelt %s.
+OneGeneral=%s jubelt!
+MeGeneral=Ihr jubelt!
+SoundDwarfMale=2725
+SoundDwarfFemale=2737
+SoundNightElfMale=2749
+SoundNightElfFemale=2761
+SoundScourgeMale=2773
+SoundScourgeFemale=2785
+SoundTaurenMale=2797
+SoundTaurenFemale=2810
+SoundGnomeMale=2835
+SoundGnomeFemale=2847
+SoundTrollMale=2859
+SoundTrollFemale=2871
+SoundHumanMale=2677
+SoundHumanFemale=2689
+SoundOrcMale=2701
+SoundOrcFemale=2713
+SoundBloodElfFemale=9632
+SoundBloodElfMale=9656
+SoundDraeneiFemale=9681
+SoundDraeneiMale=9706
+
+[22]
+name=CHICKEN
+anim=19
+OneToOne=%s flattert mit den Armen und stolziert um %s herum. Koooooomm, putt, putt, putt, putt!
+OneToMe=%s flattert mit den Armen und stolziert um Euch herum. Koooooomm, putt, putt, putt, putt!
+MeToOne=Ihr flattert mit den Armen und stolziert um %s herum. Koooooomm, putt, putt, putt, putt!
+OneGeneral=%s flattert mit den Armen und stolziert herum. Koooooomm, putt, putt, putt, putt!
+MeGeneral=Ihr flattert mit den Armen und stolziert herum. Koooooomm, putt, putt, putt, putt!
+
+[23]
+name=CHUCKLE
+anim=11
+OneToOne=%s kichert %s freundlich an.
+OneToMe=%s kichert Euch freundlich an.
+MeToOne=Ihr kichert %s freundlich an.
+OneGeneral=%s bricht in herzhaftes freundliches Gekicher aus.
+MeGeneral=Ihr brecht in herzhaftes freundliches Gekicher aus.
+
+[24]
+name=CLAP
+anim=21
+OneToOne=%s klatscht aufgeregt für %s in die Hände.
+OneToMe=%s klatscht aufgeregt für Euch in die Hände.
+MeToOne=Ihr klatscht aufgeregt für %s in die Hände.
+OneGeneral=%s klatscht aufgeregt in die Hände.
+MeGeneral=Ihr klatscht aufgeregt in die Hände.
+
+[25]
+name=CONFUSED
+anim=6
+OneToOne=%s sieht %s verwirrt an.
+OneToMe=%s sieht Euch verwirrt an.
+MeToOne=Ihr seht %s verwirrt an.
+OneGeneral=%s ist total verwirrt.
+MeGeneral=Ihr seid total verwirrt.
+
+[26]
+name=CONGRATULATE
+anim=5
+OneToOne=%s gratuliert %s.
+OneToMe=%s gratuliert Euch.
+MeToOne=Ihr gratuliert %s.
+OneGeneral=%s gratuliert allen.
+MeGeneral=Ihr gratuliert allen um Euch herum.
+SoundHumanMale=6168
+SoundHumanFemale=6141
+SoundOrcMale=6366
+SoundOrcFemale=6357
+SoundDwarfMale=6113
+SoundDwarfFemale=6104
+SoundNightElfMale=6186
+SoundNightElfFemale=6177
+SoundScourgeMale=6420
+SoundScourgeFemale=6411
+SoundTaurenMale=6384
+SoundTaurenFemale=6375
+SoundGnomeMale=6131
+SoundGnomeFemale=6122
+SoundTrollMale=6402
+SoundTrollFemale=6393
+SoundBloodElfFemale=9641
+SoundBloodElfMale=9657
+SoundDraeneiFemale=9682
+SoundDraeneiMale=9707
+
+[27]
+name=COUGH
+anim=0
+OneToOne=%s hustet %s an.
+OneToMe=%s hustet Euch an.
+MeToOne=Ihr hustet %s an.
+OneGeneral=%s bricht in lautes Husten aus.
+MeGeneral=Ihr brecht in lautes Husten aus.
+
+[28]
+name=COWER
+anim=0
+OneToOne=%s krümmt sich beim Anblick von %s verängstigt zusammen.
+OneToMe=%s krümmt sich bei Eurem Anblick verängstigt zusammen.
+MeToOne=Ihr krümmt Euch beim Anblick von %s verängstigt zusammen.
+OneGeneral=%s krümmt sich verängstigt zusammen.
+MeGeneral=Ihr krümmt Euch verängstigt zusammen.
+
+[29]
+name=CRACK
+anim=0
+OneToOne=%s lässt seine Knöchel knacken und starrt dabei %s an.
+OneToMe=%s lässt seine Knöchel knacken und starrt Euch dabei an.
+MeToOne=Ihr lasst Eure Knöchel knacken und starrt dabei %s an.
+OneGeneral=%s lässt seine Knöchel knacken.
+MeGeneral=Ihr lasst Eure Knöchel knacken.
+OneToOneFemale=%s lässt ihre Knöchel knacken und starrt dabei %s an.
+OneToMeFemale=%s lässt ihre Knöchel knacken und starrt Euch dabei an.
+OneGeneralFemale=%s lässt ihre Knöchel knacken.
+
+[30]
+name=CRINGE
+anim=0
+OneToOne=%s zuckt ängstlich vor %s zusammen.
+OneToMe=%s zuckt ängstlich vor Euch zusammen.
+MeToOne=Ihr zuckt ängstlich vor %s zusammen.
+OneGeneral=%s erschauert vor lauter Furcht.
+MeGeneral=Ihr erschauert vor lauter Furcht.
+
+[31]
+name=CRY
+anim=18
+OneToOne=%s heult sich an der Schulter von %s aus.
+OneToMe=%s heult sich an Eurer Schulter aus.
+MeToOne=Ihr heult Euch an der Schulter von %s aus.
+OneGeneral=%s heult.
+MeGeneral=Ihr heult.
+
+[32]
+name=CURIOUS
+anim=6
+OneToOne=%s wüsste zu gern, was %s vorhat.
+OneToMe=%s wüsste zu gern, was Ihr vorhabt.
+MeToOne=Ihr wüsstet zu gern, was %s vorhat.
+OneGeneral=%s zeigt allen, wie neugierig er ist.
+MeGeneral=Ihr bringt Eure Neugier allen gegenüber zum Ausdruck.
+OneGeneralFemale=%s zeigt allen, wie neugierig sie ist.
+
+[33]
+name=CURTSEY
+anim=2
+OneToOne=%s macht einen Knicks vor %s.
+OneToMe=%s macht einen Knicks vor Euch.
+MeToOne=Ihr macht einen Knicks vor %s.
+OneGeneral=%s macht einen Knicks.
+MeGeneral=Ihr macht einen Knicks.
+
+[34]
+name=DANCE
+anim=10
+OneToOne=%s tanzt mit %s.
+OneToMe=%s tanzt mit Euch.
+MeToOne=Ihr tanzt mit %s.
+OneGeneral=%s fängt spontan zu tanzen an.
+MeGeneral=Ihr fangt spontan zu tanzen an.
+
+[35]
+name=DRINK
+anim=7
+OneToOne=%s erhebt das Glas auf %s. Prost!
+OneToMe=%s erhebt das Glas auf Euch. Prost!
+MeToOne=Ihr erhebt Euer Glas auf %s. Prost!
+OneGeneral=%s erhebt das Glas zum Gruß, bevor er es leert. Prost!
+MeGeneral=Ihr erhebt das Glas zum Gruß, bevor Ihr es leert. Prost!
+
+[36]
+name=DROOL
+anim=0
+OneToOne=%s sieht %s an und fängt an zu sabbern.
+OneToMe=%s sieht Euch an und fängt an zu sabbern.
+MeToOne=Ihr seht %s an und fangt an zu sabbern.
+OneGeneral=Der Sabberfaden läuft %s aus dem Mund.
+MeGeneral=Ein Sabberfaden läuft Euch aus dem Mund.
+
+[37]
+name=EAT
+anim=7
+OneToOne=%s fängt vor %s zu essen an.
+OneToMe=%s fängt vor Euch an, Rationen zu essen.
+MeToOne=Ihr fangt vor %s zu essen an.
+OneGeneral=%s fängt zu essen an.
+MeGeneral=Ihr fangt an zu essen.
+
+[38]
+name=EYE
+anim=0
+OneToOne=%s mustert %s von oben bis unten.
+OneToMe=%s mustert Euch von oben bis unten.
+MeToOne=Ihr mustert %s von oben bis unten.
+OneGeneral=%s schielt Euch an.
+MeGeneral=Ihr schielt.
+
+[39]
+name=FART
+anim=0
+OneToOne=%s stellt sich neben %s und lässt einen lauten Furz entweichen.
+OneToMe=%s stellt sich neben Euch und lässt einen lauten Furz entweichen.
+MeToOne=Ihr stellt Euch neben %s und lasst einen lauten Furz entweichen.
+OneGeneral=%s lässt einen lauten Furz entweichen. Igitt, was stinkt hier nur so?
+MeGeneral=Ihr lasst einen lauten Furz entweichen. Igitt, was stinkt hier nur so?
+
+[40]
+name=FIDGET
+anim=0
+OneToOne=%s zappelt beim Warten auf %s nervös herum.
+OneToMe=%s zappelt beim Warten auf Euch nervös herum.
+MeToOne=Ihr zappelt beim Warten auf %s nervös herum.
+OneGeneral=%s zappelt herum.
+MeGeneral=Ihr zappelt herum.
+
+[41]
+name=FLEX
+anim=23
+OneToOne=%s lässt %s gegenüber die Muskeln spielen. Oh, echt stark!
+OneToMe=%s lässt Euch gegenüber die Muskeln spielen. Oh, echt stark!
+MeToOne=Ihr lasst %s gegenüber Eure Muskeln spielen. Oh, echt stark!
+OneGeneral=%s lässt seine Muskeln spielen. Oh, echt stark!
+MeGeneral=Ihr lasst Eure Muskeln spielen. Oh, echt stark!
+OneGeneralFemale=%s lässt ihre Muskeln spielen. Oh, echt stark!
+
+[42]
+name=FROWN
+anim=0
+OneToOne=%s ist enttäuscht und zeigt es %s durch ein Stirnrunzeln.
+OneToMe=%s ist enttäuscht und zeigt es Euch durch ein Stirnrunzeln.
+MeToOne=Ihr seid enttäuscht und zeigt es %s durch ein Stirnrunzeln.
+OneGeneral=%s runzelt die Stirn.
+MeGeneral=Ihr runzelt die Stirn.
+
+[43]
+name=GASP
+anim=5
+OneToOne=%s keucht %s an.
+OneToMe=%s keucht Euch an.
+MeToOne=Ihr keucht %s an.
+OneGeneral=%s schnappt nach Luft.
+MeGeneral=Ihr schnappt nach Luft.
+
+[44]
+name=GAZE
+anim=0
+OneToOne=%s blickt %s begierig an.
+OneToMe=%s blickt Euch begierig an.
+MeToOne=Ihr blickt %s begierig an.
+OneGeneral=%s blickt in die Ferne.
+MeGeneral=Ihr blickt in die Ferne.
+
+[45]
+name=GIGGLE
+anim=11
+OneToOne=%s kichert %s an.
+OneToMe=%s kichert Euch an.
+MeToOne=Ihr kichert %s an.
+OneGeneral=%s kichert.
+MeGeneral=Ihr kichert.
+
+[46]
+name=GLARE
+anim=0
+OneToOne=%s starrt %s wütend an.
+OneToMe=%s starrt Euch wütend an.
+MeToOne=Ihr starrt %s wütend an.
+OneGeneral=%s schaut wütend drein.
+MeGeneral=Ihr schaut wütend drein.
+
+[47]
+name=GLOAT
+anim=11
+OneToOne=%s freut sich hämisch über das Unglück von %s.
+OneToMe=%s freut sich hämisch über Euer Unglück.
+MeToOne=Ihr freut Euch hämisch am Unglück von %s.
+OneGeneral=%s freut sich hämisch über das Unglück aller.
+MeGeneral=Ihr erfreut Euch hämisch am Unglück aller.
+
+[48]
+name=GREET
+anim=3
+OneToOne=%s begrüßt %s herzlich.
+OneToMe=%s begrüßt Euch herzlich.
+MeToOne=Ihr begrüßt %s herzlich.
+OneGeneral=%s begrüßt alle herzlich.
+MeGeneral=Ihr begrüßt alle herzlich.
+
+[49]
+name=GRIN
+anim=0
+OneToOne=%s grinst %s böse an.
+OneToMe=%s grinst Euch böse an.
+MeToOne=Ihr grinst %s böse an.
+OneGeneral=%s grinst böse.
+MeGeneral=Ihr grinst böse.
+
+[50]
+name=GROAN
+anim=0
+OneToOne=%s sieht %s an und stöhnt.
+OneToMe=%s sieht Euch an und stöhnt.
+MeToOne=Ihr seht %s an und stöhnt.
+OneGeneral=%s fängt an zu stöhnen.
+MeGeneral=Ihr fangt an zu stöhnen.
+
+[51]
+name=GROVEL
+anim=20
+OneToOne=%s kriecht vor %s wie ein unterwürfiger Diener.
+OneToMe=%s kriecht vor Euch wie ein unterwürfiger Diener.
+MeToOne=Ihr kriecht vor %s wie ein unterwürfiger Diener.
+OneGeneral=%s kriecht vor lauter Unterwürfigkeit auf dem Boden.
+MeGeneral=Ihr kriecht vor lauter Unterwürfigkeit auf dem Boden.
+
+[52]
+name=GUFFAW
+anim=11
+OneToOne=%s wirft nur einen Blick auf %s und bricht in schallendes Gelächter aus.
+OneToMe=%s wirft nur einen Blick auf Euch und bricht in schallendes Gelächter aus.
+MeToOne=Ihr werft nur einen Blick auf %s und brecht in schallendes Gelächter aus.
+OneGeneral=%s bricht in schallendes Gelächter aus.
+MeGeneral=Ihr brecht in schallendes Gelächter aus.
+
+[53]
+name=HAIL
+anim=3
+OneToOne=%s grüßt %s.
+OneToMe=%s grüßt Euch.
+MeToOne=Ihr grüßt %s.
+OneGeneral=%s grüßt alle um sich herum.
+MeGeneral=Ihr grüßt alle um Euch herum.
+OneGeneralFemale=%s grüßt alle um sich herum.
+
+[54]
+name=HAPPY
+anim=0
+OneToOne=%s ist sehr glücklich mit %s!
+OneToMe=%s ist sehr glücklich mit Euch!
+MeToOne=Ihr seid sehr glücklich mit %s!
+OneGeneral=%s ist von Glück erfüllt!
+MeGeneral=Ihr seid von Glück erfüllt!
+
+[55]
+name=HELLO
+anim=3
+OneToOne=%s begrüßt %s mit einem herzlichen Hallo!
+OneToMe=%s begrüßt Euch mit einem herzlichen Hallo!
+MeToOne=Ihr begrüßt %s mit einem herzlichen Hallo!
+OneGeneral=%s begrüßt alle mit einem herzlichen Hallo!
+MeGeneral=Ihr begrüßt alle mit einem herzlichen Hallo!
+SoundHumanMale=6162
+SoundHumanFemale=6134
+SoundOrcMale=6360
+SoundOrcFemale=6351
+SoundDwarfMale=6107
+SoundDwarfFemale=6094
+SoundNightElfMale=6180
+SoundNightElfFemale=6171
+SoundScourgeMale=6414
+SoundScourgeFemale=6405
+SoundTaurenMale=6378
+SoundTaurenFemale=6369
+SoundGnomeMale=6125
+SoundGnomeFemale=6116
+SoundTrollMale=6396
+SoundTrollFemale=6387
+SoundBloodElfFemale=9635
+SoundBloodElfMale=9662
+SoundDraeneiFemale=9687
+SoundDraeneiMale=9712
+
+[56]
+name=HUG
+anim=0
+OneToOne=%s umarmt %s.
+OneToMe=%s umarmt Euch.
+MeToOne=Ihr umarmt %s.
+OneGeneral=%s muss in den Arm genommen werden!
+MeGeneral=Ihr müsst in den Arm genommen werden!
+
+[57]
+name=HUNGRY
+anim=0
+OneToOne=%s hat Hunger. Vielleicht hat %s ja etwas zu essen...
+OneToMe=%s hat Hunger. Vielleicht habt Ihr ja etwas zu essen...
+MeToOne=Ihr habt Hunger. Vielleicht hat %s ja etwas zu essen...
+OneGeneral=%s hat Hunger!
+MeGeneral=Ihr habt Hunger!
+
+[58]
+name=KISS
+anim=17
+OneToOne=%s wirft %s einen Kuss zu.
+OneToMe=%s haucht Euch einen Kuss zu.
+MeToOne=Ihr haucht %s einen Kuss zu.
+OneGeneral=%s haucht einen Kuss in die Luft.
+MeGeneral=Ihr haucht einen Kuss in die Luft.
+
+[59]
+name=KNEEL
+anim=68
+OneToOne=%s kniet vor %s.
+OneToMe=%s kniet vor Euch.
+MeToOne=Ihr kniet vor %s.
+OneGeneral=%s kniet nieder.
+MeGeneral=Ihr kniet nieder.
+
+[60]
+name=LAUGH
+anim=11
+OneToOne=%s lacht %s aus.
+OneToMe=%s lacht Euch aus.
+MeToOne=Ihr lacht %s aus.
+OneGeneral=%s lacht.
+MeGeneral=Ihr lacht.
+
+[61]
+name=LAYDOWN
+anim=12
+OneToOne=%s legt sich vor %s nieder.
+OneToMe=%s legt sich vor Euch nieder.
+MeToOne=Ihr legt Euch vor %s nieder.
+OneGeneral=%s legt sich nieder.
+MeGeneral=Ihr legt Euch nieder.
+
+[62]
+name=MASSAGE
+anim=0
+OneToOne=%s massiert die Schultern von %s.
+OneToMe=%s massiert Eure Schultern.
+MeToOne=Ihr massiert die Schultern von %s.
+OneGeneral=%s braucht eine Massage!
+MeGeneral=Ihr braucht eine Massage!
+
+[63]
+name=MOAN
+anim=0
+OneToOne=%s stöhnt %s vielsagend an.
+OneToMe=%s stöhnt Euch vielsagend an.
+MeToOne=Ihr stöhnt %s vielsagend an.
+OneGeneral=%s stöhnt vielsagend.
+MeGeneral=Ihr stöhnt vielsagend.
+
+[64]
+name=MOON
+anim=0
+OneToOne=%s lässt die Hose runter und zeigt %s das blanke Hinterteil.
+OneToMe=%s lässt die Hose runter und zeigt Euch das blanke Hinterteil.
+MeToOne=Ihr lasst die Hose runter und zeigt %s das blanke Hinterteil.
+OneGeneral=%s lässt die Hose runter und zeigt allen das blanke Hinterteil.
+MeGeneral=Ihr lasst die Hose runter und zeigt allen das blanke Hinterteil.
+OneToOneFemale=%s lässt die Hose runter und zeigt %s das blanke Hinterteil.
+OneToMeFemale=%s lässt die Hose runter und zeigt Euch das blanke Hinterteil.
+OneGeneralFemale=%s lässt die Hose runter und zeigt allen das blanke Hinterteil.
+
+[65]
+name=MOURN
+anim=18
+OneToOne=In stillem Nachdenken versunken betrauert %s den Tod von %s.
+OneToMe=In stillem Nachdenken versunken betrauert %s Euren Tod.
+MeToOne=In stillem Nachdenken versunken betrauert Ihr den Tod von %s.
+OneGeneral=In stillem Nachdenken versunken betrauert %s die Toten.
+MeGeneral=In stillem Nachdenken versunken betrauert Ihr die Toten.
+
+[66]
+name=NO
+anim=274
+OneToOne=%s sagt NEIN zu %s. Auf keinen Fall.
+OneToMe=%s sagt NEIN zu Euch. Auf keinen Fall.
+MeToOne=Ihr sagt NEIN zu %s. Auf keinen Fall.
+OneGeneral=%s sagt deutlich NEIN.
+MeGeneral=Ihr sagt deutlich: NEIN.
+SoundHumanMale=6165
+SoundHumanFemale=6137
+SoundOrcMale=6363
+SoundOrcFemale=6354
+SoundDwarfMale=6110
+SoundDwarfFemale=6100
+SoundNightElfMale=6183
+SoundNightElfFemale=6174
+SoundScourgeMale=6417
+SoundScourgeFemale=6408
+SoundTaurenMale=6381
+SoundTaurenFemale=6372
+SoundGnomeMale=6128
+SoundGnomeFemale=6119
+SoundTrollMale=6399
+SoundTrollFemale=6390
+SoundBloodElfFemale=9638
+SoundBloodElfMale=9665
+SoundDraeneiFemale=9690
+SoundDraeneiMale=9715
+
+[67]
+name=NOD
+anim=273
+OneToOne=%s nickt %s zu.
+OneToMe=%s nickt Euch zu.
+MeToOne=Ihr nickt %s zu.
+OneGeneral=%s nickt.
+MeGeneral=Ihr nickt.
+SoundHumanMale=6164
+SoundHumanFemale=6136
+SoundOrcMale=6362
+SoundOrcFemale=6353
+SoundDwarfMale=6109
+SoundDwarfFemale=6098
+SoundNightElfMale=6182
+SoundNightElfFemale=6173
+SoundScourgeMale=6416
+SoundScourgeFemale=6407
+SoundTaurenMale=6380
+SoundTaurenFemale=6371
+SoundGnomeMale=6127
+SoundGnomeFemale=6118
+SoundTrollMale=6398
+SoundTrollFemale=6389
+SoundBloodElfFemale=9637
+SoundBloodElfMale=9666
+SoundDraeneiFemale=9691
+SoundDraeneiMale=9716
+
+[68]
+name=NOSEPICK
+anim=0
+OneToOne=%s popelt in der Nase und zeigt %s seine Ausbeute.
+OneToMe=%s popelt in der Nase und zeigt Euch seine Ausbeute.
+MeToOne=Ihr popelt in der Nase und zeigt %s Eure Ausbeute.
+OneGeneral=%s vertreibt sich die Zeit mit ausgiebigem Nasepopeln.
+MeGeneral=Ihr vertreibt Euch die Zeit mit ausgiebigem Nasepopeln.
+OneToOneFemale=%s popelt in der Nase und zeigt %s ihre Ausbeute.
+OneToMeFemale=%s popelt in der Nase und zeigt Euch ihre Ausbeute.
+
+[69]
+name=PANIC
+anim=0
+OneToOne=%s wirft einen Blick auf %s und bricht in Panik aus.
+OneToMe=%s wirft einen Blick auf Euch und bricht in Panik aus.
+MeToOne=Ihr werft einen Blick auf %s und brecht in Panik aus.
+OneGeneral=%s rennt voller Panik in der Gegend herum.
+MeGeneral=Ihr rennt voller Panik in der Gegend herum.
+
+[70]
+name=PEER
+anim=0
+OneToOne=%s starrt %s forschend an.
+OneToMe=%s starrt Euch forschend an.
+MeToOne=Ihr starrt %s forschend an.
+OneGeneral=%s blickt forschend in der Gegend herum.
+MeGeneral=Ihr blickt forschend in der Gegend herum.
+
+[71]
+name=PLEAD
+anim=20
+OneToOne=%s fleht %s an.
+OneToMe=%s fleht Euch an.
+MeToOne=Ihr fleht %s an.
+OneGeneral=%s fällt auf die Knie und fleht verzweifelt.
+MeGeneral=Ihr fallt auf die Knie und fleht verzweifelt.
+OneGeneralFemale=%s fällt auf die Knie und fleht verzweifelt.
+
+[72]
+name=POINT
+anim=25
+OneToOne=%s zeigt auf %s.
+OneToMe=%s zeigt auf Euch.
+MeToOne=Ihr zeigt auf %s.
+OneGeneral=%s zeigt dort drüben hin.
+MeGeneral=Ihr zeigt dort drüben hin.
+
+[73]
+name=POKE
+anim=0
+OneToOne=%s wird von %s geknufft. He!
+OneToMe=%s knufft Euch. He!
+MeToOne=%s wird von Euch geknufft. He!
+OneGeneral=%s knufft sich in den Bauch und kichert.
+MeGeneral=Ihr knufft Euch in den Bauch und kichert.
+OneGeneralFemale=%s knufft sich in den Bauch und kichert.
+
+[74]
+name=PRAY
+anim=16
+OneToOne=%s spricht ein Gebet für %s.
+OneToMe=%s spricht ein Gebet für Euch.
+MeToOne=Ihr sprecht ein Gebet für %s.
+OneGeneral=%s betet zu den Göttern.
+MeGeneral=Ihr betet zu den Göttern.
+
+[75]
+name=ROAR
+anim=15
+OneToOne=%s brüllt %s wie ein wildes Tier an. Wie furchterregend!
+OneToMe=%s brüllt Euch wie ein wildes Tier an. Wie furchterregend!
+MeToOne=Ihr brüllt %s wie ein wildes Tier an. Wie furchterregend!
+OneGeneral=%s brüllt wie ein wildes Tier. Wie furchterregend!
+MeGeneral=Ihr brüllt wie ein wildes Tier. Wie furchterregend!
+
+[76]
+name=ROFL
+anim=11
+OneToOne=%s lacht %s aus und wälzt sich dabei vor Vergnügen auf dem Boden.
+OneToMe=%s lacht Euch aus und wälzt sich dabei vor Vergnügen auf dem Boden.
+MeToOne=Ihr lacht %s aus und wälzt Euch dabei vor Vergnügen auf dem Boden.
+OneGeneral=%s wälzt sich vor Lachen auf dem Boden.
+MeGeneral=Ihr wälzt Euch vor Lachen auf dem Boden.
+
+[77]
+name=RUDE
+anim=14
+OneToOne=%s zeigt %s eine unflätige Geste.
+OneToMe=%s macht Euch gegenüber eine unflätige Geste.
+MeToOne=Ihr zeigt %s eine unflätige Geste.
+OneGeneral=%s macht eine unflätige Geste.
+MeGeneral=Ihr macht eine unflätige Geste.
+
+[78]
+name=SALUTE
+anim=66
+OneToOne=%s grüßt %s voller Respekt.
+OneToMe=%s grüßt Euch voller Respekt.
+MeToOne=Ihr grüßt %s voller Respekt.
+OneGeneral=%s steht stramm und grüßt.
+MeGeneral=Ihr steht stramm und grüßt.
+
+[79]
+name=SCRATCH
+anim=0
+OneToOne=%s kratzt %s. Wie unerwartet!
+OneToMe=%s kratzt Euch. Wie unerwartet!
+MeToOne=Ihr kratzt %s. Wie unerwartet!
+OneGeneral=%s kratzt sich. Ah, das ist besser!
+MeGeneral=Ihr kratzt Euch. Ah, das ist besser!
+OneGeneralFemale=%s kratzt sich. Ah, das ist besser!
+
+[80]
+name=SEXY
+anim=0
+OneToOne=%s denkt, dass %s total sexy ist.
+OneToMe=%s denkt, dass Ihr total sexy seid.
+MeToOne=Ihr denkt, dass %s total sexy ist.
+OneGeneral=%s ist einfach zu sexy.
+MeGeneral=Ihr seid einfach zu sexy.
+OneGeneralFemale=%s ist einfach zu sexy.
+
+[81]
+name=SHAKE
+anim=0
+OneToOne=%s zeigt %s seinen Hintern.
+OneToMe=%s zeigt Euch seinen Hintern.
+MeToOne=Ihr zeigt %s Euren Hintern.
+OneGeneral=%s wackelt mit seinem Hintern.
+MeGeneral=Ihr wackelt mit Eurem Hintern.
+OneToOneFemale=%s zeigt %s ihren Hintern.
+OneToMeFemale=%s zeigt Euch ihren Hintern.
+OneGeneralFemale=%s wackelt mit ihrem Hintern.
+
+[82]
+name=SHOUT
+anim=22
+OneToOne=%s schreit %s an.
+OneToMe=%s schreit Euch an.
+MeToOne=Ihr schreit %s an.
+OneGeneral=%s schreit.
+MeGeneral=Ihr schreit.
+
+[83]
+name=SHRUG
+anim=6
+OneToOne=%s zeigt %s ein Achselzucken. Wer weiß?
+OneToMe=%s zeigt Euch ein Achselzucken. Wer weiß?
+MeToOne=Ihr zeigt %s ein Achselzucken. Wer weiß?
+OneGeneral=%s zuckt mit den Achseln. Wer weiß?
+MeGeneral=Ihr zuckt mit den Achseln. Wer weiß?
+
+[84]
+name=SHY
+anim=24
+OneToOne=%s lächelt %s schüchtern an.
+OneToMe=%s lächelt Euch schüchtern an.
+MeToOne=Ihr lächelt %s schüchtern an.
+OneGeneral=%s lächelt schüchtern!
+MeGeneral=Ihr lächelt schüchtern.
+
+[85]
+name=SIGH
+anim=0
+OneToOne=%s sieht %s mit einem Seufzen an.
+OneToMe=%s sieht Euch mit einem Seufzen an.
+MeToOne=Ihr seht %s mit einem Seufzen an.
+OneGeneral=%s entfährt ein langer, tiefer Seufzer.
+MeGeneral=Euch entfährt ein langer, tiefer Seufzer.
+SoundHumanFemale=7894
+SoundHumanMale=7914
+SoundDwarfMale=7918
+SoundDwarfFemale=7917
+SoundNightElfFemale=7915
+SoundNightElfMale=7916
+SoundGnomeFemale=7919
+SoundGnomeMale=7920
+SoundOrcFemale=7921
+SoundOrcMale=7922
+SoundScourgeFemale=7927
+SoundScourgeMale=7928
+SoundTaurenFemale=7925
+SoundTaurenMale=7926
+SoundTrollFemale=7923
+SoundTrollMale=7924
+SoundBloodElfFemale=10573
+SoundBloodElfMale=10575
+SoundDraeneiFemale=10577
+SoundDraeneiMale=10579
+
+[86]
+name=SIT
+anim=13
+
+[87]
+name=SLEEP
+anim=12
+OneGeneral=%s schläft ein. Zzzzzzz.
+MeGeneral=Ihr schlaft ein. Zzzzzzz.
+
+[88]
+name=SNARL
+anim=0
+OneToOne=%s zeigt seine Zähne und knurrt %s an.
+OneToMe=%s zeigt seine Zähne und knurrt Euch an.
+MeToOne=Ihr zeigt Eure Zähne und knurrt %s an.
+OneGeneral=%s zeigt seine Zähne und knurrt.
+MeGeneral=Ihr zeigt Eure Zähne und knurrt.
+OneToOneFemale=%s zeigt ihre Zähne und knurrt %s an.
+OneToMeFemale=%s zeigt ihre Zähne und knurrt Euch an.
+OneGeneralFemale=%s zeigt ihre Zähne und knurrt.
+
+[89]
+name=SPIT
+anim=0
+OneToOne=%s spuckt auf %s.
+OneToMe=%s spuckt auf Euch.
+MeToOne=Ihr spuckt auf %s.
+OneGeneral=%s spuckt auf den Boden.
+MeGeneral=Ihr spuckt auf den Boden.
+
+[90]
+name=STARE
+anim=0
+OneToOne=%s starrt %s an.
+OneToMe=%s starrt Euch an.
+MeToOne=Ihr starrt %s an.
+OneGeneral=%s starrt in die Ferne.
+MeGeneral=Ihr starrt in die Ferne.
+
+[91]
+name=SURPRISED
+anim=0
+OneToOne=%s ist von den Taten von %s überrascht.
+OneToMe=%s ist von Euren Taten überrascht.
+MeToOne=Ihr seid von den Taten von %s überrascht.
+OneGeneral=%s ist total überrascht!
+MeGeneral=Ihr seid echt überrascht!
+
+[92]
+name=SURRENDER
+anim=20
+OneToOne=%s ergibt sich %s. Niederlagen tun weh...
+OneToMe=%s ergibt sich Euch. Niederlagen tun weh...
+MeToOne=Ihr ergebt Euch %s. Niederlagen tun weh...
+OneGeneral=%s ergibt sich seinen Gegnern.
+MeGeneral=Ihr ergebt Euch Euren Gegnern.
+OneGeneralFemale=%s ergibt sich ihren Gegnern.
+
+[93]
+name=TALK
+anim=1
+OneToOne=%s will mit %s reden.
+OneToMe=%s will mit Euch reden.
+MeToOne=Ihr wollt mit %s reden.
+OneGeneral=%s spricht mit sich selbst, da wohl kein anderer interessiert ist.
+MeGeneral=Ihr sprecht mit Euch selbst, da wohl kein anderer interessiert ist.
+OneGeneralFemale=%s spricht mit sich selbst, da wohl kein anderer interessiert ist.
+
+[94]
+name=TALKEX
+anim=5
+OneToOne=%s spricht aufgeregt mit %s.
+OneToMe=%s spricht aufgeregt mit Euch.
+MeToOne=Ihr sprecht aufgeregt mit %s.
+OneGeneral=%s spricht aufgeregt mit jedem.
+MeGeneral=Ihr sprecht aufgeregt mit jedem.
+
+[95]
+name=TALKQ
+anim=6
+OneToOne=%s befragt %s.
+OneToMe=%s befragt Euch.
+MeToOne=Ihr befragt %s.
+OneGeneral=%s will wissen, was der Sinn des Lebens ist.
+MeGeneral=Ihr wollt wissen, was der Sinn des Lebens ist.
+
+[96]
+name=TAP
+anim=0
+OneToOne=%s klopft mit dem Fuß auf den Boden, während er auf %s wartet.
+OneToMe=%s klopft mit dem Fuß auf den Boden, während er auf Euch wartet.
+MeToOne=Ihr klopft mit dem Fuß auf den Boden, während Ihr auf %s wartet.
+OneGeneral=%s klopft mit dem Fuß. Jetzt aber Tempo!
+MeGeneral=Ihr klopft mit dem Fuß. Jetzt aber Tempo!
+OneToOneFemale=%s klopft mit dem Fuß auf den Boden, während sie auf %s wartet.
+OneToMeFemale=%s klopft mit dem Fuß auf den Boden, während sie auf Euch wartet.
+OneGeneralFemale=%s klopft mit dem Fuß. Jetzt aber Tempo!
+
+[97]
+name=THANK
+anim=1
+OneToOne=%s dankt %s.
+OneToMe=%s dankt Euch.
+MeToOne=Ihr dankt %s.
+OneGeneral=%s dankt allen.
+MeGeneral=Ihr dankt allen um Euch herum.
+SoundHumanMale=6166
+SoundHumanFemale=6138
+SoundOrcMale=6364
+SoundOrcFemale=6355
+SoundDwarfMale=6111
+SoundDwarfFemale=6102
+SoundNightElfMale=6184
+SoundNightElfFemale=6175
+SoundScourgeMale=6418
+SoundScourgeFemale=6409
+SoundTaurenMale=6382
+SoundTaurenFemale=6373
+SoundGnomeMale=6129
+SoundGnomeFemale=6120
+SoundTrollMale=6400
+SoundTrollFemale=6391
+SoundBloodElfFemale=9639
+SoundBloodElfMale=9671
+SoundDraeneiFemale=9696
+SoundDraeneiMale=9721
+
+[98]
+name=THREATEN
+anim=0
+OneToOne=%s droht %s mit der ewigen Verdammnis.
+OneToMe=%s droht Euch mit der ewigen Verdammnis.
+MeToOne=Ihr droht %s mit der ewigen Verdammnis.
+OneGeneral=%s droht allen mit der ewigen Verdammnis.
+MeGeneral=Ihr droht allen mit der ewigen Verdammnis.
+
+[99]
+name=TIRED
+anim=0
+OneToOne=%s teilt %s mit, dass er müde ist.
+OneToMe=%s teilt Euch mit, dass er müde ist.
+MeToOne=Ihr teilt %s mit, dass Ihr müde seid.
+OneGeneral=%s teilt allen mit, dass er müde ist.
+MeGeneral=Ihr teilt allen mit, dass Ihr müde seid.
+OneToOneFemale=%s teilt %s mit, dass sie müde ist.
+OneToMeFemale=%s teilt Euch mit, dass sie müde ist.
+OneGeneralFemale=%s teilt allen mit, dass sie müde ist.
+
+[100]
+name=VICTORY
+anim=4
+OneToOne=%s sonnt sich mit %s im Glanz des Sieges.
+OneToMe=%s sonnt sich mit Euch im Glanz des Sieges.
+MeToOne=Ihr sonnt Euch mit %s im Glanz des Sieges.
+OneGeneral=%s sonnt sich im Glanz des Sieges.
+MeGeneral=Ihr sonnt Euch im Glanz des Sieges.
+
+[101]
+name=WAVE
+anim=3
+OneToOne=%s winkt %s zu.
+OneToMe=%s winkt Euch zu.
+MeToOne=Ihr winkt %s zu.
+OneGeneral=%s winkt.
+MeGeneral=Ihr winkt.
+
+[102]
+name=WELCOME
+anim=1
+OneToOne=%s hat %s gern geholfen.
+OneToMe=%s hat Euch gern geholfen.
+MeToOne=Ihr sagt: 'Gern geschehen, %s.'
+OneGeneral=%s sagt: 'Bitte sehr.'
+MeGeneral=Ihr sagt: 'Bitte sehr.'
+SoundHumanMale=6167
+SoundHumanFemale=6139
+SoundOrcMale=6365
+SoundOrcFemale=6356
+SoundDwarfMale=6112
+SoundDwarfFemale=6103
+SoundNightElfMale=6185
+SoundNightElfFemale=6176
+SoundScourgeMale=6419
+SoundScourgeFemale=6410
+SoundTaurenMale=6383
+SoundTaurenFemale=6374
+SoundGnomeMale=6130
+SoundGnomeFemale=6121
+SoundTrollMale=6401
+SoundTrollFemale=6392
+SoundBloodElfFemale=9640
+SoundBloodElfMale=9674
+SoundDraeneiFemale=9699
+SoundDraeneiMale=9724
+
+[103]
+name=WHINE
+anim=0
+OneToOne=%s heult %s herzzerreißend an.
+OneToMe=%s heult Euch herzzerreißend an.
+MeToOne=Ihr heult %s herzzerreißend an.
+OneGeneral=%s heult herzzerreißend.
+MeGeneral=Ihr heult herzzerreißend.
+
+[104]
+name=WHISTLE
+anim=0
+OneToOne=%s pfeift %s zu.
+OneToMe=%s pfeift Euch zu.
+MeToOne=Ihr pfeift %s zu.
+OneGeneral=%s lässt ein lautes Pfeifen hören.
+MeGeneral=Ihr lasst ein lautes Pfeifen hören.
+SoundHumanFemale=7967
+SoundHumanMale=7968
+SoundDwarfFemale=7963
+SoundDwarfMale=7964
+SoundNightElfFemale=7969
+SoundNightElfMale=7970
+SoundGnomeFemale=7965
+SoundGnomeMale=7966
+SoundOrcFemale=7971
+SoundOrcMale=7972
+SoundScourgeFemale=7977
+SoundScourgeMale=7978
+SoundTaurenFemale=7973
+SoundTaurenMale=7974
+SoundTrollFemale=7975
+SoundTrollMale=7976
+SoundBloodElfFemale=10032
+SoundBloodElfMale=10033
+SoundDraeneiFemale=10034
+SoundDraeneiMale=10035
+
+[105]
+name=WORK
+anim=0
+OneToOne=%s arbeitet mit %s.
+OneToMe=%s arbeitet mit Euch.
+MeToOne=Ihr arbeitet mit %s.
+OneGeneral=%s beginnt mit der Arbeit.
+MeGeneral=Ihr beginnt mit der Arbeit.
+
+[106]
+name=YAWN
+anim=0
+OneToOne=%s gähnt %s müde an.
+OneToMe=%s gähnt Euch müde an.
+MeToOne=Ihr gähnt %s müde an.
+OneGeneral=%s gähnt müde.
+MeGeneral=Ihr gähnt müde.
+SoundDwarfFemale=7935
+SoundDwarfMale=7936
+SoundGnomeFemale=7937
+SoundGnomeMale=7938
+SoundHumanFemale=7931
+SoundHumanMale=7932
+SoundNightElfFemale=7933
+SoundNightElfMale=7934
+SoundOrcFemale=7939
+SoundOrcMale=7940
+SoundScourgeFemale=7941
+SoundScourgeMale=7942
+SoundTaurenFemale=7945
+SoundTaurenMale=7946
+SoundTrollFemale=7943
+SoundTrollMale=7944
+SoundBloodElfFemale=10574
+SoundBloodElfMale=10576
+SoundDraeneiFemale=10578
+SoundDraeneiMale=10580
+
+[107]
+name=BOGGLE
+anim=6
+OneToOne=%s sieht %s ungläubig an.
+OneToMe=%s sieht Euch ungläubig an.
+MeToOne=Ihr seht %s ungläubig an.
+OneGeneral=%s schaut angesichts der Situation ungläubig drein.
+MeGeneral=Ihr schaut angesichts der Situation ungläubig drein.
+
+[108]
+name=CALM
+anim=0
+OneToOne=%s versucht, %s zu beruhigen.
+OneToMe=%s versucht, Euch zu beruhigen.
+MeToOne=Ihr versucht, %s zu beruhigen.
+OneGeneral=%s bleibt ruhig.
+MeGeneral=Ihr bleibt ruhig.
+
+[109]
+name=COLD
+anim=0
+OneToOne=%s teilt %s mit, dass ihm kalt ist.
+OneToMe=%s teilt Euch mit, dass ihm kalt ist.
+MeToOne=Ihr teilt %s mit, dass Euch kalt ist.
+OneGeneral=%s teilt allen mit, dass ihm kalt ist.
+MeGeneral=Ihr teilt allen mit, dass Euch kalt ist.
+OneToOneFemale=%s teilt %s mit, dass ihr kalt ist.
+OneToMeFemale=%s teilt Euch mit, dass ihr kalt ist.
+OneGeneralFemale=%s teilt allen mit, dass ihr kalt ist.
+
+[110]
+name=COMFORT
+anim=0
+OneToOne=%s tröstet %s.
+OneToMe=%s tröstet Euch.
+MeToOne=Ihr tröstet %s.
+OneGeneral=%s braucht Trost.
+MeGeneral=Ihr müsst getröstet werden.
+
+[111]
+name=CUDDLE
+anim=0
+OneToOne=%s kuschelt sich an %s.
+OneToMe=%s kuschelt sich an Euch.
+MeToOne=Ihr kuschelt Euch an %s.
+OneGeneral=%s braucht eine Umarmung.
+MeGeneral=Ihr müsst umarmt werden.
+
+[112]
+name=DUCK
+anim=0
+OneToOne=%s duckt sich hinter %s.
+OneToMe=%s duckt sich hinter Euch.
+MeToOne=Ihr duckt Euch hinter %s.
+OneGeneral=%s duckt sich zum Schutz.
+MeGeneral=Ihr duckt Euch zum Schutz.
+
+[113]
+name=INSULT
+anim=14
+OneToOne=%s findet, %s sei die Ausgeburt eines mutterlosen Ogers.
+OneToMe=%s findet, Ihr seid die Ausgeburt eines mutterlosen Ogers.
+MeToOne=Ihr findet, %s sei die Ausgeburt eines mutterlosen Ogers.
+OneGeneral=%s findet, dass alle um ihn herum Ausgeburten von mutterlosen Ogern sind.
+MeGeneral=Ihr findet, dass alle um Euch herum Ausgeburten von mutterlosen Ogern sind.
+OneGeneralFemale=%s findet, dass alle um sie herum Ausgeburten von mutterlosen Ogern sind.
+
+[114]
+name=INTRODUCE
+anim=0
+OneToOne=%s stellt sich %s vor.
+OneToMe=%s stellt sich Euch vor.
+MeToOne=Ihr stellt Euch %s vor.
+OneGeneral=%s stellt sich allen vor.
+MeGeneral=Ihr stellt Euch allen vor.
+OneToOneFemale=%s stellt sich %s vor.
+OneToMeFemale=%s stellt sich Euch vor.
+OneGeneralFemale=%s stellt sich allen vor.
+
+[115]
+name=JK
+anim=0
+OneToOne=%s zeigt %s, dass er nur Spaß gemacht hat!
+OneToMe=%s zeigt Euch, dass er nur Spaß gemacht hat!
+MeToOne=Ihr zeigt %s, dass Ihr nur Spaß gemacht habt!
+OneGeneral=%s hat nur Spaß gemacht!
+MeGeneral=Ihr habt nur Spaß gemacht!
+OneToOneFemale=%s zeigt %s, dass sie nur Spaß gemacht hat!
+OneToMeFemale=%s zeigt Euch, dass sie nur Spaß gemacht hat!
+
+[116]
+name=LICK
+anim=0
+OneToOne=%s leckt %s.
+OneToMe=%s leckt Euch.
+MeToOne=Ihr leckt %s.
+OneGeneral=%s leckt sich die Lippen.
+MeGeneral=Ihr leckt Eure Lippen.
+OneGeneralFemale=%s leckt sich die Lippen.
+
+[117]
+name=LISTEN
+anim=0
+OneToOne=%s hört %s aufmerksam zu.
+OneToMe=%s hört Euch aufmerksam zu.
+MeToOne=Ihr hört %s aufmerksam zu.
+OneGeneral=%s hört zu!
+MeGeneral=Ihr hört zu!
+
+[118]
+name=LOST
+anim=6
+OneToOne=%s lässt %s wissen, dass er sich total verirrt hat.
+OneToMe=%s lässt Euch wissen, dass er sich total verirrt hat.
+MeToOne=Ihr lasst %s wissen, dass Ihr Euch total verirrt habt.
+OneGeneral=%s hat sich total verirrt.
+MeGeneral=Ihr habt Euch total verirrt.
+OneToOneFemale=%s lässt %s wissen, dass sie sich total verirrt hat.
+OneToMeFemale=%s lässt Euch wissen, dass sie sich total verirrt hat.
+
+[119]
+name=MOCK
+anim=0
+OneToOne=%s macht sich über die Dummheit von %s lustig.
+OneToMe=%s macht sich über Eure Dummheit lustig.
+MeToOne=Ihr macht Euch über die Dummheit von %s lustig.
+OneGeneral=%s macht sich über das Leben und alles, wofür es steht, lustig.
+MeGeneral=Ihr macht Euch über das Leben und alles, wofür es steht, lustig.
+
+[120]
+name=PONDER
+anim=6
+OneToOne=%s denkt über die Taten von %s nach.
+OneToMe=%s macht sich Gedanken über Euer Tun.
+MeToOne=Ihr macht Euch Gedanken über das Tun von %s.
+OneGeneral=%s macht sich Gedanken über die Situation.
+MeGeneral=Ihr denkt über die Situation nach.
+
+[121]
+name=POUNCE
+anim=0
+OneToOne=%s springt auf %s.
+OneToMe=%s springt auf Euch.
+MeToOne=Ihr springt auf %s.
+OneGeneral=%s springt aus dem Schatten.
+MeGeneral=Ihr springt aus dem Schatten.
+
+[122]
+name=PRAISE
+anim=0
+OneToOne=%s überschüttet %s mit Lob.
+OneToMe=%s überschüttet Euch mit Lob.
+MeToOne=Ihr überschüttet %s mit Lob.
+OneGeneral=%s preist das Licht.
+MeGeneral=Ihr preist das Licht.
+
+[123]
+name=PURR
+anim=0
+OneToOne=%s schnurrt %s an.
+OneToMe=%s schnurrt Euch an.
+MeToOne=Ihr schnurrt %s an.
+OneGeneral=%s schnurrt wie ein Kätzchen.
+MeGeneral=Ihr schnurrt wie ein Kätzchen.
+
+[124]
+name=PUZZLE
+anim=6
+OneToOne=%s ist von %s verwirrt!
+OneToMe=Ihr verwirrt %s. Was macht Ihr da bloß?
+MeToOne=%s verwirrt Euch.
+OneGeneral=%s ist verwirrt. Was ist denn hier nur los?
+MeGeneral=Ihr seid verwirrt. Was ist denn hier nur los?
+
+[125]
+name=RAISE
+anim=0
+OneToOne=%s sieht %s an und streckt seine Hand in die Luft.
+OneToMe=%s sieht Euch an und hebt seine Hand.
+MeToOne=Ihr seht %s an und hebt Eure Hand.
+OneGeneral=%s streckt seine Hand in die Luft.
+MeGeneral=Ihr streckt Eure Hand in die Luft.
+OneToOneFemale=%s sieht %s an und streckt ihre Hand in die Luft.
+OneToMeFemale=%s sieht Euch an und hebt ihre Hand.
+OneGeneralFemale=%s streckt ihre Hand in die Luft.
+
+[126]
+name=READY
+anim=0
+OneToOne=%s teilt %s mit, dass er bereit ist!
+OneToMe=%s teilt Euch mit, dass er bereit ist!
+MeToOne=Ihr teilt %s mit, dass Ihr bereit seid!
+OneGeneral=%s teilt allen mit, dass er bereit ist!
+MeGeneral=Ihr teilt allen mit, dass Ihr bereit seid!
+OneToOneFemale=%s teilt %s mit, dass sie bereit ist!
+OneToMeFemale=%s teilt Euch mit, dass sie bereit ist!
+OneGeneralFemale=%s teilt allen mit, dass sie bereit ist!
+
+[127]
+name=SHIMMY
+anim=0
+OneToOne=%s tänzelt vor %s herum.
+OneToMe=%s tänzelt vor Euch herum.
+MeToOne=Ihr tänzelt vor %s herum.
+OneGeneral=%s tänzelt vor den Massen herum.
+MeGeneral=Ihr tänzelt vor den Massen herum.
+
+[128]
+name=SHIVER
+anim=0
+OneToOne=%s fröstelt neben %s. Eiskalt!
+OneToMe=%s fröstelt neben Euch. Eiskalt!
+MeToOne=Euch fröstelt neben %s. Eiskalt!
+OneGeneral=%s fröstelt bis ins Mark. Eiskalt!
+MeGeneral=Ihr fröstelt bis ins Mark. Eiskalt!
+OneGeneralFemale=%s fröstelt bis ins Mark. Eiskalt!
+
+[129]
+name=SHOO
+anim=0
+OneToOne=%s verscheucht %s. Hinfort, nervige Pest!
+OneToMe=%s verscheucht Euch. Hinfort, nervige Pest!
+MeToOne=Ihr scheucht %s weg. Hinfort, nervige Pest!
+OneGeneral=%s verscheucht die nervige Pest.
+MeGeneral=Ihr verscheucht die nervige Pest.
+
+[130]
+name=SLAP
+anim=0
+OneToOne=%s gibt %s eine Ohrfeige. Aua!
+OneToMe=%s gibt Euch eine Ohrfeige. Aua!
+MeToOne=Ihr gebt %s eine Ohrfeige. Aua!
+OneGeneral=%s gibt sich selbst eine Ohrfeige. Aua!
+MeGeneral=Ihr gebt Euch selbst eine Ohrfeige. Aua!
+OneGeneralFemale=%s gibt sich selbst eine Ohrfeige. Aua!
+
+[131]
+name=SMIRK
+anim=0
+OneToOne=%s grinst %s verstohlen an.
+OneToMe=%s grinst Euch verstohlen an.
+MeToOne=Ihr grinst %s verstohlen an.
+OneGeneral=Ein verstohlenes Grinsen breitet sich auf dem Gesicht von %s aus.
+MeGeneral=Ein verstohlenes Grinsen breitet sich auf Eurem Gesicht aus.
+
+[132]
+name=SNIFF
+anim=0
+OneToOne=%s schnüffelt an %s.
+OneToMe=%s schnüffelt an Euch.
+MeToOne=Ihr schnüffelt an %s.
+OneGeneral=%s schnüffelt die Luft um sich herum.
+MeGeneral=Ihr schnüffelt die Luft um Euch herum.
+OneGeneralFemale=%s schnüffelt die Luft um sich herum.
+
+[133]
+name=SNUB
+anim=0
+OneToOne=%s beleidigt %s.
+OneToMe=%s beleidigt Euch.
+MeToOne=Ihr beleidigt %s.
+OneGeneral=%s beleidigt alle niederen Peons um sich herum.
+MeGeneral=Ihr beleidigt alle niederen Peons um Euch herum.
+OneGeneralFemale=%s beleidigt all das niedere Volk um sich herum.
+
+[134]
+name=SOOTHE
+anim=0
+OneToOne=%s besänftigt %s. Keine Panik... alles wird wieder gut...
+OneToMe=%s besänftigt Euch. Keine Panik... alles wird wieder gut...
+MeToOne=Ihr besänftigt %s. Keine Panik... alles wird wieder gut...
+OneGeneral=%s muss besänftigt werden.
+MeGeneral=Ihr müsst besänftigt werden.
+
+[135]
+name=STINK
+anim=0
+OneToOne=%s riecht an %s. Igitt, hier stinkt jemand!
+OneToMe=%s riecht an Euch. Igitt, hier stinkt jemand!
+MeToOne=Ihr riecht an %s. Igitt, hier stinkt jemand!
+OneGeneral=%s riecht die Luft um sich herum. Igitt, hier stinkt jemand!
+MeGeneral=Ihr riecht die Luft um Euch herum. Igitt, hier stinkt jemand!
+OneGeneralFemale=%s riecht die Luft um sich herum. Igitt, hier stinkt jemand!
+
+[136]
+name=TAUNT
+anim=19
+OneToOne=%s macht %s gegenüber eine spöttische Geste. Na los doch!
+OneToMe=%s macht Euch gegenüber eine spöttische Geste. Na los doch!
+MeToOne=Ihr macht %s gegenüber eine spöttische Geste. Na los doch!
+OneGeneral=%s verspottet alle um sich herum. Na los doch, Ihr Dummköpfe!
+MeGeneral=Ihr verspottet alle um Euch herum. Na los doch, Ihr Dummköpfe!
+OneGeneralFemale=%s verspottet alle um sich herum. Na los doch, Ihr Dummköpfe!
+
+[137]
+name=TEASE
+anim=0
+OneToOne=%s zieht %s auf.
+OneToMe=%s zieht Euch auf.
+MeToOne=Ihr zieht %s auf.
+OneGeneral=%s zieht alle Leute so gern auf.
+MeGeneral=Ihr zieht alle Leute so gern auf.
+
+[138]
+name=THIRSTY
+anim=0
+OneToOne=%s teilt %s mit, dass er durstig ist. Habt Ihr was zu trinken übrig?
+OneToMe=%s teilt Euch mit, dass er durstig ist. Habt Ihr was zu trinken übrig?
+MeToOne=Ihr teilt %s mit, dass Ihr durstig seid. Habt Ihr was zu trinken übrig?
+OneGeneral=%s ist ja so durstig. Hat jemand was zu trinken übrig?
+MeGeneral=Ihr seid ja so durstig. Hat jemand was zu trinken übrig?
+OneToOneFemale=%s teilt %s mit, dass sie durstig ist. Habt Ihr was zu trinken übrig?
+OneToMeFemale=%s teilt Euch mit, dass sie durstig ist. Habt Ihr was zu trinken übrig?
+
+[139]
+name=VETO
+anim=0
+OneToOne=%s lehnt den Antrag von %s ab.
+OneToMe=%s lehnt Euren Antrag ab.
+MeToOne=Ihr lehnt den Antrag von %s ab.
+OneGeneral=%s lehnt den gestellten Antrag ab.
+MeGeneral=Ihr lehnt den gestellten Antrag ab.
+
+[140]
+name=SNICKER
+anim=0
+OneToOne=%s kichert %s belustigt an.
+OneToMe=%s kichert Euch belustigt an.
+MeToOne=Ihr kichert %s belustigt an.
+OneGeneral=%s kichert leise belustigt in sich hinein.
+MeGeneral=Ihr kichert leise belustigt in Euch hinein.
+OneGeneralFemale=%s kichert leise belustigt in sich hinein.
+
+[141]
+name=STAND
+anim=26
+
+[142]
+name=TICKLE
+anim=0
+OneToOne=%s kitzelt %s. Ha ha ha!
+OneToMe=%s kitzelt Euch. Ha ha ha!
+MeToOne=Ihr kitzelt %s. Ha ha ha!
+OneGeneral=%s will gekitzelt werden. Ha ha ha!
+MeGeneral=Ihr wollt gekitzelt werden. Ha ha ha!
+
+[143]
+name=VIOLIN
+anim=18
+OneToOne=%s spielt der Welt kleinste Geige für %s.
+OneToMe=%s spielt der Welt kleinste Geige für Euch.
+MeToOne=Ihr spielt der Welt kleinste Geige für %s.
+OneGeneral=%s fängt an, der Welt kleinste Geige zu spielen.
+MeGeneral=Ihr fangt an, der Welt kleinste Geige zu spielen.
+
+[163]
+name=SMILE
+anim=0
+OneToOne=%s lächelt %s an.
+OneToMe=%s lächelt Euch an.
+MeToOne=Ihr lächelt %s an.
+OneGeneral=%s lächelt.
+MeGeneral=Ihr lächelt.
+
+[183]
+name=RASP
+anim=14
+OneToOne=%s zeigt %s eine unflätige Geste.
+OneToMe=%s macht Euch gegenüber eine unflätige Geste.
+MeToOne=Ihr zeigt %s eine unflätige Geste.
+OneGeneral=%s macht eine unflätige Geste.
+MeGeneral=Ihr macht eine unflätige Geste.
+SoundHumanMale=2679
+SoundHumanFemale=2691
+SoundOrcMale=2703
+SoundOrcFemale=2715
+SoundDwarfMale=2727
+SoundDwarfFemale=2739
+SoundNightElfMale=2751
+SoundNightElfFemale=2763
+SoundScourgeMale=2775
+SoundScourgeFemale=2787
+SoundTaurenMale=2800
+SoundTaurenFemale=2812
+SoundGnomeMale=2837
+SoundGnomeFemale=2849
+SoundTrollMale=2861
+SoundTrollFemale=2873
+SoundBloodElfFemale=9634
+SoundBloodElfMale=9669
+SoundDraeneiFemale=9694
+SoundDraeneiMale=9719
+
+[203]
+name=PITY
+anim=0
+OneToOne=%s blickt mitleidig auf %s herab.
+OneToMe=%s blickt mitleidig auf Euch herab.
+MeToOne=Ihr blickt mitleidig auf %s herab.
+OneGeneral=%s hat Mitleid mit allen um sich herum.
+MeGeneral=Ihr habt Mitleid mit allen um Euch herum.
+OneGeneralFemale=%s hat Mitleid mit allen um sich herum.
+
+[204]
+name=GROWL
+anim=15
+OneToOne=%s knurrt %s bedrohlich an.
+OneToMe=%s knurrt Euch bedrohlich an.
+MeToOne=Ihr knurrt %s bedrohlich an.
+OneGeneral=%s knurrt bedrohlich.
+MeGeneral=Ihr knurrt bedrohlich.
+
+[205]
+name=BARK
+anim=0
+OneToOne=%s bellt %s an.
+OneToMe=%s bellt Euch an.
+MeToOne=Ihr bellt %s an.
+OneGeneral=%s bellt. Wuff, wuff!
+MeGeneral=Ihr bellt! Wuff, wuff!
+
+[223]
+name=SCARED
+anim=0
+OneToOne=%s hat Angst vor %s.
+OneToMe=%s hat Angst vor Euch.
+MeToOne=Ihr habt Angst vor %s.
+OneGeneral=%s hat Angst!
+MeGeneral=Ihr habt Angst!
+
+[224]
+name=FLOP
+anim=0
+OneToOne=%s wälzt sich hilflos um %s herum.
+OneToMe=%s wälzt sich hilflos um Euch herum.
+MeToOne=Ihr wälzt Euch hilflos um %s herum.
+OneGeneral=%s wälzt sich hilflos herum.
+MeGeneral=Ihr wälzt Euch hilflos herum.
+
+[225]
+name=LOVE
+anim=0
+OneToOne=%s liebt %s.
+OneToMe=%s liebt Euch.
+MeToOne=Ihr liebt %s.
+OneGeneral=%s spürt die Liebe.
+MeGeneral=Ihr spürt die Liebe.
+
+[226]
+name=MOO
+anim=0
+OneToOne=%s wird von %s angemuht. Muuuuh!
+OneToMe=%s muht Euch an. Muuuuh!
+MeToOne=%s wird von Euch angemuht. Muuuuh!
+OneGeneral=%s muht. Muuuuh!
+MeGeneral=Muuuuh!
+SoundTaurenMale=7930
+SoundTaurenFemale=7929
+
+[243]
+name=COMMEND
+anim=21
+OneToOne=%s lobt %s für die gute Arbeit.
+OneToMe=%s lobt Euch für Eure gute Arbeit.
+MeToOne=Ihr lobt %s für die gute Arbeit.
+OneGeneral=%s lobt alle für ihre gute Arbeit.
+MeGeneral=Ihr lobt alle für ihre gute Arbeit.
+
+[264]
+name=TRAIN
+anim=275
+SoundHumanMale=7634
+SoundHumanFemale=7635
+SoundOrcMale=7638
+SoundOrcFemale=7639
+SoundDwarfMale=7636
+SoundDwarfFemale=7637
+SoundNightElfMale=7643
+SoundNightElfFemale=7642
+SoundScourgeMale=7644
+SoundScourgeFemale=7645
+SoundTaurenMale=7646
+SoundTaurenFemale=7647
+SoundGnomeMale=7641
+SoundGnomeFemale=7640
+SoundTrollMale=7648
+SoundTrollFemale=7649
+SoundBloodElfFemale=9644
+SoundBloodElfMale=9672
+SoundDraeneiFemale=9697
+SoundDraeneiMale=9722
+
+[303]
+name=HELPME
+anim=22
+OneGeneral=%s ruft um Hilfe!
+MeGeneral=Ihr ruft um Hilfe!
+SoundHumanMale=2668
+SoundHumanFemale=2680
+SoundOrcMale=2692
+SoundOrcFemale=2704
+SoundDwarfMale=2716
+SoundDwarfFemale=2728
+SoundNightElfMale=2740
+SoundNightElfFemale=2752
+SoundScourgeMale=2764
+SoundScourgeFemale=2776
+SoundTaurenMale=2788
+SoundTaurenFemale=2801
+SoundGnomeMale=2826
+SoundGnomeFemale=2838
+SoundTrollMale=2850
+SoundTrollFemale=2862
+SoundBloodElfFemale=9623
+SoundBloodElfMale=9663
+SoundDraeneiFemale=9688
+SoundDraeneiMale=9713
+
+[304]
+name=INCOMING
+anim=22
+OneGeneral=%s ruft, dass die Feinde kommen!
+MeGeneral=Ihr ruft, dass die Feinde kommen!
+SoundHumanMale=2669
+SoundHumanFemale=2681
+SoundOrcMale=2693
+SoundOrcFemale=2705
+SoundDwarfMale=2717
+SoundDwarfFemale=2729
+SoundNightElfMale=2741
+SoundNightElfFemale=2753
+SoundScourgeMale=2765
+SoundScourgeFemale=2777
+SoundTaurenMale=2789
+SoundTaurenFemale=2802
+SoundGnomeMale=2827
+SoundGnomeFemale=2839
+SoundTrollMale=2851
+SoundTrollFemale=2863
+SoundBloodElfFemale=9624
+SoundBloodElfMale=9664
+SoundDraeneiFemale=9689
+SoundDraeneiMale=9714
+
+[305]
+name=CHARGE
+anim=25
+OneGeneral=%s greift an.
+MeGeneral=Ihr greift an.
+SoundHumanMale=2670
+SoundHumanFemale=2682
+SoundOrcMale=2694
+SoundOrcFemale=2706
+SoundDwarfMale=2718
+SoundDwarfFemale=2730
+SoundNightElfMale=2742
+SoundNightElfFemale=2754
+SoundScourgeMale=2766
+SoundScourgeFemale=2778
+SoundTaurenMale=2790
+SoundTaurenFemale=2803
+SoundGnomeMale=2828
+SoundGnomeFemale=2840
+SoundTrollMale=2852
+SoundTrollFemale=2864
+SoundBloodElfFemale=9625
+SoundBloodElfMale=9655
+SoundDraeneiFemale=9680
+SoundDraeneiMale=9705
+
+[306]
+name=FLEE
+anim=22
+OneToOne=%s ruft %s zu, schnell zu fliehen!
+OneToMe=%s ruft, dass Ihr fliehen sollt!
+MeToOne=Ihr ruft %s zu, schnell zu fliehen!
+OneGeneral=%s ruft, dass alle fliehen sollen!
+MeGeneral=Ihr ruft, dass alle fliehen sollen!
+SoundHumanMale=2671
+SoundHumanFemale=2683
+SoundOrcMale=2695
+SoundOrcFemale=2707
+SoundDwarfMale=2719
+SoundDwarfFemale=2731
+SoundNightElfMale=2743
+SoundNightElfFemale=2755
+SoundScourgeMale=2767
+SoundScourgeFemale=2779
+SoundTaurenMale=2791
+SoundTaurenFemale=2804
+SoundGnomeMale=2829
+SoundGnomeFemale=2841
+SoundTrollMale=2853
+SoundTrollFemale=2865
+SoundBloodElfFemale=9626
+SoundBloodElfMale=9658
+SoundDraeneiFemale=9683
+SoundDraeneiMale=9708
+
+[307]
+name=ATTACKMYTARGET
+anim=15
+OneToOne=%s sagt Euch, dass Ihr %s angreifen sollt.
+OneToMe=%s sagt allen, dass sie Euch angreifen sollen.
+MeToOne=Ihr sagt allen, dass sie %s angreifen sollen.
+OneGeneral=%s sagt Euch, dass Ihr etwas angreifen sollt.
+MeGeneral=Ihr sagt allen, dass sie etwas angreifen sollen.
+SoundHumanMale=2672
+SoundHumanFemale=2684
+SoundOrcMale=2696
+SoundOrcFemale=2708
+SoundDwarfMale=2720
+SoundDwarfFemale=2732
+SoundNightElfMale=2744
+SoundNightElfFemale=2756
+SoundScourgeMale=2768
+SoundScourgeFemale=2780
+SoundTaurenMale=2792
+SoundTaurenFemale=2805
+SoundGnomeMale=2830
+SoundGnomeFemale=2842
+SoundTrollMale=2854
+SoundTrollFemale=2866
+SoundBloodElfFemale=9627
+SoundBloodElfMale=9653
+SoundDraeneiFemale=9678
+SoundDraeneiMale=9703
+
+[323]
+name=OOM
+anim=1
+OneGeneral=%s hat wenig Mana.
+MeGeneral=Ihr verkündet, dass Ihr wenig Mana habt!
+SoundHumanMale=2673
+SoundHumanFemale=2685
+SoundOrcMale=2697
+SoundOrcFemale=2709
+SoundDwarfMale=2721
+SoundDwarfFemale=2733
+SoundNightElfMale=2745
+SoundNightElfFemale=2757
+SoundScourgeMale=2769
+SoundScourgeFemale=2781
+SoundTaurenMale=2793
+SoundTaurenFemale=2806
+SoundGnomeMale=2831
+SoundGnomeFemale=2843
+SoundTrollMale=2855
+SoundTrollFemale=2867
+SoundBloodElfFemale=9628
+SoundBloodElfMale=9667
+SoundDraeneiFemale=9692
+SoundDraeneiMale=9717
+
+[324]
+name=FOLLOW
+anim=1
+OneToOne=%s gibt %s ein Zeichen zu folgen.
+OneToMe=%s gibt Euch ein Zeichen zu folgen.
+MeToOne=Ihr gebt %s ein Zeichen zu folgen.
+OneGeneral=%s gibt Euch ein Zeichen zu folgen.
+MeGeneral=Ihr gebt allen ein Zeichen zu folgen.
+SoundHumanMale=2674
+SoundHumanFemale=2686
+SoundOrcMale=2698
+SoundOrcFemale=2710
+SoundDwarfMale=2722
+SoundDwarfFemale=2734
+SoundNightElfMale=2746
+SoundNightElfFemale=2758
+SoundScourgeMale=2770
+SoundScourgeFemale=2782
+SoundTaurenMale=2794
+SoundTaurenFemale=2807
+SoundGnomeMale=2832
+SoundGnomeFemale=2844
+SoundTrollMale=2856
+SoundTrollFemale=2868
+SoundBloodElfFemale=9629
+SoundDraeneiFemale=9685
+SoundBloodElfMale=9660
+SoundDraeneiMale=9710
+
+[325]
+name=WAIT
+anim=1
+OneToOne=%s bittet %s zu warten.
+OneToMe=%s bittet Euch zu warten.
+MeToOne=Ihr bittet %s zu warten.
+OneGeneral=%s bittet Euch zu warten.
+MeGeneral=Ihr bittet alle zu warten.
+SoundHumanMale=2675
+SoundHumanFemale=2687
+SoundOrcMale=2699
+SoundOrcFemale=2711
+SoundDwarfMale=2723
+SoundDwarfFemale=2735
+SoundNightElfMale=2747
+SoundNightElfFemale=2759
+SoundScourgeMale=2771
+SoundScourgeFemale=2783
+SoundTaurenMale=2795
+SoundTaurenFemale=2808
+SoundGnomeMale=2833
+SoundGnomeFemale=2845
+SoundTrollMale=2857
+SoundTrollFemale=2869
+SoundBloodElfFemale=9630
+SoundBloodElfMale=9673
+SoundDraeneiFemale=9698
+SoundDraeneiMale=9723
+
+[326]
+name=HEALME
+anim=1
+OneGeneral=%s ruft nach Heilung!
+MeGeneral=Ihr ruft nach Heilung!
+SoundHumanMale=2676
+SoundHumanFemale=2688
+SoundOrcMale=2700
+SoundOrcFemale=2712
+SoundDwarfMale=2724
+SoundDwarfFemale=2736
+SoundNightElfMale=2748
+SoundNightElfFemale=2760
+SoundScourgeMale=2772
+SoundScourgeFemale=2784
+SoundTaurenMale=2796
+SoundTaurenFemale=2809
+SoundGnomeMale=2834
+SoundGnomeFemale=2846
+SoundTrollMale=2858
+SoundTrollFemale=2870
+SoundBloodElfFemale=9631
+SoundBloodElfMale=9661
+SoundDraeneiFemale=9686
+SoundDraeneiMale=9711
+
+[327]
+name=OPENFIRE
+anim=25
+OneGeneral=%s befiehlt Euch, das Feuer zu eröffnen.
+MeGeneral=Ihr gebt den Befehl, das Feuer zu eröffnen.
+SoundHumanMale=2678
+SoundHumanFemale=2690
+SoundOrcMale=2702
+SoundOrcFemale=2714
+SoundDwarfMale=2726
+SoundDwarfFemale=2738
+SoundNightElfMale=2750
+SoundNightElfFemale=2762
+SoundScourgeMale=2774
+SoundScourgeFemale=2786
+SoundTaurenMale=2799
+SoundTaurenFemale=2811
+SoundGnomeMale=2836
+SoundGnomeFemale=2848
+SoundTrollMale=2860
+SoundTrollFemale=2872
+SoundBloodElfFemale=9633
+SoundBloodElfMale=9668
+SoundDraeneiFemale=9693
+SoundDraeneiMale=9718
+
+[328]
+name=FLIRT
+anim=24
+OneToOne=%s flirtet mit %s.
+OneToMe=%s flirtet mit Euch.
+MeToOne=Ihr flirtet mit %s.
+OneGeneral=%s flirtet.
+MeGeneral=Ihr flirtet.
+SoundHumanMale=6169
+SoundHumanFemale=6142
+SoundOrcMale=6367
+SoundOrcFemale=6358
+SoundDwarfMale=6114
+SoundDwarfFemale=6105
+SoundNightElfMale=6187
+SoundNightElfFemale=6178
+SoundScourgeMale=6421
+SoundScourgeFemale=6412
+SoundTaurenMale=6385
+SoundTaurenFemale=6376
+SoundGnomeMale=6132
+SoundGnomeFemale=6123
+SoundTrollMale=6403
+SoundTrollFemale=6394
+SoundBloodElfFemale=9642
+SoundBloodElfMale=9659
+SoundDraeneiFemale=9684
+SoundDraeneiMale=9709
+
+[329]
+name=JOKE
+anim=1
+OneToOne=%s erzählt %s einen Witz.
+OneToMe=%s erzählt Euch einen Witz.
+MeToOne=Ihr erzählt %s einen Witz.
+OneGeneral=%s erzählt einen Witz.
+MeGeneral=Ihr erzählt einen Witz.
+SoundHumanMale=6170
+SoundHumanFemale=6143
+SoundOrcMale=6368
+SoundOrcFemale=6359
+SoundDwarfMale=6115
+SoundDwarfFemale=6106
+SoundNightElfMale=6188
+SoundNightElfFemale=6179
+SoundScourgeMale=6422
+SoundScourgeFemale=6413
+SoundTaurenMale=6386
+SoundTaurenFemale=6377
+SoundGnomeMale=6133
+SoundGnomeFemale=6124
+SoundTrollMale=6404
+SoundTrollFemale=6395
+SoundBloodElfFemale=9643
+SoundBloodElfMale=9670
+SoundDraeneiFemale=9695
+SoundDraeneiMale=9720
+
+[343]
+name=GOLFCLAP
+anim=21
+OneToOne=%s klatscht für %s, offensichtlich unbeeindruckt.
+OneToMe=%s klatscht für Euch, offensichtlich unbeeindruckt.
+MeToOne=Ihr klatscht für %s, offensichtlich unbeeindruckt.
+OneGeneral=%s klatscht halbherzig, offensichtlich unbeeindruckt.
+MeGeneral=Ihr klatscht halbherzig, offensichtlich unbeeindruckt.
+
+[363]
+name=WINK
+anim=0
+OneToOne=%s zwinkert %s verschmitzt zu.
+OneToMe=%s zwinkert euch verschmitzt zu.
+MeToOne=Ihr zwinkert %s verschmitzt zu.
+OneGeneral=%s zwinkert verschmitzt.
+MeGeneral=Ihr zwinkert verschmitzt.
+
+[364]
+name=PAT
+anim=0
+OneToOne=%s gibt %s einen freundschaftlichen Klaps.
+OneToMe=%s gibt Euch einen freundschaftlichen Klaps.
+MeToOne=Ihr gebt %s einen freundschaftlichen Klaps.
+OneGeneral=%s braucht eine Aufmunterung.
+MeGeneral=Ihr braucht eine Aufmunterung.
+
+[365]
+name=SERIOUS
+anim=0
+OneToOne=%s denkt, %s meint es ernst.
+OneToMe=%s denkt, Ihr meint es ernst.
+MeToOne=Ihr denkt, %s meint es ernst.
+OneGeneral=%s hält dies für eine ernste Angelegenheit.
+MeGeneral=Ihr haltet dies für eine ernste Angelegenheit.
+
+[366]
+name=MOUNTSPECIAL
+anim=377
+
+[367]
+name=GOODLUCK
+anim=0
+OneToOne=%s wünscht %s viel Glück.
+OneToMe=%s wünscht Euch viel Glück.
+MeToOne=Ihr wünscht %s viel Glück.
+OneGeneral=%s wünscht viel Glück.
+MeGeneral=Ihr wünscht viel Glück.
+
+[368]
+name=BLAME
+anim=25
+OneToOne=%s gibt %s an allem die Schuld.
+OneToMe=%s gibt Euch an allem die Schuld.
+MeToOne=Ihr gebt %s an allem die Schuld.
+OneGeneral=%s gibt allen außer sich selbst die Schuld.
+MeGeneral=Ihr gebt allen außer Euch selbst die Schuld.
+OneGeneralFemale=%s gibt allen außer sich selbst die Schuld.
+
+[369]
+name=BLANK
+anim=0
+OneToOne=%s starrt %s ausdruckslos an.
+OneToMe=%s starrt Euch ausdruckslos an.
+MeToOne=Ihr starrt %s ausdruckslos an.
+OneGeneral=%s starrt ausdruckslos ins Leere.
+MeGeneral=Ihr starrt ausdruckslos ins Leere.
+OneGeneralFemale=%s starrt ausdruckslos ins Leere.
+
+[370]
+name=BRANDISH
+anim=0
+OneToOne=%s richtet bedrohlich seine Waffe auf %s.
+OneToMe=%s richtet bedrohlich seine Waffe auf Euch.
+MeToOne=Ihr richtet bedrohlich Eure Waffe auf %s.
+OneGeneral=%s schwenkt bedrohlich seine Waffe.
+MeGeneral=Ihr schwenkt bedrohlich Eure Waffe.
+OneToOneFemale=%s richtet bedrohlich ihre Waffe auf %s.
+OneToMeFemale=%s richtet bedrohlich ihre Waffe auf Euch.
+OneGeneralFemale=%s schwenkt bedrohlich ihre Waffe.
+
+[371]
+name=BREATH
+anim=0
+OneToOne=%s rät %s tief durchzuatmen.
+OneToMe=%s rät Euch tief durchzuatmen.
+MeToOne=Ihr ratet %s tief durchzuatmen.
+OneGeneral=%s atmet tief durch.
+MeGeneral=Ihr atmet tief durch.
+
+[372]
+name=DISAGREE
+anim=274
+OneToOne=%s ist anderer Meinung als %s.
+OneToMe=%s ist anderer Meinung als Ihr.
+MeToOne=Ihr seid anderer Meinung als %s.
+OneGeneral=%s ist anderer Meinung.
+MeGeneral=Ihr seid anderer Meinung.
+
+[373]
+name=DOUBT
+anim=274
+OneToOne=%s zweifelt an %s.
+OneToMe=%s zweifelt an Euch.
+MeToOne=Ihr zweifelt an %s.
+OneGeneral=%s zweifelt stark daran, dass die Situation gut ausgehen wird.
+MeGeneral=Ihr zweifelt stark daran, dass die Situation gut ausgehen wird.
+OneGeneralFemale=%s zweifelt stark daran, dass die Situation gut ausgehen wird.
+
+[374]
+name=EMBARRASS
+anim=0
+OneToOne=%s schämt sich für %s.
+OneToMe=%s schämt sich für Euch.
+MeToOne=Ihr schämt Euch für %s.
+OneGeneral=%s wird rot vor Scham.
+MeGeneral=Ihr werdet rot vor Scham.
+
+[375]
+name=ENCOURAGE
+anim=0
+OneToOne=%s muntert %s auf. Ihr schafft das!
+OneToMe=%s muntert Euch auf. Ihr schafft das!
+MeToOne=Ihr muntert %s auf. Ihr schafft das!
+OneGeneral=%s muntert alle auf. Ihr schafft das!
+MeGeneral=Ihr muntert alle auf. Ihr schafft das!
+OneGeneralFemale=%s muntert alle auf. Ihr schafft das!
+
+[376]
+name=ENEMY
+anim=0
+OneToOne=%s warnt %s, dass Feinde in der Nähe sind.
+OneToMe=%s warnt Euch, dass Feinde in der Nähe sind.
+MeToOne=Ihr warnt %s, dass Feinde in der Nähe sind.
+OneGeneral=%s warnt alle, dass Feinde in der Nähe sind.
+MeGeneral=Ihr warnt alle, dass Feinde in der Nähe sind.
+
+[377]
+name=EYEBROW
+anim=0
+OneToOne=%s betrachtet %s mit hochgezogener Augenbraue.
+OneToMe=%s betrachtet Euch mit hochgezogener Augenbraue.
+MeToOne=Ihr betrachtet %s mit hochgezogener Augenbraue.
+OneGeneral=%s hebt fragend eine Augenbraue.
+MeGeneral=Ihr hebt fragend eine Augenbraue.
+OneToOneFemale=%s betrachtet %s mit hochgezogener Augenbraue.
+OneToMeFemale=%s betrachtet Euch mit hochgezogener Augenbraue.
+OneGeneralFemale=%s hebt fragend eine Augenbraue.
+
+[378]
+name=TOAST
+anim=7
+OneToOne=%s erhebt das Glas auf %s. Prost!
+OneToMe=%s erhebt das Glas auf Euch. Prost!
+MeToOne=Ihr erhebt Euer Glas auf %s. Prost!
+OneGeneral=%s erhebt das Glas zum Gruß, bevor er es leert. Prost!
+MeGeneral=Ihr erhebt das Glas zum Gruß, bevor Ihr es leert. Prost!
+
