@@ -17,24 +17,11 @@ else( OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES )
   set(OPENSSL_FOUND 0)
 
   if(WIN32)
+	set(TMP_OPENSSL_INCLUDE_DIR "./src/dep/include/openssl")
     if(PLATFORM MATCHES X64)
-      set(TMP_OPENSSL_INCLUDE_DIR
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;InstallLocation]/include/openssl"
-      )
-      set(TMP_OPENSSL_LIBRARIES
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (64-bit)_is1;InstallLocation]/lib"
-      )
+      set(TMP_OPENSSL_LIBRARIES "./src/dep/lib/static/x64")
     else()
-      set(TMP_OPENSSL_INCLUDE_DIR
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;InstallLocation]/include/openssl"
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;InstallLocation]/include/openssl"
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;InstallLocation]/include/openssl"
-      )
-      set(TMP_OPENSSL_LIBRARIES
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;InstallLocation]/lib"
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;InstallLocation]/lib"
-        "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenSSL (32-bit)_is1;InstallLocation]/lib"
-      )
+      set(TMP_OPENSSL_LIBRARIES "./src/dep/lib/static")
     endif()
   endif()
 
@@ -54,8 +41,7 @@ else( OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES )
 
   find_library(OPENSSL_LIBRARIES
     NAMES
-      ssleay32
-      ssl
+      libcrypto
     PATHS
       /usr/lib
       /usr/lib/ssl
@@ -70,6 +56,7 @@ else( OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES )
     find_library(OPENSSL_EXTRA_LIBRARIES
     NAMES
       libeay32
+	  libcrypto
     PATHS
       ${TMP_OPENSSL_LIBRARIES}
     DOC
