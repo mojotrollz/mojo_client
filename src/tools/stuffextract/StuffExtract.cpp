@@ -310,7 +310,7 @@ bool ConvertDBC(void)
     }
 
     printf("races..");
-    for(DBCFile::Iterator it = ChrRaces.begin(); it != ChrRaces.end(); ++it)
+    /*for(DBCFile::Iterator it = ChrRaces.begin(); it != ChrRaces.end(); ++it)
     {
         uint32 id = (*it).getUInt(CHRRACES_RACEID);
         racemap[id] = (*it).getString(CHRRACES_NAME_GENERAL); // for later use
@@ -334,7 +334,7 @@ bool ConvertDBC(void)
         std::stringstream temp;
         temp << classmask[id];
         RaceDataStorage[id].push_back(std::string("classmask").append("=").append(temp.str()));
-    }
+    }*/
 
     printf("emotes..");
     for(DBCFile::Iterator it = EmotesText.begin(); it != EmotesText.end(); ++it)
@@ -417,7 +417,7 @@ bool ConvertDBC(void)
     }
 
     printf("map info..");
-    for(DBCFile::Iterator it = Map.begin(); it != Map.end(); ++it)
+    /*for(DBCFile::Iterator it = Map.begin(); it != Map.end(); ++it)
     {
         mapNames[it->getInt(MAP_ID)] = it->getString(MAP_NAME_GENERAL);
         uint32 id = it->getUInt(MAP_ID);
@@ -430,7 +430,7 @@ bool ConvertDBC(void)
                     MapDataStorage[id].push_back(std::string(MapFieldNames[field]) + "=" + value);
             }
         }
-    }
+    }*/
 
     printf("loadingscreen..");
     for(DBCFile::Iterator it = LoadingScreen.begin(); it != LoadingScreen.end(); ++it)

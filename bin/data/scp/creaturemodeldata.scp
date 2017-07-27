@@ -1,2320 +1,3093 @@
 #dbname=creaturemodeldata
 [1]
 file=Basilisk.m2
+mpqfilename=Creature\Basilisk\Basilisk.m2
 
 [2]
 file=BogBeast.m2
+mpqfilename=Creature\BogBeast\BogBeast.m2
 
 [3]
 file=Centaur.m2
+mpqfilename=Creature\Centaur\Centaur.m2
 
 [4]
 file=CrystalSpider.m2
+mpqfilename=Creature\CrystalSpider\CrystalSpider.m2
 
 [5]
 file=DarkHound.m2
+mpqfilename=Creature\DarkHound\DarkHound.m2
 
 [6]
 file=DragonWhelp.m2
+mpqfilename=Creature\DragonWhelp\DragonWhelp.m2
 
 [8]
 file=Furbolg.m2
+mpqfilename=Creature\furbolg\Furbolg.m2
 
 [9]
 file=Ghost.m2
+mpqfilename=Creature\Ghost\Ghost.m2
 
 [10]
 file=gnoll.m2
+mpqfilename=Creature\Gnoll\gnoll.m2
 
 [11]
 file=Grell.m2
+mpqfilename=Creature\Grell\Grell.m2
 
 [12]
 file=Harpy.m2
+mpqfilename=Creature\Harpy\Harpy.m2
 
 [13]
 file=HUFMCitizenLow.m2
+mpqfilename=Creature\HUFMCitizenLow\HUFMCitizenLow.m2
 
 [14]
 file=HUFMCitizenMid.m2
+mpqfilename=Creature\HUFMCitizenMid\HUFMCitizenMid.m2
 
 [15]
 file=HUFMMerchant.m2
+mpqfilename=Creature\HUFMMerchant\HUFMMerchant.m2
 
 [16]
 file=HumanThief.m2
+mpqfilename=Creature\HumanThief\HumanThief.m2
 
 [17]
 file=HUMLBlackSmith.m2
+mpqfilename=Creature\HUMLBlackSmith\HUMLBlackSmith.m2
 
 [18]
 file=HUMLMagicSmith.m2
+mpqfilename=Creature\HUMLMagicSmith\HUMLMagicSmith.m2
 
 [19]
 file=HUMLMerchant.m2
+mpqfilename=Creature\HUMLMerchant\HUMLMerchant.m2
 
 [20]
 file=HUMLUpperCitizen.m2
+mpqfilename=Creature\HUMLUpperCitizen\HUMLUpperCitizen.m2
 
 [21]
 file=HUMNGuardBig.m2
+mpqfilename=Creature\HUMNGuardBig\HUMNGuardBig.m2
 
 [22]
 file=HUMSCitizenMid.m2
+mpqfilename=Creature\HUMSCitizenMid\HUMSCitizenMid.m2
 
 [23]
 file=HUMSMerchant.m2
+mpqfilename=Creature\HUMSMerchant\HUMSMerchant.m2
 
 [24]
 file=Infernal.m2
+mpqfilename=Creature\Infernal\Infernal.m2
 
 [25]
 file=KeeperOfTheGrove.m2
+mpqfilename=Creature\KeeperOfTheGrove\KeeperOfTheGrove.m2
 
 [26]
 file=Kobold.m2
+mpqfilename=Creature\Kobold\Kobold.m2
 
 [27]
 file=KodoBeast.m2
+mpqfilename=Creature\Kodobeast\KodoBeast.m2
 
 [28]
 file=LavaSpider.m2
+mpqfilename=Creature\LavaSpider\LavaSpider.m2
 
 [29]
 file=LostOne.m2
+mpqfilename=Creature\LostOne\LostOne.m2
 
 [30]
 file=MineSpider.m2
+mpqfilename=Creature\MineSpider\MineSpider.m2
 
 [31]
 file=Murloc.m2
+mpqfilename=Creature\Murloc\Murloc.m2
 
 [32]
 file=Ogre.m2
+mpqfilename=Creature\Ogre\Ogre.m2
 
 [33]
 file=OgreMage.m2
+mpqfilename=Creature\Ogre\OgreMage.m2
 
 [34]
 file=Raptor.m2
+mpqfilename=Creature\Raptor\Raptor.m2
 
 [35]
 file=SeaGiant.m2
+mpqfilename=Creature\SeaGiant\SeaGiant.m2
 
 [36]
 file=Silithid.m2
+mpqfilename=Creature\SILITHID\Silithid.m2
 
 [37]
 file=Succubus.m2
+mpqfilename=Creature\Succubus\Succubus.m2
 
 [38]
 file=TallStrider.m2
+mpqfilename=Creature\Tallstrider\TallStrider.m2
 
 [39]
 file=TitanFemale.m2
+mpqfilename=Creature\TitanFemale\TitanFemale.m2
 
 [40]
 file=TitanMale.m2
+mpqfilename=Creature\TitanMale\TitanMale.m2
 
 [41]
 file=Troglodyte.m2
+mpqfilename=Creature\Troglodyte\Troglodyte.m2
 
 [42]
 file=Troll.m2
+mpqfilename=Creature\Troll\Troll.m2
 
 [43]
 file=Wolf.m2
+mpqfilename=Creature\Wolf\Wolf.m2
 
 [44]
 file=Worgen.m2
+mpqfilename=Creature\Worgen\Worgen.m2
 
 [45]
 file=Ghoul.m2
+mpqfilename=Creature\Ghoul\Ghoul.m2
 
 [47]
 file=DragonSpawn.m2
+mpqfilename=Creature\DragonSpawn\DragonSpawn.m2
 
 [49]
 file=HumanMale.m2
+mpqfilename=Character\Human\Male\HumanMale.m2
 
 [50]
 file=HumanFemale.m2
+mpqfilename=Character\Human\Female\HumanFemale.m2
 
 [51]
 file=OrcMale.m2
+mpqfilename=Character\Orc\Male\OrcMale.m2
 
 [52]
 file=OrcFemale.m2
+mpqfilename=Character\Orc\Female\OrcFemale.m2
 
 [53]
 file=DwarfMale.m2
+mpqfilename=Character\Dwarf\Male\DwarfMale.m2
 
 [54]
 file=DwarfFemale.m2
+mpqfilename=Character\Dwarf\Female\DwarfFemale.m2
 
 [55]
 file=NightElfMale.m2
+mpqfilename=Character\NightElf\Male\NightElfMale.m2
 
 [56]
 file=NightElfFemale.m2
+mpqfilename=Character\NightElf\Female\NightElfFemale.m2
 
 [57]
 file=ScourgeMale.m2
+mpqfilename=Character\Scourge\Male\ScourgeMale.m2
 
 [58]
 file=ScourgeFemale.m2
+mpqfilename=Character\Scourge\Female\ScourgeFemale.m2
 
 [59]
 file=TaurenMale.m2
+mpqfilename=Character\Tauren\Male\TaurenMale.m2
 
 [60]
 file=TaurenFemale.m2
+mpqfilename=Character\Tauren\Female\TaurenFemale.m2
 
 [61]
 file=CarrionBird.m2
+mpqfilename=Creature\CarrionBird\CarrionBird.m2
 
 [62]
 file=Hydra.m2
+mpqfilename=Creature\Hydra\Hydra.m2
 
 [63]
 file=Tarantula.m2
+mpqfilename=Creature\Tarantula\Tarantula.m2
 
 [64]
 file=SoundTest.m2
+mpqfilename=SoundTest.m2
 
 [65]
 file=Horse.m2
+mpqfilename=Creature\Horse\Horse.m2
 
 [66]
 file=Boar.m2
+mpqfilename=Creature\Boar\Boar.m2
 
 [67]
 file=AncientProtector.m2
+mpqfilename=Creature\ANCIENTPROTECTOR\AncientProtector.m2
 
 [68]
 file=DoomGuard.m2
+mpqfilename=Creature\DoomGuard\DoomGuard.m2
 
 [69]
 file=ElementalEarth.m2
+mpqfilename=Creature\ElementalEarth\ElementalEarth.m2
 
 [70]
 file=Skeleton.m2
+mpqfilename=Creature\Skeleton\Skeleton.m2
 
 [71]
 file=GolemHarvest.m2
+mpqfilename=Creature\GolemHarvest\GolemHarvest.m2
 
 [72]
 file=GolemHarvestStage2.m2
+mpqfilename=Creature\GolemHarvestStage2\GolemHarvestStage2.m2
 
 [73]
 file=DireWolf.m2
+mpqfilename=Creature\DireWolf\DireWolf.m2
 
 [74]
 file=HumanMalePeasant.m2
+mpqfilename=Creature\HumanMalePeasant\HumanMalePeasant.m2
 
 [75]
 file=WindSerpent.m2
+mpqfilename=Creature\WindSerpent\WindSerpent.m2
 
 [76]
 file=Frenzy.m2
+mpqfilename=Creature\Frenzy\Frenzy.m2
 
 [77]
 file=Dryad.m2
+mpqfilename=Creature\Dryad\Dryad.m2
 
 [78]
 file=Satyr.m2
+mpqfilename=Creature\Satyr\Satyr.m2
 
 [79]
 file=HumanMaleKid.m2
+mpqfilename=Creature\HumanMaleKid\HumanMaleKid.m2
 
 [80]
 file=HumanFemaleKid.m2
+mpqfilename=Creature\HumanFemaleKid\HumanFemaleKid.m2
 
 [81]
 file=Slime.m2
+mpqfilename=Creature\Slime\Slime.m2
 
 [82]
 file=Tiger.m2
+mpqfilename=Creature\Tiger\Tiger.m2
 
 [83]
 file=Bear.m2
+mpqfilename=Creature\bear\Bear.m2
 
 [84]
 file=GolemStone.m2
+mpqfilename=Creature\GolemStone\GolemStone.m2
 
 [85]
 file=Wyvern.m2
+mpqfilename=Creature\Wyvern\Wyvern.m2
 
 [86]
 file=HumanMalePeasantAxe.m2
+mpqfilename=Creature\HumanMalePeasant\HumanMalePeasantAxe.m2
 
 [87]
 file=HumanMalePeasantGold.m2
+mpqfilename=Creature\HumanMalePeasant\HumanMalePeasantGold.m2
 
 [88]
 file=HumanMalePeasantPick.m2
+mpqfilename=Creature\HumanMalePeasant\HumanMalePeasantPick.m2
 
 [89]
 file=HumanMalePeasantWood.m2
+mpqfilename=Creature\HumanMalePeasant\HumanMalePeasantWood.m2
 
 [90]
 file=Hippogryph.m2
+mpqfilename=Creature\Hippogryph\Hippogryph.m2
 
 [91]
 file=SilithidTank.m2
+mpqfilename=Creature\SilithidTank\SilithidTank.m2
 
 [92]
 file=SilithidWasp.m2
+mpqfilename=Creature\Silithidwasp\SilithidWasp.m2
 
 [93]
 file=HumanFemaleBlacksmith.m2
+mpqfilename=Creature\HumanFemaleBlacksmith\HumanFemaleBlacksmith.m2
 
 [94]
 file=HumanFemaleFarmer.m2
+mpqfilename=Creature\HumanFemaleFarmer\HumanFemaleFarmer.m2
 
 [95]
 file=HumanFemaleMerchantFat.m2
+mpqfilename=Creature\HumanFemaleMerchantFat\HumanFemaleMerchantFat.m2
 
 [96]
 file=HumanFemaleMerchantThin.m2
+mpqfilename=Creature\HumanFemaleMerchantThin\HumanFemaleMerchantThin.m2
 
 [97]
 file=HumanFemalePeasant.m2
+mpqfilename=Creature\HumanFemalePeasant\HumanFemalePeasant.m2
 
 [98]
 file=HumanFemaleWarriorHeavy.m2
+mpqfilename=Creature\HumanFemaleWarriorHeavy\HumanFemaleWarriorHeavy.m2
 
 [99]
 file=HumanFemaleWarriorLight.m2
+mpqfilename=Creature\HumanFemaleWarriorLight\HumanFemaleWarriorLight.m2
 
 [100]
 file=HumanFemaleWarriorMedium.m2
+mpqfilename=Creature\HumanFemaleWarriorMedium\HumanFemaleWarriorMedium.m2
 
 [101]
 file=HumanMaleBlacksmith.m2
+mpqfilename=Creature\HumanMaleBlacksmith\HumanMaleBlacksmith.m2
 
 [102]
 file=HumanMaleFarmer.m2
+mpqfilename=Creature\HumanMaleFarmer\HumanMaleFarmer.m2
 
 [103]
 file=HumanMaleNoble.m2
+mpqfilename=Creature\HumanMaleNoble\HumanMaleNoble.m2
 
 [104]
 file=HumanMaleWarriorHeavy.m2
+mpqfilename=Creature\HumanMaleWarriorHeavy\HumanMaleWarriorHeavy.m2
 
 [105]
 file=HumanMaleWarriorMedium.m2
+mpqfilename=Creature\HumanMaleWarriorMedium\HumanMaleWarriorMedium.m2
 
 [106]
 file=HumanMaleWizard.m2
+mpqfilename=Creature\HumanMaleWizard\HumanMaleWizard.m2
 
 [107]
 file=HumanMaleWarriorLight.m2
+mpqfilename=Creature\HumanMaleWarriorLight\HumanMaleWarriorLight.m2
 
 [108]
 file=HumanMaleCaster.m2
+mpqfilename=Creature\HumanMaleCaster\HumanMaleCaster.m2
 
 [109]
 file=HumanFemaleCaster.m2
+mpqfilename=Creature\HumanFemaleCaster\HumanFemaleCaster.m2
 
 [110]
 file=WaterElemental.m2
+mpqfilename=Creature\WATERELEMENTAL\WaterElemental.m2
 
 [111]
 file=Chicken.m2
+mpqfilename=Creature\Chicken\Chicken.m2
 
 [112]
 file=OrcMaleWarriorLight.m2
+mpqfilename=Creature\OrcMaleWarriorLight\OrcMaleWarriorLight.m2
 
 [113]
 file=OrcMaleMerchantLight.m2
+mpqfilename=Creature\OrcMaleMerchantLight\OrcMaleMerchantLight.m2
 
 [114]
 file=Rabbit.m2
+mpqfilename=Creature\Rabbit\Rabbit.m2
 
 [115]
 file=DwarfMaleWarriorLight.m2
+mpqfilename=Creature\DwarfMaleWarriorLight\DwarfMaleWarriorLight.m2
 
 [116]
 file=TrollJungleCaster.m2
+mpqfilename=Creature\Troll\TrollJungleCaster.m2
 
 [117]
 file=TrollJungleBoss.m2
+mpqfilename=Creature\Troll\TrollJungleBoss.m2
 
 [118]
 file=TrollWhelp.m2
+mpqfilename=Creature\Troll\TrollWhelp.m2
 
 [119]
 file=TrollMelee.m2
+mpqfilename=Creature\Troll\TrollMelee.m2
 
 [120]
 file=TrollForestBoss.m2
+mpqfilename=Creature\Troll\TrollForestBoss.m2
 
 [121]
 file=TrollForestCaster.m2
+mpqfilename=Creature\Troll\TrollForestCaster.m2
 
 [122]
 file=GnollCaster.m2
+mpqfilename=Creature\GnollCaster\GnollCaster.m2
 
 [123]
 file=GnollMelee.m2
+mpqfilename=Creature\GnollMelee\GnollMelee.m2
 
 [124]
 file=Deer.m2
+mpqfilename=Creature\Deer\Deer.m2
 
 [125]
 file=HumanMaleMarshal.m2
+mpqfilename=Creature\HumanMaleMarshal\HumanMaleMarshal.m2
 
 [126]
 file=HumanMaleGuard.m2
+mpqfilename=Creature\HumanMaleGuard\HumanMaleGuard.m2
 
 [127]
 file=HumanMalePirateCaptain.m2
+mpqfilename=Creature\HumanMalePirateCaptain\HumanMalePirateCaptain.m2
 
 [128]
 file=HumanMalePirateCrewman.m2
+mpqfilename=Creature\HumanMalePirateCrewman\HumanMalePirateCrewman.m2
 
 [129]
 file=HumanMalePirateSwashbuckler.m2
+mpqfilename=Creature\HumanMalePirateSwashbuckler\HumanMalePirateSwashbuckler.m2
 
 [130]
 file=DreadLord.m2
+mpqfilename=Creature\Dreadlord\DreadLord.m2
 
 [131]
 file=Gnome.m2
+mpqfilename=Creature\Gnome\Gnome.m2
 
 [132]
 file=Crab.m2
+mpqfilename=Creature\Crab\Crab.m2
 
 [133]
 file=Threshadon.m2
+mpqfilename=Creature\threshadon\Threshadon.m2
 
 [134]
 file=Squirrel.m2
+mpqfilename=Creature\Squirrel\Squirrel.m2
 
 [136]
 file=Gorilla.m2
+mpqfilename=Creature\Gorilla\Gorilla.m2
 
 [137]
 file=Crocodile.m2
+mpqfilename=Creature\Crocodile\Crocodile.m2
 
 [139]
 file=FelHound.m2
+mpqfilename=Creature\Felhound\FelHound.m2
 
 [140]
 file=Sheep.m2
+mpqfilename=Creature\Sheep\Sheep.m2
 
 [141]
 file=Ent.m2
+mpqfilename=Creature\Ent\Ent.m2
 
 [142]
 file=Frog.m2
+mpqfilename=Creature\Frog\Frog.m2
 
 [143]
 file=Horse.m2
+mpqfilename=Creature\Horse\Horse.m2
 
 [144]
 file=Banshee.m2
+mpqfilename=Creature\Banshee\Banshee.m2
 
 [145]
 file=QuillBoar.m2
+mpqfilename=Creature\Quillboar\QuillBoar.m2
 
 [146]
 file=Wendigo.m2
+mpqfilename=Creature\Wendigo\Wendigo.m2
 
 [147]
 file=Gryphon.m2
+mpqfilename=Creature\Gryphon\Gryphon.m2
 
 [149]
 file=GolemHarvestStage2.m2
+mpqfilename=Creature\GolemHarvestStage2\GolemHarvestStage2.m2
 
 [150]
 file=DeathGuard.m2
+mpqfilename=Creature\TempDeathGuard\DeathGuard.m2
 
 [151]
 file=ScarletCrusaderLight.m2
+mpqfilename=Creature\TempScarletCrusaderLight\ScarletCrusaderLight.m2
 
 [152]
 file=ScarletCrusaderHeavy.m2
+mpqfilename=Creature\TempScarletCrusaderHeavy\ScarletCrusaderHeavy.m2
 
 [155]
 file=Cow.m2
+mpqfilename=Creature\Cow\Cow.m2
 
 [156]
 file=FleshGolem.m2
+mpqfilename=Creature\FleshGolem\FleshGolem.m2
 
 [157]
 file=BattleGuard.m2
+mpqfilename=Creature\QuirajBattleguard\BattleGuard.m2
 
 [158]
 file=QuirajGladiator.m2
+mpqfilename=Creature\QuirajGladiator\QuirajGladiator.m2
 
 [159]
 file=QuirajProphet.m2
+mpqfilename=Creature\QuirajProphet\QuirajProphet.m2
 
 [160]
 file=FireElemental.m2
+mpqfilename=Creature\FireElemental\FireElemental.m2
 
 [161]
 file=PrarieDog.m2
+mpqfilename=Creature\PrarieDog\PrarieDog.m2
 
 [162]
 file=VoidWalker.m2
+mpqfilename=Creature\VoidWalker\VoidWalker.m2
 
 [163]
 file=OrcMaleWarriorHeavy.m2
+mpqfilename=Creature\OrcMaleWarriorHeavy\OrcMaleWarriorHeavy.m2
 
 [164]
 file=Goblin.m2
+mpqfilename=Creature\Goblin\Goblin.m2
 
 [165]
 file=Rat.m2
+mpqfilename=Creature\Rat\Rat.m2
 
 [167]
 file=ZombieArm.m2
+mpqfilename=Creature\Zombie\ZombieArm.m2
 
 [168]
 file=Zombie.m2
+mpqfilename=Creature\Zombie\Zombie.m2
 
 [170]
 file=snake.m2
+mpqfilename=Creature\snake\snake.m2
 
 [171]
 file=Wolf_ghost.m2
+mpqfilename=Creature\Wolf\Wolf_ghost.m2
 
 [172]
 file=Lobstrok.m2
+mpqfilename=Creature\Lobstrok\Lobstrok.m2
 
 [173]
 file=SeaTurtle.m2
+mpqfilename=Creature\SeaTurtle\SeaTurtle.m2
 
 [174]
 file=SkeletonMage.m2
+mpqfilename=Creature\SkeletonMage\SkeletonMage.m2
 
 [175]
 file=FaerieDragon.m2
+mpqfilename=Creature\FaerieDragon\FaerieDragon.m2
 
 [176]
 file=GoblinShredder.m2
+mpqfilename=Creature\Goblin\GoblinShredder.m2
 
 [177]
 file=FaerieDragon_Ghost.m2
+mpqfilename=Creature\FaerieDragon\FaerieDragon_Ghost.m2
 
 [178]
 file=Cockroach.m2
+mpqfilename=Creature\cockroach\Cockroach.m2
 
 [180]
 file=Bear.m2
+mpqfilename=Creature\bear\Bear.m2
 
 [181]
 file=StasisTotem.m2
+mpqfilename=Creature\Spells\StasisTotem.m2
 
 [182]
 file=GnomeMale.m2
+mpqfilename=Character\Gnome\Male\GnomeMale.m2
 
 [183]
 file=GnomeFemale.m2
+mpqfilename=Character\Gnome\Female\GnomeFemale.m2
 
 [185]
 file=TrollMale.m2
+mpqfilename=Character\Troll\Male\TrollMale.m2
 
 [186]
 file=TrollFemale.m2
+mpqfilename=Character\Troll\Female\TrollFemale.m2
 
 [187]
 file=AncientofLore.m2
+mpqfilename=Creature\AncientOfLore\AncientofLore.m2
 
 [188]
 file=AncientofWar.m2
+mpqfilename=Creature\AncientOfWar\AncientofWar.m2
 
 [190]
 file=Serpent_Totem.m2
+mpqfilename=Creature\Spells\Serpent_Totem.m2
 
 [191]
 file=ThunderLizard.m2
+mpqfilename=Creature\ThunderLizard\ThunderLizard.m2
 
 [192]
 file=Hyena.m2
+mpqfilename=Creature\Hyena\Hyena.m2
 
 [193]
 file=Shark.m2
+mpqfilename=Creature\Shark\Shark.m2
 
 [194]
 file=Stag.m2
+mpqfilename=Creature\Stag\Stag.m2
 
 [195]
 file=MountedKnight.m2
+mpqfilename=Creature\MountedKnight\MountedKnight.m2
 
 [197]
 file=Gazelle.m2
+mpqfilename=Creature\Gazelle\Gazelle.m2
 
 [198]
 file=Giraffe.m2
+mpqfilename=Creature\giraffe\Giraffe.m2
 
 [199]
 file=MonsterLure01.m2
+mpqfilename=Creature\SPELLS\MonsterLure01.m2
 
 [201]
 file=FelBat.m2
+mpqfilename=Creature\FelBat\FelBat.m2
 
 [202]
 file=HealingTotem.m2
+mpqfilename=Creature\Spells\HealingTotem.m2
 
 [203]
 file=Dragon.m2
+mpqfilename=Creature\Dragon\Dragon.m2
 
 [204]
 file=TitanMale_Ghost.m2
+mpqfilename=Creature\TitanMale\TitanMale_Ghost.m2
 
 [205]
 file=MountainGiant.m2
+mpqfilename=Creature\MountainGiant\MountainGiant.m2
 
 [206]
 file=SeaGiant.m2
+mpqfilename=Creature\SeaGiant\SeaGiant.m2
 
 [207]
 file=Wisp.m2
+mpqfilename=Creature\Wisp\Wisp.m2
 
 [209]
 file=Hippogryph.m2
+mpqfilename=Creature\Hippogryph\Hippogryph.m2
 
 [210]
 file=Lion.m2
+mpqfilename=Creature\Lion\Lion.m2
 
 [212]
 file=Unicorn.m2
+mpqfilename=Creature\Unicorn\Unicorn.m2
 
 [213]
 file=DruidBear.m2
+mpqfilename=Creature\DruidBear\DruidBear.m2
 
 [214]
 file=DruidBearTauren.m2
+mpqfilename=Creature\DruidBear\DruidBearTauren.m2
 
 [215]
 file=Nightmare.m2
+mpqfilename=Creature\Nightmare\Nightmare.m2
 
 [216]
 file=RidingHorse.m2
+mpqfilename=Creature\RidingHorse\RidingHorse.m2
 
 [217]
 file=RidingDireWolf.m2
+mpqfilename=Creature\DireWolf\RidingDireWolf.m2
 
 [218]
 file=Scorpion.m2
+mpqfilename=Creature\Scorpion\Scorpion.m2
 
 [219]
 file=ManaTotem.m2
+mpqfilename=Creature\Spells\ManaTotem.m2
 
 [220]
 file=SentryTotem.m2
+mpqfilename=Creature\SPELLS\SentryTotem.m2
 
 [221]
 file=InvisibilityTotem.m2
+mpqfilename=Creature\Spells\InvisibilityTotem.m2
 
 [222]
 file=EyeOfKilrog.m2
+mpqfilename=Creature\Spells\EyeOfKilrog.m2
 
 [223]
 file=SeaLion.m2
+mpqfilename=Creature\SeaLion\SeaLion.m2
 
 [224]
 file=SeaLion.m2
+mpqfilename=Creature\SeaLion\SeaLion.m2
 
 [225]
 file=ForceofNature.m2
+mpqfilename=Creature\ForceOfNature\ForceofNature.m2
 
 [227]
 file=Orca.m2
+mpqfilename=Creature\Orca\Orca.m2
 
 [229]
 file=Ram.m2
+mpqfilename=Creature\Ram\Ram.m2
 
 [230]
 file=HammerHead.m2
+mpqfilename=Creature\Shark\HammerHead.m2
 
 [250]
 file=CryptFiend.m2
+mpqfilename=Creature\CryptFiend\CryptFiend.m2
 
 [270]
 file=WoodenDummy.m2
+mpqfilename=Creature\Object\WoodenDummy.m2
 
 [271]
 file=ArcheryTarget.m2
+mpqfilename=Creature\Object\ArcheryTarget.m2
 
 [290]
 file=Cannon.m2
+mpqfilename=Creature\Object\Cannon.m2
 
 [310]
 file=HighElfFemale_Mage.m2
+mpqfilename=Creature\HighElf\HighElfFemale_Mage.m2
 
 [311]
 file=HighElfFemale_Hunter.m2
+mpqfilename=Creature\HighElf\HighElfFemale_Hunter.m2
 
 [312]
 file=HighElfFemale_Priest.m2
+mpqfilename=Creature\HighElf\HighElfFemale_Priest.m2
 
 [313]
 file=HighElfFemale_Warrior.m2
+mpqfilename=Creature\HighElf\HighElfFemale_Warrior.m2
 
 [314]
 file=HighElfMale_Mage.m2
+mpqfilename=Creature\HighElf\HighElfMale_Mage.m2
 
 [315]
 file=HighElfMale_Hunter.m2
+mpqfilename=Creature\HighElf\HighElfMale_Hunter.m2
 
 [316]
 file=HighElfMale_Priest.m2
+mpqfilename=Creature\HighElf\HighElfMale_Priest.m2
 
 [317]
 file=HighElfMale_Warrior.m2
+mpqfilename=Creature\HighElf\HighElfMale_Warrior.m2
 
 [331]
 file=BatTaxi.m2
+mpqfilename=Creature\FelBat\BatTaxi.m2
 
 [332]
 file=NagaMale.m2
+mpqfilename=Creature\NagaMale\NagaMale.m2
 
 [351]
 file=Chimera.m2
+mpqfilename=Creature\Chimera\Chimera.m2
 
 [352]
 file=Serpent.m2
+mpqfilename=Creature\Serpent\Serpent.m2
 
 [371]
 file=Imp.m2
+mpqfilename=Creature\Imp\Imp.m2
 
 [372]
 file=QuillBoarWarrior.m2
+mpqfilename=Creature\Quillboar\QuillBoarWarrior.m2
 
 [373]
 file=Owl.m2
+mpqfilename=Creature\Owl\Owl.m2
 
 [374]
 file=WaterElementalTotem.m2
+mpqfilename=Creature\Spells\WaterElementalTotem.m2
 
 [375]
 file=EarthElementalTotem.m2
+mpqfilename=Creature\Spells\EarthElementalTotem.m2
 
 [376]
 file=FireElementalTotem.m2
+mpqfilename=Creature\Spells\FireElementalTotem.m2
 
 [377]
 file=AirElementalTotem.m2
+mpqfilename=Creature\SPELLS\AirElementalTotem.m2
 
 [391]
 file=Shade.m2
+mpqfilename=Creature\Shade\Shade.m2
 
 [392]
 file=QuillBoarCaster.m2
+mpqfilename=Creature\Quillboar\QuillBoarCaster.m2
 
 [393]
 file=FireLightTotem.m2
+mpqfilename=Creature\Spells\FireLightTotem.m2
 
 [411]
 file=FelBat.m2
+mpqfilename=Creature\FelBat\FelBat.m2
 
 [452]
 file=Fish.m2
+mpqfilename=Creature\Fish\Fish.m2
 
 [453]
 file=StormCrow.m2
+mpqfilename=Creature\StormCrow\StormCrow.m2
 
 [454]
 file=trex.m2
+mpqfilename=Creature\TRex\trex.m2
 
 [455]
 file=ZombieSword.m2
+mpqfilename=Creature\Zombie\ZombieSword.m2
 
 [456]
 file=Anubisath.m2
+mpqfilename=Creature\Anubisath\Anubisath.m2
 
 [457]
 file=RidingFrostSabre.m2
+mpqfilename=Creature\FrostSabre\RidingFrostSabre.m2
 
 [458]
 file=RidingRaptor.m2
+mpqfilename=Creature\RidingRaptor\RidingRaptor.m2
 
 [459]
 file=TallStrider.m2
+mpqfilename=Creature\Tallstrider\TallStrider.m2
 
 [471]
 file=CentaurKhan.m2
+mpqfilename=Creature\Centaur\CentaurKhan.m2
 
 [491]
 file=RidingUndeadHorse.m2
+mpqfilename=Creature\UndeadHorse\RidingUndeadHorse.m2
 
 [492]
 file=CentaurCaster.m2
+mpqfilename=Creature\Centaur\CentaurCaster.m2
 
 [511]
 file=CentaurWarrior.m2
+mpqfilename=Creature\Centaur\CentaurWarrior.m2
 
 [512]
 file=Fish.m2
+mpqfilename=Creature\Fish\Fish.m2
 
 [531]
 file=Siren.m2
+mpqfilename=Creature\NagaFemale\Siren.m2
 
 [551]
 file=FelGuard.m2
+mpqfilename=Creature\FelGuard\FelGuard.m2
 
 [552]
 file=UndeadHorse.m2
+mpqfilename=Creature\UndeadHorse\UndeadHorse.m2
 
 [571]
 file=Drake.m2
+mpqfilename=Creature\Drake\Drake.m2
 
 [591]
 file=AirElemental.m2
+mpqfilename=Creature\AirElemental\AirElemental.m2
 
 [611]
 file=Parrot.m2
+mpqfilename=Creature\Parrot\Parrot.m2
 
 [631]
 file=Cat.m2
+mpqfilename=Creature\Cat\Cat.m2
 
 [651]
 file=Parrot.m2
+mpqfilename=Creature\Parrot\Parrot.m2
 
 [671]
 file=GnomeSpiderTank.m2
+mpqfilename=Creature\GnomeSpidertank\GnomeSpiderTank.m2
 
 [692]
 file=StoneKeeper.m2
+mpqfilename=Creature\StoneKeeper\StoneKeeper.m2
 
 [711]
 file=KodoBeastTame.m2
+mpqfilename=Creature\Kodobeast\KodoBeastTame.m2
 
 [712]
 file=LandMine01.m2
+mpqfilename=Creature\Spells\LandMine01.m2
 
 [731]
 file=MountedDeathKnight.m2
+mpqfilename=Creature\MountedDeathKnight\MountedDeathKnight.m2
 
 [751]
 file=MechaStrider.m2
+mpqfilename=Creature\MechaStrider\MechaStrider.m2
 
 [771]
 file=GnomeBot.m2
+mpqfilename=Creature\GNOMESPIDERTANK\GnomeBot.m2
 
 [791]
 file=Wyvern.m2
+mpqfilename=Creature\Wyvern\Wyvern.m2
 
 [792]
 file=Gryphon.m2
+mpqfilename=Creature\Gryphon\Gryphon.m2
 
 [811]
 file=GnomeAlertBot.m2
+mpqfilename=Creature\GnomeSpidertank\GnomeAlertBot.m2
 
 [831]
 file=GoblinMale.m2
+mpqfilename=Character\Goblin\Male\GoblinMale.m2
 
 [832]
 file=GoblinFemale.m2
+mpqfilename=Character\Goblin\Female\GoblinFemale.m2
 
 [851]
 file=GnomeBomBot.m2
+mpqfilename=Creature\GnomeSpidertank\GnomeBomBot.m2
 
 [852]
 file=GnomeMechaStrider.m2
+mpqfilename=Creature\MechaStrider\GnomeMechaStrider.m2
 
 [853]
 file=GnomePounder.m2
+mpqfilename=Creature\GnomeSpidertank\GnomePounder.m2
 
 [871]
 file=SilithidScarab.m2
+mpqfilename=Creature\SILITHIDSCARAB\SilithidScarab.m2
 
 [891]
 file=Gargoyle.m2
+mpqfilename=Creature\Gargoyle\Gargoyle.m2
 
 [892]
 file=MineSpiderBoss.m2
+mpqfilename=Creature\MineSpider\MineSpiderBoss.m2
 
 [911]
 file=Worm.m2
+mpqfilename=Creature\Worm\Worm.m2
 
 [912]
 file=SkeletonNaked.m2
+mpqfilename=Creature\SkeletonNaked\SkeletonNaked.m2
 
 [931]
 file=DemonHunter.m2
+mpqfilename=Creature\demonhunter\DemonHunter.m2
 
 [932]
 file=Larva.m2
+mpqfilename=Creature\Larva\Larva.m2
 
 [951]
 file=Lasher.m2
+mpqfilename=Creature\Lasher\Lasher.m2
 
 [971]
 file=TrollDire.m2
+mpqfilename=Creature\TrollDire\TrollDire.m2
 
 [991]
 file=SlimeLesser.m2
+mpqfilename=Creature\Slime\SlimeLesser.m2
 
 [1011]
 file=DragonSpawnCaster.m2
+mpqfilename=Creature\DragonSpawnCaster\DragonSpawnCaster.m2
 
 [1031]
 file=DragonSpawnArmored.m2
+mpqfilename=Creature\DragonSpawn\DragonSpawnArmored.m2
 
 [1051]
 file=Lich.m2
+mpqfilename=Creature\Lich\Lich.m2
 
 [1071]
 file=KodoBeastPack.m2
+mpqfilename=Creature\Kodobeast\KodoBeastPack.m2
 
 [1091]
 file=FlyingMachineCreature.m2
+mpqfilename=Creature\FlyingMachineCreature\FlyingMachineCreature.m2
 
 [1111]
 file=SkeletalSerpent.m2
+mpqfilename=Creature\SkeletalSerpent\SkeletalSerpent.m2
 
 [1131]
 file=GolemCannonStone.m2
+mpqfilename=Creature\GolemStone\GolemCannonStone.m2
 
 [1151]
 file=SalamanderMale.m2
+mpqfilename=Creature\Salamander\SalamanderMale.m2
 
 [1171]
 file=Pterrordax.m2
+mpqfilename=Creature\Pterrordax\Pterrordax.m2
 
 [1191]
 file=WarHorse.m2
+mpqfilename=Creature\WarHorse\WarHorse.m2
 
 [1211]
 file=Diemetradon.m2
+mpqfilename=Creature\Diemetradon\Diemetradon.m2
 
 [1231]
 file=DruidCat.m2
+mpqfilename=Creature\DRUIDCAT\DruidCat.m2
 
 [1232]
 file=DruidCatTauren.m2
+mpqfilename=Creature\DruidCatTauren\DruidCatTauren.m2
 
 [1271]
 file=Creature_SpellPortal.m2
+mpqfilename=Creature\Spells\Creature_SpellPortal.m2
 
 [1291]
 file=OrcDrakeRider.m2
+mpqfilename=Creature\Drake\OrcDrakeRider.m2
 
 [1311]
 file=ZigguratCrystal.m2
+mpqfilename=Creature\ZigguratCrystal\ZigguratCrystal.m2
 
 [1331]
 file=FrostSabre.m2
+mpqfilename=Creature\FrostSabre\FrostSabre.m2
 
 [1351]
 file=Crypt_Scarab.m2
+mpqfilename=Creature\CryptScarab\Crypt_Scarab.m2
 
 [1371]
 file=RidingRam.m2
+mpqfilename=Creature\Ram\RidingRam.m2
 
 [1391]
 file=EggCreature.m2
+mpqfilename=Creature\Egg\EggCreature.m2
 
 [1411]
 file=DragonSpawnOverlord.m2
+mpqfilename=Creature\DragonSpawn\DragonSpawnOverlord.m2
 
 [1431]
 file=OgreWarlord.m2
+mpqfilename=Creature\Ogre\OgreWarlord.m2
 
 [1451]
 file=FelBeast.m2
+mpqfilename=Creature\FelBeast\FelBeast.m2
 
 [1471]
 file=GoblinRocketCar.m2
+mpqfilename=Creature\GoblinRocketCar\GoblinRocketCar.m2
 
 [1491]
 file=Wight.m2
+mpqfilename=Creature\Wight\Wight.m2
 
 [1492]
 file=SpiritHealer.m2
+mpqfilename=Creature\spirithealer\SpiritHealer.m2
 
 [1511]
 file=RidingUndeadWarHorse.m2
+mpqfilename=Creature\MountedDeathKnight\RidingUndeadWarHorse.m2
 
 [1531]
 file=DiabloFunSized.m2
+mpqfilename=Creature\diablo\DiabloFunSized.m2
 
 [1532]
 file=PandaCub.m2
+mpqfilename=Creature\panda\PandaCub.m2
 
 [1533]
 file=ZerglingPet.m2
+mpqfilename=Creature\zergling\ZerglingPet.m2
 
 [1551]
 file=DragonOnyxia.m2
+mpqfilename=Creature\Dragon\DragonOnyxia.m2
 
 [1571]
 file=Ragnaros.m2
+mpqfilename=Creature\Ragnaros\Ragnaros.m2
 
 [1591]
 file=DragonNefarian.m2
+mpqfilename=Creature\Dragon\DragonNefarian.m2
 
 [1611]
 file=Turkey.m2
+mpqfilename=Creature\Turkey\Turkey.m2
 
 [1631]
 file=FelBoar.m2
+mpqfilename=Creature\FelBoar\FelBoar.m2
 
 [1651]
 file=DragonAzurgoz.m2
+mpqfilename=Creature\Dragon\DragonAzurgoz.m2
 
 [1671]
 file=CrystalPortal.m2
+mpqfilename=Creature\CrystalPortal\CrystalPortal.m2
 
 [1691]
 file=LordKezzak.m2
+mpqfilename=Creature\Lord Kezzak\LordKezzak.m2
 
 [1711]
 file=RidingKodo.m2
+mpqfilename=Creature\Kodobeast\RidingKodo.m2
 
 [1731]
 file=InvisibleStalker.m2
+mpqfilename=Creature\InvisibleStalker\InvisibleStalker.m2
 
 [1751]
 file=Tharazun.m2
+mpqfilename=Creature\Tharazun\Tharazun.m2
 
 [1752]
 file=InvisibleStalker.m2
+mpqfilename=Creature\InvisibleStalker\InvisibleStalker.m2
 
 [1753]
 file=ObsidianDestroyer.m2
+mpqfilename=Creature\ObsidianDestroyer\ObsidianDestroyer.m2
 
 [1771]
 file=BoneGolem.m2
+mpqfilename=Creature\BoneGolem\BoneGolem.m2
 
 [1811]
 file=LordKezzak.m2
+mpqfilename=Creature\Lord Kezzak\LordKezzak.m2
 
 [1831]
 file=SnowMan.m2
+mpqfilename=Creature\Snowman\SnowMan.m2
 
 [1851]
 file=VoidTerror.m2
+mpqfilename=Creature\voidterror\VoidTerror.m2
 
 [1871]
 file=ManaFiend.m2
+mpqfilename=Creature\Manafiend\ManaFiend.m2
 
 [1891]
 file=DragonFootSoldier.m2
+mpqfilename=Creature\DragonFootSoldier\DragonFootSoldier.m2
 
 [1911]
 file=PvPRidingDireWolf.m2
+mpqfilename=Creature\DireWolf\PvPRidingDireWolf.m2
 
 [1912]
 file=PVPRidingFrostSabre.m2
+mpqfilename=Creature\FrostSabre\PVPRidingFrostSabre.m2
 
 [1913]
 file=PVPRidingRam.m2
+mpqfilename=Creature\Ram\PVPRidingRam.m2
 
 [1914]
 file=KodoBeastPvPT2.m2
+mpqfilename=Creature\Kodobeast\KodoBeastPvPT2.m2
 
 [1915]
 file=PvPMechaStrider.m2
+mpqfilename=Creature\MechaStrider\PvPMechaStrider.m2
 
 [1916]
 file=PvPRidingRaptor.m2
+mpqfilename=Creature\RidingRaptor\PvPRidingRaptor.m2
 
 [1917]
 file=RidingHorsePvPT2.m2
+mpqfilename=Creature\RidingHorse\RidingHorsePvPT2.m2
 
 [1931]
 file=Drakeadon.m2
+mpqfilename=Creature\Drakeadon\Drakeadon.m2
 
 [1951]
 file=Gorgon101.m2
+mpqfilename=Creature\Nightmare\Gorgon101.m2
 
 [1952]
 file=PVPWarHorse.m2
+mpqfilename=Creature\WARHORSE\PVPWarHorse.m2
 
 [1971]
 file=BattleStandard_Alliance.m2
+mpqfilename=Creature\Spells\BattleStandard_Alliance.m2
 
 [1972]
 file=BattleStandard_Horde.m2
+mpqfilename=Creature\Spells\BattleStandard_Horde.m2
 
 [1973]
 file=DragonSpawnGreater.m2
+mpqfilename=Creature\DragonSpawn\DragonSpawnGreater.m2
 
 [1991]
 file=PackMule.m2
+mpqfilename=Creature\RIDINGHORSE\PackMule.m2
 
 [2011]
 file=OrcMaleKid.m2
+mpqfilename=Creature\OrcMaleKid\OrcMaleKid.m2
 
 [2031]
 file=OrcFemaleKid.m2
+mpqfilename=Creature\OrcFemaleKid\OrcFemaleKid.m2
 
 [2051]
 file=AncientofLore.m2
+mpqfilename=Creature\AncientOfLore\AncientofLore.m2
 
 [2071]
 file=ChineseDragon.m2
+mpqfilename=Creature\ChineseDragon\ChineseDragon.m2
 
 [2072]
 file=BattleStandard_Frostwolf_A_01.m2
+mpqfilename=Creature\Spells\BattleStandard_Frostwolf_A_01.m2
 
 [2073]
 file=BattleStandard_Stormpike_A_01.m2
+mpqfilename=Creature\Spells\BattleStandard_Stormpike_A_01.m2
 
 [2091]
 file=TigonMale.m2
+mpqfilename=Creature\tigon\TigonMale.m2
 
 [2111]
 file=Thunderaan.m2
+mpqfilename=Creature\Thunderaan\Thunderaan.m2
 
 [2131]
 file=TigonFemale.m2
+mpqfilename=Creature\tigon\TigonFemale.m2
 
 [2151]
 file=Slith.m2
+mpqfilename=Creature\slith\Slith.m2
 
 [2171]
 file=Mobat.m2
+mpqfilename=Creature\mobat\Mobat.m2
 
 [2191]
 file=Dryder.m2
+mpqfilename=Creature\Dryder\Dryder.m2
 
 [2192]
 file=Hakkar.m2
+mpqfilename=Creature\Hakkar\Hakkar.m2
 
 [2193]
 file=Hakkar.m2
+mpqfilename=Creature\Hakkar\Hakkar.m2
 
 [2194]
 file=BatRider.m2
+mpqfilename=Creature\FelBat\BatRider.m2
 
 [2195]
 file=GnomeRocketCar.m2
+mpqfilename=Creature\GnomeRocketCar\GnomeRocketCar.m2
 
 [2196]
 file=Taerar.m2
+mpqfilename=Creature\Dragon\Taerar.m2
 
 [2197]
 file=Lethon.m2
+mpqfilename=Creature\Dragon\Lethon.m2
 
 [2198]
 file=BabyMurloc.m2
+mpqfilename=Creature\Murloc\BabyMurloc.m2
 
 [2199]
 file=DruidOwlBear.m2
+mpqfilename=Creature\DruidOwlbear\DruidOwlBear.m2
 
 [2200]
 file=DruidOwlBearTauren.m2
+mpqfilename=Creature\DruidOwlbear\DruidOwlBearTauren.m2
 
 [2201]
 file=SteamTonk.m2
+mpqfilename=Creature\SteamTonk\SteamTonk.m2
 
 [2202]
 file=BabyMurloc.m2
+mpqfilename=Creature\Murloc\BabyMurloc.m2
 
 [2203]
 file=ManaFiendGreen.m2
+mpqfilename=Creature\ManafiendGreen\ManaFiendGreen.m2
 
 [2204]
 file=SilithidWaspBoss.m2
+mpqfilename=Creature\SilithidWaspBoss\SilithidWaspBoss.m2
 
 [2205]
 file=Horisath.m2
+mpqfilename=Creature\Horisath\Horisath.m2
 
 [2206]
 file=InvisibleMan.m2
+mpqfilename=Creature\InvisibleMan\InvisibleMan.m2
 
 [2207]
 file=LesserManaFiend.m2
+mpqfilename=Creature\LesserManaFiend\LesserManaFiend.m2
 
 [2208]
 file=BloodElfMale.m2
+mpqfilename=Character\BloodElf\Male\BloodElfMale.m2
 
 [2209]
 file=BloodElfFemale.m2
+mpqfilename=Character\BloodElf\Female\BloodElfFemale.m2
 
 [2210]
 file=ManaWurm.m2
+mpqfilename=Creature\ManaWurm\ManaWurm.m2
 
 [2211]
 file=BloodElfMale_Guard.m2
+mpqfilename=Creature\BloodElfGuard\BloodElfMale_Guard.m2
 
 [2212]
 file=CrackElfMale.m2
+mpqfilename=Creature\CrackElf\CrackElfMale.m2
 
 [2213]
 file=EyeofKathune.m2
+mpqfilename=Creature\EyeOfKathune\EyeofKathune.m2
 
 [2215]
 file=MountedDemonKnight.m2
+mpqfilename=Creature\MountedDemonKnight\MountedDemonKnight.m2
 
 [2216]
 file=SilithidTankBoss.m2
+mpqfilename=Creature\SilithidTankBoss\SilithidTankBoss.m2
 
 [2217]
 file=SilithidTankBoss_Damaged.m2
+mpqfilename=Creature\SilithidTankBoss\SilithidTankBoss_Damaged.m2
 
 [2218]
 file=SandWorm.m2
+mpqfilename=Creature\SANDWORM\SandWorm.m2
 
 [2219]
 file=RidingSilithid.m2
+mpqfilename=Creature\RidingSilithid\RidingSilithid.m2
 
 [2220]
 file=RidingSilithid.m2
+mpqfilename=Creature\RidingSilithid\RidingSilithid.m2
 
 [2221]
 file=GiantSlime.m2
+mpqfilename=Creature\SlimeGiant\GiantSlime.m2
 
 [2222]
 file=SandReaver.m2
+mpqfilename=Creature\SandReaver\SandReaver.m2
 
 [2223]
 file=TwinEmperor.m2
+mpqfilename=Creature\TwinEmperor\TwinEmperor.m2
 
 [2224]
 file=BodyofKathune.m2
+mpqfilename=Creature\BODYOFKATHUNE\BodyofKathune.m2
 
 [2225]
 file=HalfBodyofKathune.m2
+mpqfilename=Creature\HalfBodyofKathune\HalfBodyofKathune.m2
 
 [2226]
 file=EyeStalkofKathune.m2
+mpqfilename=Creature\EyeStalkofKathune\EyeStalkofKathune.m2
 
 [2227]
 file=ClawofKathune.m2
+mpqfilename=Creature\ClawofKathune\ClawofKathune.m2
 
 [2228]
 file=MouthofKathune01.m2
+mpqfilename=Creature\MouthofKathune01\MouthofKathune01.m2
 
 [2229]
 file=Shark.m2
+mpqfilename=Creature\Shark\Shark.m2
 
 [2230]
 file=PortalofKathune.m2
+mpqfilename=Creature\PortalofKathune\PortalofKathune.m2
 
 [2231]
 file=Nian.m2
+mpqfilename=Creature\NIAN\Nian.m2
 
 [2232]
 file=ReinDeer.m2
+mpqfilename=Creature\ReinDeer\ReinDeer.m2
 
 [2233]
 file=ReinDeerMount.m2
+mpqfilename=Creature\ReinDeer\ReinDeerMount.m2
 
 [2234]
 file=CryptLord.m2
+mpqfilename=Creature\CryptLord\CryptLord.m2
 
 [2235]
 file=KelThuzad.m2
+mpqfilename=Creature\KelThuzad\KelThuzad.m2
 
 [2236]
 file=KelThuzad.m2
+mpqfilename=Creature\KelThuzad\KelThuzad.m2
 
 [2237]
 file=Cupid.m2
+mpqfilename=Creature\Cupid\Cupid.m2
 
 [2239]
 file=ValentinesDummy.m2
+mpqfilename=Creature\SPELLS\ValentinesDummy.m2
 
 [2240]
 file=SpiritOfRedemption.m2
+mpqfilename=Creature\SpiritofRedemption\SpiritOfRedemption.m2
 
 [2241]
 file=FrostWurm.m2
+mpqfilename=Creature\FrostWurm\FrostWurm.m2
 
 [2242]
 file=FleshGiant.m2
+mpqfilename=Creature\FleshGiant\FleshGiant.m2
 
 [2243]
 file=GiantSpider.m2
+mpqfilename=Creature\GiantSpider\GiantSpider.m2
 
 [2244]
 file=MadScientist.m2
+mpqfilename=Creature\MadScientist\MadScientist.m2
 
 [2245]
 file=UndeadBeast.m2
+mpqfilename=Creature\UndeadBeast\UndeadBeast.m2
 
 [2246]
 file=FungalMonster.m2
+mpqfilename=Creature\FungalMonster\FungalMonster.m2
 
 [2247]
 file=SporeCreature.m2
+mpqfilename=Creature\SporeCreature\SporeCreature.m2
 
 [2248]
 file=DraeneiMale.m2
+mpqfilename=Character\Draenei\Male\DraeneiMale.m2
 
 [2250]
 file=DraeneiFemale.m2
+mpqfilename=Character\Draenei\Female\DraeneiFemale.m2
 
 [2251]
 file=Creature_ScourgeCrystal.m2
+mpqfilename=Creature\QuestObjects\Creature_ScourgeCrystal.m2
 
 [2252]
 file=Creature_ScourgeCrystalDamaged.m2
+mpqfilename=Creature\QuestObjects\Creature_ScourgeCrystalDamaged.m2
 
 [2253]
 file=FleshTitan.m2
+mpqfilename=Creature\FleshTitan\FleshTitan.m2
 
 [2254]
 file=MountedDeathKnight_Mograine.m2
+mpqfilename=Creature\MOUNTEDDEATHKNIGHT\MountedDeathKnight_Mograine.m2
 
 [2255]
 file=MountedDeathKnight_Blaumeux.m2
+mpqfilename=Creature\MOUNTEDDEATHKNIGHT\MountedDeathKnight_Blaumeux.m2
 
 [2256]
 file=MountedDeathKnight_Zeliek.m2
+mpqfilename=Creature\MOUNTEDDEATHKNIGHT\MountedDeathKnight_Zeliek.m2
 
 [2257]
 file=MountedDeathKnight_Korthazz.m2
+mpqfilename=Creature\MOUNTEDDEATHKNIGHT\MountedDeathKnight_Korthazz.m2
 
 [2259]
 file=PolarBearCub.m2
+mpqfilename=Creature\Bear\PolarBearCub.m2
 
 [2260]
 file=Cocoon.m2
+mpqfilename=Creature\Cocoon\Cocoon.m2
 
 [2261]
 file=Necromancer.m2
+mpqfilename=Creature\Necromancer\Necromancer.m2
 
 [2262]
 file=NetherDrake.m2
+mpqfilename=Creature\NetherDrake\NetherDrake.m2
 
 [2263]
 file=FelOrc.m2
+mpqfilename=Creature\FelOrc\FelOrc.m2
 
 [2264]
 file=Pig.m2
+mpqfilename=Creature\Pig\Pig.m2
 
 [2265]
 file=Turtle.m2
+mpqfilename=Creature\Turtle\Turtle.m2
 
 [2266]
 file=ArcaneGolem.m2
+mpqfilename=Creature\ArcaneGolem\ArcaneGolem.m2
 
 [2267]
 file=ArcaneGolemBroken.m2
+mpqfilename=Creature\ArcaneGolem\ArcaneGolemBroken.m2
 
 [2270]
 file=Crawler.m2
+mpqfilename=Creature\CRAWLER\Crawler.m2
 
 [2271]
 file=FelOrcWarriorAxe.m2
+mpqfilename=Creature\FelOrcAxe\FelOrcWarriorAxe.m2
 
 [2272]
 file=FelReaver.m2
+mpqfilename=Creature\FelReaver\FelReaver.m2
 
 [2273]
 file=Moarg1.m2
+mpqfilename=Creature\Moarg\Moarg1.m2
 
 [2274]
 file=Moarg2.m2
+mpqfilename=Creature\Moarg\Moarg2.m2
 
 [2275]
 file=Moarg3.m2
+mpqfilename=Creature\Moarg\Moarg3.m2
 
 [2276]
 file=Moarg4.m2
+mpqfilename=Creature\Moarg\Moarg4.m2
 
 [2277]
 file=Moarg5.m2
+mpqfilename=Creature\Moarg\Moarg5.m2
 
 [2278]
 file=MoargMinion.m2
+mpqfilename=Creature\MoargMinion\MoargMinion.m2
 
 [2279]
 file=Pitlord.m2
+mpqfilename=Creature\PITLORD\Pitlord.m2
 
 [2280]
 file=skunk.m2
+mpqfilename=Creature\Skunk\skunk.m2
 
 [2281]
 file=FelOrcWarriorSword.m2
+mpqfilename=Creature\FelOrcSword\FelOrcWarriorSword.m2
 
 [2282]
 file=HydraOutland.m2
+mpqfilename=Creature\HydraOutland\HydraOutland.m2
 
 [2283]
 file=Abyssal_Outland.m2
+mpqfilename=Creature\AbyssalOutland\Abyssal_Outland.m2
 
 [2284]
 file=Arakkoa_Warrior.m2
+mpqfilename=Creature\Arakkoa\Arakkoa_Warrior.m2
 
 [2285]
 file=Basilisk_Outland.m2
+mpqfilename=Creature\BasiliskOutland\Basilisk_Outland.m2
 
 [2286]
 file=CarrionBirdOutland.m2
+mpqfilename=Creature\CarrionBirdOutland\CarrionBirdOutland.m2
 
 [2288]
 file=BE_Broom01.m2
+mpqfilename=Creature\Broom\BE_Broom01.m2
 
 [2289]
 file=FleshBeast.m2
+mpqfilename=Creature\FleshBeast\FleshBeast.m2
 
 [2290]
 file=ImpOutland.m2
+mpqfilename=Creature\ImpOutland\ImpOutland.m2
 
 [2291]
 file=LarvaOutland.m2
+mpqfilename=Creature\LarvaOutland\LarvaOutland.m2
 
 [2293]
 file=Raptor_Outland.m2
+mpqfilename=Creature\RaptorOutland\Raptor_Outland.m2
 
 [2295]
 file=WindSerpentOutland.m2
+mpqfilename=Creature\WindserpentOutland\WindSerpentOutland.m2
 
 [2296]
 file=InvisibleStalkerNoName.m2
+mpqfilename=Creature\InvisibleStalker\InvisibleStalkerNoName.m2
 
 [2297]
 file=AshenvaleTreeFalling01.m2
+mpqfilename=Creature\Tree\AshenvaleTreeFalling01.m2
 
 [2298]
 file=FelOrcFemale.m2
+mpqfilename=Character\FelOrc\Female\FelOrcFemale.m2
 
 [2299]
 file=FelOrcMale.m2
+mpqfilename=Character\FelOrc\Male\FelOrcMale.m2
 
 [2300]
 file=StasisTotem.m2
+mpqfilename=Creature\SPELLS\StasisTotem.m2
 
 [2301]
 file=HealingTotem.m2
+mpqfilename=Creature\SPELLS\HealingTotem.m2
 
 [2302]
 file=Serpent_Totem.m2
+mpqfilename=Creature\SPELLS\Serpent_Totem.m2
 
 [2303]
 file=ManaTotem.m2
+mpqfilename=Creature\SPELLS\ManaTotem.m2
 
 [2304]
 file=InvisibilityTotem.m2
+mpqfilename=Creature\SPELLS\InvisibilityTotem.m2
 
 [2305]
 file=SentryTotem.m2
+mpqfilename=Creature\SPELLS\SentryTotem.m2
 
 [2306]
 file=FireTotem.m2
+mpqfilename=Creature\SPELLS\FireTotem.m2
 
 [2307]
 file=CloudSwampGas.m2
+mpqfilename=Creature\Cloud\CloudSwampGas.m2
 
 [2310]
 file=Arakkoa_Sage.m2
+mpqfilename=Creature\Arakkoa\Arakkoa_Sage.m2
 
 [2311]
 file=Arakkoa.m2
+mpqfilename=Creature\Arakkoa\Arakkoa.m2
 
 [2313]
 file=RidingElekk.m2
+mpqfilename=Creature\RidingElekk\RidingElekk.m2
 
 [2315]
 file=MountainGiant_Bladesedge.m2
+mpqfilename=Creature\MountainGiantOutland\MountainGiant_Bladesedge.m2
 
 [2316]
 file=MountainGiant_Netherstorm.m2
+mpqfilename=Creature\MountainGiantOutland\MountainGiant_Netherstorm.m2
 
 [2317]
 file=MountainGiant_Zangarmarsh.m2
+mpqfilename=Creature\MountainGiantOutland\MountainGiant_Zangarmarsh.m2
 
 [2318]
 file=VoidWalker_Outland.m2
+mpqfilename=Creature\VoidWalkerOutland\VoidWalker_Outland.m2
 
 [2319]
 file=ChimeraOutland.m2
+mpqfilename=Creature\ChimeraOutland\ChimeraOutland.m2
 
 [2320]
 file=DoomGuardOutland.m2
+mpqfilename=Creature\DoomGuardOutland\DoomGuardOutland.m2
 
 [2321]
 file=LobstrokOutland.m2
+mpqfilename=Creature\LobstrokOutland\LobstrokOutland.m2
 
 [2322]
 file=MountainGiant_Bladesedge.m2
+mpqfilename=Creature\MountainGiantOutland\MountainGiant_Bladesedge.m2
 
 [2323]
 file=MountainGiant_Netherstorm.m2
+mpqfilename=Creature\MountainGiantOutland\MountainGiant_Netherstorm.m2
 
 [2324]
 file=MountainGiant_Zangarmarsh.m2
+mpqfilename=Creature\MountainGiantOutland\MountainGiant_Zangarmarsh.m2
 
 [2325]
 file=RidingTurtle.m2
+mpqfilename=Creature\RidingTurtle\RidingTurtle.m2
 
 [2326]
 file=Gryphon_Skeletal.m2
+mpqfilename=Creature\Gryphon\Gryphon_Skeletal.m2
 
 [2328]
 file=Zippelin.m2
+mpqfilename=Creature\Zippelin\Zippelin.m2
 
 [2329]
 file=Landro.m2
+mpqfilename=Creature\Landro\Landro.m2
 
 [2330]
 file=DeathGuard.m2
+mpqfilename=Creature\TempDeathGuard\DeathGuard.m2
 
 [2332]
 file=AllianceRider.m2
+mpqfilename=Creature\AllianceRider\AllianceRider.m2
 
 [2333]
 file=HordeRider.m2
+mpqfilename=Creature\HordeRider\HordeRider.m2
 
 [2334]
 file=DragonWhelpOutland.m2
+mpqfilename=Creature\DragonWhelpOutland\DragonWhelpOutland.m2
 
 [2335]
 file=Gronn.m2
+mpqfilename=Creature\Gronn\Gronn.m2
 
 [2337]
 file=Landro.m2
+mpqfilename=Creature\Landro\Landro.m2
 
 [2338]
 file=Elekk.m2
+mpqfilename=Creature\Elekk\Elekk.m2
 
 [2340]
 file=AirElemental.m2
+mpqfilename=Creature\AirElemental\AirElemental.m2
 
 [2353]
 file=Naga_Male.m2
+mpqfilename=CHARACTER\Naga_\Male\Naga_Male.m2
 
 [2354]
 file=Naga_Female.m2
+mpqfilename=CHARACTER\Naga_\Female\Naga_Female.m2
 
 [2355]
 file=Tigercub.m2
+mpqfilename=Creature\Tiger\Tigercub.m2
 
 [2356]
 file=HippogryphPet.m2
+mpqfilename=Creature\Hippogryph\HippogryphPet.m2
 
 [2357]
 file=Creature_NagaDistiller.m2
+mpqfilename=Creature\QuestObjects\Creature_NagaDistiller.m2
 
 [2358]
 file=ElekkWild.m2
+mpqfilename=Creature\Elekk\ElekkWild.m2
 
 [2360]
 file=Wrathguard.m2
+mpqfilename=Creature\Wrathguard\Wrathguard.m2
 
 [2361]
 file=Shivan.m2
+mpqfilename=Creature\Shivan\Shivan.m2
 
 [2363]
 file=DragonHawk.m2
+mpqfilename=Creature\DragonHawk\DragonHawk.m2
 
 [2364]
 file=RidingElekk.m2
+mpqfilename=Creature\RidingElekk\RidingElekk.m2
 
 [2365]
 file=Gryphon_Ghost.m2
+mpqfilename=Creature\GRYPHON\Gryphon_Ghost.m2
 
 [2366]
 file=Moth.m2
+mpqfilename=Creature\Moth\Moth.m2
 
 [2367]
 file=BrokenMale.m2
+mpqfilename=CHARACTER\Broken\Male\BrokenMale.m2
 
 [2368]
 file=BrokenFemale.m2
+mpqfilename=CHARACTER\Broken\Female\BrokenFemale.m2
 
 [2369]
 file=SkeletonMale.m2
+mpqfilename=CHARACTER\Skeleton\Male\SkeletonMale.m2
 
 [2370]
 file=SkeletonFemale.m2
+mpqfilename=CHARACTER\Skeleton\Female\SkeletonFemale.m2
 
 [2371]
 file=RockFlayer.m2
+mpqfilename=Creature\RockFlayer\RockFlayer.m2
 
 [2372]
 file=InvisibleStalkerNoName.m2
+mpqfilename=Creature\InvisibleStalker\InvisibleStalkerNoName.m2
 
 [2373]
 file=StormCrow.m2
+mpqfilename=Creature\StormCrow\StormCrow.m2
 
 [2374]
 file=Wyvern_Armored.m2
+mpqfilename=Creature\Wyvern\Wyvern_Armored.m2
 
 [2375]
 file=Gryphon_Mount.m2
+mpqfilename=Creature\Gryphon\Gryphon_Mount.m2
 
 [2376]
 file=Gryphon_ArmoredMount.m2
+mpqfilename=Creature\Gryphon\Gryphon_ArmoredMount.m2
 
 [2377]
 file=RidingWyvern.m2
+mpqfilename=Creature\RidingWyvern\RidingWyvern.m2
 
 [2378]
 file=RidingWyvernArmored.m2
+mpqfilename=Creature\RidingWyvernArmored\RidingWyvernArmored.m2
 
 [2379]
 file=VoidCaller.m2
+mpqfilename=Creature\Voidcaller\VoidCaller.m2
 
 [2380]
 file=LasherOrchid.m2
+mpqfilename=Creature\LasherOrchid\LasherOrchid.m2
 
 [2381]
 file=DragonWhelpOutlandCute.m2
+mpqfilename=Creature\DragonWhelpOutlandCute\DragonWhelpOutlandCute.m2
 
 [2382]
 file=InvisibleMan.m2
+mpqfilename=Creature\InvisibleMan\InvisibleMan.m2
 
 [2383]
 file=SporeBat.m2
+mpqfilename=Creature\sporebat\SporeBat.m2
 
 [2384]
 file=Phoenix.m2
+mpqfilename=Creature\PHOENIX\Phoenix.m2
 
 [2385]
 file=Tripod.m2
+mpqfilename=Creature\Tripod\Tripod.m2
 
 [2386]
 file=DragonWhelpOutland.m2
+mpqfilename=Creature\DragonWhelpOutland\DragonWhelpOutland.m2
 
 [2387]
 file=Velen.m2
+mpqfilename=Creature\Velen\Velen.m2
 
 [2388]
 file=Creature_PowerCrystal.m2
+mpqfilename=Creature\QuestObjects\Creature_PowerCrystal.m2
 
 [2390]
 file=Naaru.m2
+mpqfilename=Creature\Naaru\Naaru.m2
 
 [2392]
 file=SporeCreature.m2
+mpqfilename=Creature\SporeCreature\SporeCreature.m2
 
 [2393]
 file=VoidLord.m2
+mpqfilename=Creature\Voidlord\VoidLord.m2
 
 [2394]
 file=VoidWraith.m2
+mpqfilename=Creature\Voidwraith\VoidWraith.m2
 
 [2395]
 file=LordKezzak_Armored.m2
+mpqfilename=Creature\Lord Kezzak\LordKezzak_Armored.m2
 
 [2396]
 file=NetherDrake.m2
+mpqfilename=Creature\NetherDrake\NetherDrake.m2
 
 [2397]
 file=NetherDragon.m2
+mpqfilename=Creature\NetherDragon\NetherDragon.m2
 
 [2398]
 file=RidingPhoenix.m2
+mpqfilename=Creature\RidingPhoenix\RidingPhoenix.m2
 
 [2399]
 file=RidingElekk.m2
+mpqfilename=Creature\RidingElekk\RidingElekk.m2
 
 [2400]
 file=RidingElekkElite.m2
+mpqfilename=Creature\RidingElekk\RidingElekkElite.m2
 
 [2401]
 file=OgreMageLord.m2
+mpqfilename=Creature\OgreMageLord\OgreMageLord.m2
 
 [2402]
 file=FungalGiant.m2
+mpqfilename=Creature\FungalGiant\FungalGiant.m2
 
 [2405]
 file=NightBane.m2
+mpqfilename=Creature\Nightbane\NightBane.m2
 
 [2409]
 file=Raccoon.m2
+mpqfilename=Creature\Raccoon\Raccoon.m2
 
 [2410]
 file=Magtheridon.m2
+mpqfilename=Creature\PitLord\Magtheridon.m2
 
 [2411]
 file=WarpStorm.m2
+mpqfilename=Creature\WarpStorm\WarpStorm.m2
 
 [2416]
 file=RabbitGold.m2
+mpqfilename=Creature\Rabbit\RabbitGold.m2
 
 [2417]
 file=Drake.m2
+mpqfilename=Creature\Drake\Drake.m2
 
 [2418]
 file=DoomGuardOutland.m2
+mpqfilename=Creature\DoomGuardOutland\DoomGuardOutland.m2
 
 [2423]
 file=Etherial.m2
+mpqfilename=Creature\Etherial\Etherial.m2
 
 [2424]
 file=Eredar.m2
+mpqfilename=Creature\EREDAR\Eredar.m2
 
 [2425]
 file=DragonHawk.m2
+mpqfilename=Creature\DragonHawk\DragonHawk.m2
 
 [2426]
 file=Owl.m2
+mpqfilename=Creature\Owl\Owl.m2
 
 [2427]
 file=Archimonde.m2
+mpqfilename=Creature\EREDAR\Archimonde.m2
 
 [2428]
 file=FelCannon.m2
+mpqfilename=Creature\FelCannon\FelCannon.m2
 
 [2429]
 file=OgreKing.m2
+mpqfilename=Creature\OgreKing\OgreKing.m2
 
 [2430]
 file=Sporeling.m2
+mpqfilename=Creature\Sporeling\Sporeling.m2
 
 [2432]
 file=WarpStorm_Large.m2
+mpqfilename=Creature\WarpStorm\WarpStorm_Large.m2
 
 [2433]
 file=WarpStorm_XLarge.m2
+mpqfilename=Creature\WarpStorm\WarpStorm_XLarge.m2
 
 [2434]
 file=CockatriceMount.m2
+mpqfilename=Creature\Cockatrice\CockatriceMount.m2
 
 [2435]
 file=CockatriceElite.m2
+mpqfilename=Creature\Cockatrice\CockatriceElite.m2
 
 [2436]
 file=Wyvern_Armored.m2
+mpqfilename=Creature\Wyvern\Wyvern_Armored.m2
 
 [2437]
 file=Medivh.m2
+mpqfilename=Creature\medivh\Medivh.m2
 
 [2438]
 file=WarpStalker.m2
+mpqfilename=Creature\warpstalker\WarpStalker.m2
 
 [2439]
 file=FireFlyGreen.m2
+mpqfilename=Creature\firefly\FireFlyGreen.m2
 
 [2442]
 file=FelBeast.m2
+mpqfilename=Creature\FelBeast\FelBeast.m2
 
 [2443]
 file=Gryphon_Armored.m2
+mpqfilename=Creature\Gryphon\Gryphon_Armored.m2
 
 [2444]
 file=FelOrcNetherDrake.m2
+mpqfilename=Creature\FelOrcNetherdrake\FelOrcNetherDrake.m2
 
 [2445]
 file=FelOrcNetherDrakeMounted.m2
+mpqfilename=Creature\FelOrcNetherdrake\FelOrcNetherDrakeMounted.m2
 
 [2446]
 file=Murmur.m2
+mpqfilename=Creature\Murmur\Murmur.m2
 
 [2447]
 file=Time_Rift1.m2
+mpqfilename=Creature\Timerift\Time_Rift1.m2
 
 [2448]
 file=Krakken.m2
+mpqfilename=Creature\Krakken\Krakken.m2
 
 [2449]
 file=Beholder.m2
+mpqfilename=Creature\Beholder\Beholder.m2
 
 [2450]
 file=DragonWhelpOutlandCute.m2
+mpqfilename=Creature\DragonWhelpOutlandCute\DragonWhelpOutlandCute.m2
 
 [2453]
 file=DragonSpawnDarkshade.m2
+mpqfilename=Creature\DragonSpawnDarkshade\DragonSpawnDarkshade.m2
 
 [2454]
 file=DragonSpawnArmoredDarkshade.m2
+mpqfilename=Creature\DragonSpawnArmoredDarkshade\DragonSpawnArmoredDarkshade.m2
 
 [2455]
 file=DrakeDarkshade.m2
+mpqfilename=Creature\DrakeDarkshade\DrakeDarkshade.m2
 
 [2456]
 file=DragonSpawnCasterDarkshade.m2
+mpqfilename=Creature\DragonSpawnCasterDarkshade\DragonSpawnCasterDarkshade.m2
 
 [2457]
 file=DraeneiTotem_Air.m2
+mpqfilename=Creature\SPELLS\DraeneiTotem_Air.m2
 
 [2458]
 file=DraeneiTotem_Earth.m2
+mpqfilename=Creature\SPELLS\DraeneiTotem_Earth.m2
 
 [2459]
 file=DraeneiTotem_Fire.m2
+mpqfilename=Creature\SPELLS\DraeneiTotem_Fire.m2
 
 [2460]
 file=DraeneiTotem_Water.m2
+mpqfilename=Creature\SPELLS\DraeneiTotem_Water.m2
 
 [2462]
 file=DraeneiFemaleKid.m2
+mpqfilename=Creature\DraeneiFemaleKid\DraeneiFemaleKid.m2
 
 [2463]
 file=DraeneiMaleKid.m2
+mpqfilename=Creature\DraeneiMaleKid\DraeneiMaleKid.m2
 
 [2464]
 file=Talbuk.m2
+mpqfilename=Creature\talbuk\Talbuk.m2
 
 [2465]
 file=FelOrcWarriorBoss.m2
+mpqfilename=Creature\FelOrcBoss\FelOrcWarriorBoss.m2
 
 [2466]
 file=FlameTurret.m2
+mpqfilename=Creature\SPELLS\FlameTurret.m2
 
 [2467]
 file=ArcaneTitan.m2
+mpqfilename=Creature\ARCANETITAN\ArcaneTitan.m2
 
 [2468]
 file=Kaelthas.m2
+mpqfilename=Creature\Kaelthas\Kaelthas.m2
 
 [2470]
 file=UnMountedDeathKnight.m2
+mpqfilename=Creature\MOUNTEDDEATHKNIGHT\UnMountedDeathKnight.m2
 
 [2471]
 file=FelOrc_Axe.m2
+mpqfilename=Creature\FelOrc\FelOrc_Axe.m2
 
 [2472]
 file=FelOrc_Sword.m2
+mpqfilename=Creature\FelOrc\FelOrc_Sword.m2
 
 [2473]
 file=Creature_EtherealStorm.m2
+mpqfilename=Creature\QuestObjects\Creature_EtherealStorm.m2
 
 [2474]
 file=AncientofArcane.m2
+mpqfilename=Creature\Ancientofarcane\AncientofArcane.m2
 
 [2475]
 file=FelHorseEpic.m2
+mpqfilename=Creature\felhorse\FelHorseEpic.m2
 
 [2477]
 file=Creature_PowerCrystal.m2
+mpqfilename=Creature\QuestObjects\Creature_PowerCrystal.m2
 
 [2478]
 file=Dragon.m2
+mpqfilename=Creature\Dragon\Dragon.m2
 
 [2479]
 file=NetherDrakeOutland.m2
+mpqfilename=Creature\NetherDrake\NetherDrakeOutland.m2
 
 [2480]
 file=DragonSpawnOverlordDarkshade.m2
+mpqfilename=Creature\DragonSpawnOverlordDarkshade\DragonSpawnOverlordDarkshade.m2
 
 [2481]
 file=InvisibleStalkerNoName.m2
+mpqfilename=Creature\InvisibleStalker\InvisibleStalkerNoName.m2
 
 [2482]
 file=MountainGiantCrystal.m2
+mpqfilename=Creature\MountainGiantCrystal\MountainGiantCrystal.m2
 
 [2483]
 file=RidingTalbuk.m2
+mpqfilename=Creature\RIDINGTALBUK\RidingTalbuk.m2
 
 [2484]
 file=RidingTalbukEpic.m2
+mpqfilename=Creature\ridingtalbuk\RidingTalbukEpic.m2
 
 [2485]
 file=BloodelfMaleKid.m2
+mpqfilename=Creature\BloodElfMaleKid\BloodelfMaleKid.m2
 
 [2486]
 file=BloodelfFemaleKid.m2
+mpqfilename=Creature\BloodElfFemaleKid\BloodelfFemaleKid.m2
 
 [2488]
 file=MountainGiantCrystal_Boss.m2
+mpqfilename=Creature\MountainGiantCrystal\MountainGiantCrystal_Boss.m2
 
 [2489]
 file=Dragon.m2
+mpqfilename=Creature\Dragon\Dragon.m2
 
 [2490]
 file=NetherRay.m2
+mpqfilename=Creature\netherray\NetherRay.m2
 
 [2491]
 file=CleftHoove.m2
+mpqfilename=Creature\CleftHoove\CleftHoove.m2
 
 [2499]
 file=TigerGem.m2
+mpqfilename=Creature\Tiger\TigerGem.m2
 
 [2500]
 file=RidingWyvern_Armored.m2
+mpqfilename=Creature\RidingWyvern_Armored\RidingWyvern_Armored.m2
 
 [2501]
 file=RidingWyvern.m2
+mpqfilename=Creature\RidingWyvern\RidingWyvern.m2
 
 [2502]
 file=Moarg6.m2
+mpqfilename=Creature\Moarg\Moarg6.m2
 
 [2503]
 file=Ogre02.m2
+mpqfilename=Creature\Ogre02\Ogre02.m2
 
 [2504]
 file=OgreMage02.m2
+mpqfilename=Creature\OgreMage02\OgreMage02.m2
 
 [2505]
 file=Kargath.m2
+mpqfilename=Creature\Kargath\Kargath.m2
 
 [2506]
 file=FelReaver.m2
+mpqfilename=Creature\FelReaver\FelReaver.m2
 
 [2507]
 file=NetherDrake.m2
+mpqfilename=Creature\NetherDrake\NetherDrake.m2
 
 [2508]
 file=Gryphon_Ghost.m2
+mpqfilename=Creature\Gryphon\Gryphon_Ghost.m2
 
 [2509]
 file=Gryphon_Ghost.m2
+mpqfilename=Creature\Gryphon\Gryphon_Ghost.m2
 
 [2510]
 file=Taerar.m2
+mpqfilename=Creature\DRAGON\Taerar.m2
 
 [2511]
 file=SandVortex.m2
+mpqfilename=Creature\sandvortex\SandVortex.m2
 
 [2512]
 file=InvisibleMan.m2
+mpqfilename=Creature\InvisibleMan\InvisibleMan.m2
 
 [2513]
 file=InvisibleStalkerNoName.m2
+mpqfilename=Creature\InvisibleStalker\InvisibleStalkerNoName.m2
 
 [2514]
 file=RockFlayerElite.m2
+mpqfilename=Creature\RockFlayer\RockFlayerElite.m2
 
 [2515]
 file=CrawlerElite.m2
+mpqfilename=Creature\CrawlerElite\CrawlerElite.m2
 
 [2516]
 file=NetherDrakeElite.m2
+mpqfilename=Creature\NetherDrake\NetherDrakeElite.m2
 
 [2517]
 file=CrateCreature.m2
+mpqfilename=Creature\CrateCreature\CrateCreature.m2
 
 [2518]
 file=EggCreature.m2
+mpqfilename=Creature\Egg\EggCreature.m2
 
 [2519]
 file=DragonDarkShade.m2
+mpqfilename=Creature\DragonDarkshade\DragonDarkShade.m2
 
 [2520]
 file=DragonWhelpdarkshade.m2
+mpqfilename=Creature\DragonWhelpDarkshade\DragonWhelpdarkshade.m2
 
 [2521]
 file=DragonFootSoldierDarkshade.m2
+mpqfilename=Creature\DragonFootSoldierDarkshade\DragonFootSoldierDarkshade.m2
 
 [2522]
 file=felbeastshadowmoon.m2
+mpqfilename=Creature\FelBeastShadowmoon\felbeastshadowmoon.m2
 
 [2523]
 file=OrcFemaleKidBrown.m2
+mpqfilename=Creature\OrcFemaleKidBrown\OrcFemaleKidBrown.m2
 
 [2524]
 file=OrcMaleKidBrown.m2
+mpqfilename=Creature\OrcMaleKidBrown\OrcMaleKidBrown.m2
 
 [2525]
 file=OrcMaleKidBrown.m2
+mpqfilename=Creature\OrcMaleKidBrown\OrcMaleKidBrown.m2
 
 [2526]
 file=OrcFemaleKidBrown.m2
+mpqfilename=Creature\OrcFemaleKidBrown\OrcFemaleKidBrown.m2
 
 [2527]
 file=Taerar_q.m2
+mpqfilename=Creature\Dragon\Taerar_q.m2
 
 [2528]
 file=Boneworm.m2
+mpqfilename=Creature\BoneWorm\Boneworm.m2
 
 [2529]
 file=Miev.m2
+mpqfilename=Creature\Miev\Miev.m2
 
 [2530]
 file=FelReaver.m2
+mpqfilename=Creature\FelReaver\FelReaver.m2
 
 [2531]
 file=Akama.m2
+mpqfilename=Creature\Akama\Akama.m2
 
 [2532]
 file=NetherDrakonid.m2
+mpqfilename=Creature\NetherDrakonid\NetherDrakonid.m2
 
 [2533]
 file=NetherDrakonidBoss.m2
+mpqfilename=Creature\NetherDrakonidBoss\NetherDrakonidBoss.m2
 
 [2534]
 file=VoidLord.m2
+mpqfilename=Creature\Voidlord\VoidLord.m2
 
 [2535]
 file=LadyVashj.m2
+mpqfilename=Creature\LadyVashj\LadyVashj.m2
 
 [2536]
 file=WaterBubbleCreature.m2
+mpqfilename=Creature\WaterBubbleCreature\WaterBubbleCreature.m2
 
 [2537]
 file=CrateCreatureBasic.m2
+mpqfilename=Creature\CRATECREATURE\CrateCreatureBasic.m2
 
 [2538]
 file=Diemetradon.m2
+mpqfilename=Creature\Diemetradon\Diemetradon.m2
 
 [2539]
 file=felbeastshadowmoon.m2
+mpqfilename=Creature\FelBeastShadowmoon\felbeastshadowmoon.m2
 
 [2540]
 file=StormCrowDruid.m2
+mpqfilename=Creature\StormCrowDruid\StormCrowDruid.m2
 
 [2541]
 file=StormCrowDruid.m2
+mpqfilename=Creature\StormCrowDruid\StormCrowDruid.m2
 
 [2542]
 file=EtherialRobe.m2
+mpqfilename=Creature\EtherialRobe\EtherialRobe.m2
 
 [2543]
 file=Rexxar.m2
+mpqfilename=Creature\Rexxar\Rexxar.m2
 
 [2544]
 file=Taerar.m2
+mpqfilename=Creature\Dragon\Taerar.m2
 
 [2546]
 file=FrostWurm_NoFrost.m2
+mpqfilename=Creature\FROSTWURM\FrostWurm_NoFrost.m2
 
 [2548]
 file=Illidan.m2
+mpqfilename=Creature\Illidan\Illidan.m2
 
 [2549]
 file=WellofSouls.m2
+mpqfilename=Creature\WellofSouls\WellofSouls.m2
 
 [2550]
 file=NetherRay.m2
+mpqfilename=Creature\netherray\NetherRay.m2
 
 [2551]
 file=RidingNetherRay.m2
+mpqfilename=Creature\RidingNetherRay\RidingNetherRay.m2
 
 [2552]
 file=RidingNetherRay.m2
+mpqfilename=Creature\RidingNetherRay\RidingNetherRay.m2
 
 [2553]
 file=Basilisk_Outland.m2
+mpqfilename=Creature\BasiliskOutland\Basilisk_Outland.m2
 
 [2554]
 file=RockFlayerCrystal.m2
+mpqfilename=Creature\RockFlayer\RockFlayerCrystal.m2
 
 [2555]
 file=NagaLordMale.m2
+mpqfilename=Creature\NagaLordMale\NagaLordMale.m2
 
 [2556]
 file=SerpentRuby.m2
+mpqfilename=Creature\Serpent\SerpentRuby.m2
 
 [2558]
 file=Abyssal_Illidan.m2
+mpqfilename=Creature\AbyssalIllidan\Abyssal_Illidan.m2
 
 [2559]
 file=EpicDruidFlightAlliance.m2
+mpqfilename=Creature\EpicDruidFlightAlliance\EpicDruidFlightAlliance.m2
 
 [2560]
 file=EpicDruidFlightHorde.m2
+mpqfilename=Creature\EpicDruidFlightHorde\EpicDruidFlightHorde.m2
 
 [2565]
 file=HaremMatron.m2
+mpqfilename=Creature\HaremMatron\HaremMatron.m2
 
 [2566]
 file=FelOrcWarlord.m2
+mpqfilename=Creature\FelOrcWarlord\FelOrcWarlord.m2
 
 [2567]
 file=TeronGorefiend.m2
+mpqfilename=Creature\TeronGorefiend\TeronGorefiend.m2
 
 [2568]
 file=TeronGorefiend_Mounted.m2
+mpqfilename=Creature\TeronGorefiend_Mounted\TeronGorefiend_Mounted.m2
 
 [2569]
 file=Creature_BurningAsh.m2
+mpqfilename=Creature\QUESTOBJECTS\Creature_BurningAsh.m2
 
 [2570]
 file=IllidanDark.m2
+mpqfilename=Creature\Illidan\IllidanDark.m2
 
 [2571]
 file=Abyssal_Illidan.m2
+mpqfilename=Creature\AbyssalIllidan\Abyssal_Illidan.m2
 
 [2572]
 file=FelCannon_02.m2
+mpqfilename=Creature\FelCannon\FelCannon_02.m2
 
 [2573]
 file=gorillapet.m2
+mpqfilename=Creature\Gorilla\gorillapet.m2
 
 [2574]
 file=gorillapet.m2
+mpqfilename=Creature\Gorilla\gorillapet.m2
 
 [2575]
 file=BabyBeholder.m2
+mpqfilename=Creature\BabyBeholder\BabyBeholder.m2
 
 [2576]
 file=Babyhawkstrider.m2
+mpqfilename=Creature\BabyHawkstrider\Babyhawkstrider.m2
 
 [2577]
 file=BabyElekk.m2
+mpqfilename=Creature\BabyElekk\BabyElekk.m2
 
 [2578]
 file=RavenGod.m2
+mpqfilename=Creature\RavenGod\RavenGod.m2
 
 [2579]
 file=ZombieSword.m2
+mpqfilename=Creature\Zombie\ZombieSword.m2
 
 [2580]
 file=FelOrcDire.m2
+mpqfilename=Creature\FelOrcDire\FelOrcDire.m2
 
 [2581]
 file=WellofSoulsGrief.m2
+mpqfilename=Creature\WellofSouls\WellofSoulsGrief.m2
 
 [2582]
 file=WellofSoulsPain.m2
+mpqfilename=Creature\WellofSouls\WellofSoulsPain.m2
 
 [2583]
 file=WellofSoulsSeduction.m2
+mpqfilename=Creature\WellofSouls\WellofSoulsSeduction.m2
 
 [2584]
 file=RidingNetherRay.m2
+mpqfilename=Creature\RidingNetherRay\RidingNetherRay.m2
 
 [2585]
 file=Creature_IllidansGlaive.m2
+mpqfilename=Creature\IllidanGlaive\Creature_IllidansGlaive.m2
 
 [2586]
 file=FelOrc.m2
+mpqfilename=Creature\FELORC\FelOrc.m2
 
 [2587]
 file=MountainGiantCrystalOgrila.m2
+mpqfilename=Creature\MountainGiantCrystalOgrila\MountainGiantCrystalOgrila.m2
 
 [2590]
 file=EagleGod.m2
+mpqfilename=Creature\EagleGod\EagleGod.m2
 
 [2591]
 file=beargod.m2
+mpqfilename=Creature\BearGod\beargod.m2
 
 [2592]
 file=Lynxgod.m2
+mpqfilename=Creature\LynxGod\Lynxgod.m2
 
 [2593]
 file=DragonHawkGod.m2
+mpqfilename=Creature\DragonhawkGod\DragonHawkGod.m2
 
 [2596]
 file=bandUndeadMale.m2
+mpqfilename=Creature\band\bandUndeadMale.m2
 
 [2597]
 file=BandTaurenMale.m2
+mpqfilename=Creature\band\BandTaurenMale.m2
 
 [2598]
 file=BandTrollMale.m2
+mpqfilename=Creature\band\BandTrollMale.m2
 
 [2599]
 file=bandOrcMale.m2
+mpqfilename=Creature\band\bandOrcMale.m2
 
 [2600]
 file=bandBloodElfMale.m2
+mpqfilename=Creature\band\bandBloodElfMale.m2
 
 [2601]
 file=murloccostume.m2
+mpqfilename=Creature\MurlocCostume\murloccostume.m2
 
 [2602]
 file=MothPet.m2
+mpqfilename=Creature\Mothpet\MothPet.m2
 
 [2610]
 file=PumpkinSoldier.m2
+mpqfilename=Creature\pumpkinSoldier\PumpkinSoldier.m2
 
 [2611]
 file=InvisibleStalker.m2
+mpqfilename=Creature\InvisibleStalker\InvisibleStalker.m2
 
 [2612]
 file=BroomMount.m2
+mpqfilename=Creature\BroomMount\BroomMount.m2
 
 [2613]
 file=ForestTrollMale.m2
+mpqfilename=CHARACTER\ForestTroll\Male\ForestTrollMale.m2
 
 [2614]
 file=ForestTrollMale.m2
+mpqfilename=CHARACTER\ForestTroll\Male\ForestTrollMale.m2
 
 [2619]
 file=SpectralTiger.m2
+mpqfilename=Creature\SpectralTiger\SpectralTiger.m2
 
 [2620]
 file=SpectralTiger.m2
+mpqfilename=Creature\SpectralTiger\SpectralTiger.m2
 
 [2626]
 file=SpectralTigerEpic.m2
+mpqfilename=Creature\SpectralTiger\SpectralTigerEpic.m2
 
 [2630]
 file=Zuljin.m2
+mpqfilename=Creature\zuljin\Zuljin.m2
 
 [2631]
 file=eagle.m2
+mpqfilename=Creature\Eagle\eagle.m2
 
 [2632]
 file=Wolpertinger.m2
+mpqfilename=Creature\Wolpertinger\Wolpertinger.m2
 
 [2633]
 file=HeadlessHorsemanMount.m2
+mpqfilename=Creature\HeadlessHorsemanMount\HeadlessHorsemanMount.m2
 
 [2634]
 file=Headlesshorseman.m2
+mpqfilename=Creature\HeadlessHorseman\Headlesshorseman.m2
 
 [2636]
 file=InvisibleMan.m2
+mpqfilename=Creature\InvisibleMan\InvisibleMan.m2
 
 [2637]
 file=CloudSwampGas_Shadowmoon_White.m2
+mpqfilename=Creature\Cloud\CloudSwampGas_Shadowmoon_White.m2
 
 [2638]
 file=BearMount.m2
+mpqfilename=Creature\bearmount\BearMount.m2
 
 [2639]
 file=HippogryphMount.m2
+mpqfilename=Creature\HippogryphMount\HippogryphMount.m2
 
 [2640]
 file=BabyCrocodile.m2
+mpqfilename=Creature\BabyCrocodile\BabyCrocodile.m2
 
 [2647]
 file=HeadlessHorsemanHorse.m2
+mpqfilename=CREATURE\HeadlessHorsemanHorse\HeadlessHorsemanHorse.m2
 
 [2651]
 file=Creature_DemonCrystal_02.m2
+mpqfilename=Creature\QuestObjects\Creature_DemonCrystal_02.m2
 
 [2654]
 file=Brutallus.m2
+mpqfilename=Creature\Brutallus\Brutallus.m2
 
 [2656]
 file=Gyrocopter_02.m2
+mpqfilename=Creature\Gyrocopter\Gyrocopter_02.m2
 
 [2657]
 file=Gyrocopter_01.m2
+mpqfilename=Creature\Gyrocopter\Gyrocopter_01.m2
 
 [2659]
 file=FireSprite.m2
+mpqfilename=Creature\FireSprite\FireSprite.m2
 
 [2660]
 file=ArcaneVoidWraith.m2
+mpqfilename=Creature\ArcaneVoidwraith\ArcaneVoidWraith.m2
 
 [2661]
 file=FelGolem.m2
+mpqfilename=Creature\FelGolem\FelGolem.m2
 
 [2662]
 file=Creature_SpellPortalLarge_Purple.m2
+mpqfilename=Spells\Creature_SpellPortalLarge_Purple.m2
 
 [2663]
 file=G_GnomeMultiBox.m2
+mpqfilename=World\GOOBER\G_GnomeMultiBox.m2
 
 [2664]
 file=HolidayRobot.m2
+mpqfilename=Creature\HolidayRobot\HolidayRobot.m2
 
 [2666]
 file=FlyingReindeer.m2
+mpqfilename=Creature\FlyingReindeer\FlyingReindeer.m2
 
 [2667]
 file=Meteor_Ball_Missile.m2
+mpqfilename=Spells\Meteor_Ball_Missile.m2
 
 [2669]
 file=DragonHawk.m2
+mpqfilename=Creature\DragonHawk\DragonHawk.m2
 
 [2670]
 file=G_ScourgeRuneCircleCrystal.m2
+mpqfilename=World\GOOBER\G_ScourgeRuneCircleCrystal.m2
 
 [2671]
 file=G_ControlConsoleZippelin.m2
+mpqfilename=World\GOOBER\G_ControlConsoleZippelin.m2
 
 [2673]
 file=TaurenKite03.m2
+mpqfilename=World\GENERIC\Tauren\Passive Doodads\Kites\TaurenKite03.m2
 
 [2674]
 file=RocketChicken.m2
+mpqfilename=Creature\RocketChicken\RocketChicken.m2
 
 [2675]
 file=KaelThasBroken.m2
+mpqfilename=Creature\Kaelthas_broken\KaelThasBroken.m2
 
 [2676]
 file=DragonKite.m2
+mpqfilename=Creature\dragonkite\DragonKite.m2
 
 [2677]
 file=FelElfWarriorMale.m2
+mpqfilename=Creature\FelElfWarriorMale\FelElfWarriorMale.m2
 
 [2678]
 file=FelElfCasterFemale.m2
+mpqfilename=Creature\FelElfCasterFemale\FelElfCasterFemale.m2
 
 [2679]
 file=SummerFest_Bonfire_Large01.m2
+mpqfilename=World\GENERIC\PassiveDoodads\SummerFestival\SummerFest_Bonfire_Large01.m2
 
 [2686]
 file=EredarFemale.m2
+mpqfilename=Creature\EredarFemale\EredarFemale.m2
 
 [2687]
 file=Kiljaeden.m2
+mpqfilename=Creature\Kiljaeden\Kiljaeden.m2
 
 [2689]
 file=FrostWurmFellfire.m2
+mpqfilename=Creature\FrostWurmFellfire\FrostWurmFellfire.m2
 
 [2690]
 file=FelElfCasterMale.m2
+mpqfilename=Creature\FelElfCasterMale\FelElfCasterMale.m2
 
 [2691]
 file=FelElfHunterFemale.m2
+mpqfilename=Creature\FelElfHunterFemale\FelElfHunterFemale.m2
 
 [2692]
 file=VoidGod.m2
+mpqfilename=Creature\VoidGod\VoidGod.m2
 
 [2693]
 file=GroundFlower.m2
+mpqfilename=Creature\GroundFlower\GroundFlower.m2
 
 [2698]
 file=DragonKalecgos.m2
+mpqfilename=Creature\DragonKalecgos\DragonKalecgos.m2
 
 [2699]
 file=Kalecgos.m2
+mpqfilename=Creature\Kalecgos\Kalecgos.m2
 
 [2703]
 file=Muru.m2
+mpqfilename=Creature\Muru\Muru.m2
 
 [2705]
 file=FrostLordCore.m2
+mpqfilename=Creature\FrostLord\FrostLordCore.m2
 
 [2706]
 file=FrostLord.m2
+mpqfilename=Creature\FrostLord\FrostLord.m2
 
 [2709]
 file=FireDancer.m2
+mpqfilename=Creature\FireDancer\FireDancer.m2
 
 [2718]
 file=RocketMount.m2
+mpqfilename=Creature\RocketMount\RocketMount.m2
 
 [2719]
 file=PhoenixPet.m2
+mpqfilename=Creature\PhoenixPet\PhoenixPet.m2
 
 [2720]
 file=MagePortal_Blank.m2
+mpqfilename=Spells\MagePortal_Blank.m2
 
 [2721]
 file=MagePortal_Shattrath.m2
+mpqfilename=World\GENERIC\ActiveDoodads\SpellPortals\MagePortal_Shattrath.m2
 
 [2722]
 file=G_JewelBlack.m2
+mpqfilename=World\GOOBER\G_JewelBlack.m2
 
 [2730]
 file=KarazahnPedestals02.m2
+mpqfilename=World\AZEROTH\KARAZAHN\PASSIVEDOODADS\Pedestals\KarazahnPedestals02.m2
 
 [2760]
 file=ZebraMount.m2
+mpqfilename=CREATURE\ZebraMount\ZebraMount.m2
 
 [2764]
 file=ZebraMount.m2
+mpqfilename=Creature\ZebraMount\ZebraMount.m2
 
 [2774]
 file=ElwynnFlower01.m2
+mpqfilename=World\AZEROTH\ELWYNN\PASSIVEDOODADS\DETAIL\ElwynnFlower01.m2
 
 [2776]
 file=ElwynnFlower02.m2
+mpqfilename=World\AZEROTH\ELWYNN\PASSIVEDOODADS\DETAIL\ElwynnFlower02.m2
 
 [2778]
 file=NightDragon02.m2
+mpqfilename=World\KALIMDOR\FELWOOD\PASSIVEDOODADS\PLANTSQUEST\NightDragon02.m2
 
 [2779]
 file=SongFlower01.m2
+mpqfilename=World\KALIMDOR\FELWOOD\PASSIVEDOODADS\PLANTSQUEST\SongFlower01.m2
 
 [2782]
 file=ElekkWild.m2
+mpqfilename=CREATURE\ELEKK\ElekkWild.m2
 
 [2786]
 file=WaterBubbleCreature_NoSound.m2
+mpqfilename=CREATURE\WaterBubbleCreature\WaterBubbleCreature_NoSound.m2
 
 [2791]
 file=GnomeHazardLight01.m2
+mpqfilename=World\Generic\GNOME\PASSIVE DOODADS\HazardLights\GnomeHazardLight01.m2
 
 [2795]
 file=ragdoll_02.m2
+mpqfilename=World\Generic\HUMAN\PASSIVE DOODADS\DOLLS\ragdoll_02.m2
 
 [2798]
 file=HHMount.m2
+mpqfilename=CREATURE\HHMount\HHMount.m2
 
 [2800]
 file=G_BarrelExplode.m2
+mpqfilename=World\GOOBER\G_BarrelExplode.m2
 
 [2804]
 file=Band_DrumSet.m2
+mpqfilename=CREATURE\BAND\Band_DrumSet.m2
 
 [2817]
 file=BearMountALT.m2
+mpqfilename=CREATURE\bearmountALT\BearMountALT.m2
 
 [2864]
 file=TyraelPet.m2
+mpqfilename=CREATURE\TYRAELPET\TyraelPet.m2
 
 [2871]
 file=HHGroundMount.m2
+mpqfilename=CREATURE\HHGroundMount\HHGroundMount.m2
 
