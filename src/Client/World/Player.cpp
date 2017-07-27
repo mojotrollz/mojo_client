@@ -29,7 +29,7 @@ MyCharacter::MyCharacter() : Player()
 
 MyCharacter::~MyCharacter()
 {
-    DEBUG(logdebug("~MyCharacter() destructor, this=0x%X guid="I64FMT,this,GetGUID())); // this _could_ crash if Player::Create(guid) wasnt called before!
+    DEBUG(logdebug("~MyCharacter() destructor, this=0x%X guid=%016I64X",this,GetGUID())); // this _could_ crash if Player::Create(guid) wasnt called before!
 }
 
 void MyCharacter::SetActionButtons(WorldPacket &data)

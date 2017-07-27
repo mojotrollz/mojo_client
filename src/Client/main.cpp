@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
         logcustom(0,LGREEN,"|  http://www.mangosclient.org     |");
         logcustom(0,LGREEN,"+----------------------------------+");
         logcustom(0,GREEN,"Platform: %s",PLATFORM_NAME);
-        logcustom(0,GREEN,"Compiler: %s ("COMPILER_VERSION_OUT")",COMPILER_NAME,COMPILER_VERSION);
+        logcustom(0,GREEN,"Compiler: %s (%u)",COMPILER_NAME,COMPILER_VERSION);
         logcustom(0,GREEN,"Compiled: %s  %s",__DATE__,__TIME__);
 
         _HookSignals();

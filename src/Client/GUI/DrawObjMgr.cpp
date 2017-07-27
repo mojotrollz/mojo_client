@@ -18,7 +18,7 @@ void DrawObjMgr::Clear(void)
     DEBUG( logdebug("DrawObjMgr::Clear(), deleting %u DrawObjects...", _storage.size() ) );
     for(DrawObjStorage::iterator i = _storage.begin(); i != _storage.end(); i++)
     {
-        DEBUG( logdebug("del for guid "I64FMT, i->first) );
+        DEBUG( logdebug("del for guid %016I64X", i->first) );
         delete i->second; // this can be done safely, since the object ptrs are not accessed
     }
     _storage.clear();
@@ -65,7 +65,7 @@ void DrawObjMgr::Update(void)
     while(_add.size())
     {
         std::pair<uint64,DrawObject*> p = _add.next();
-        DEBUG(logdebug("DrawObjMgr: adding DrawObj 0x%X guid "I64FMT" to main storage",p.second,p.first));
+        DEBUG(logdebug("DrawObjMgr: adding DrawObj 0x%X guid %016I64X to main storage",p.second,p.first));
         _storage[p.first] = p.second;
     }
 
@@ -77,13 +77,13 @@ void DrawObjMgr::Update(void)
         {
 
             DrawObject *o = _storage[guid];
-            DEBUG(logdebug("DrawObjMgr: removing DrawObj 0x%X guid "I64FMT" from main storage",o,guid));
+            DEBUG(logdebug("DrawObjMgr: removing DrawObj 0x%X guid %016I64X from main storage",o,guid));
             _storage.erase(guid);
             delete o;
         }
         else
         {
-            DEBUG(logdebug("DrawObjMgr: ERROR: removable DrawObject "I64FMT" not exising",guid));
+            DEBUG(logdebug("DrawObjMgr: ERROR: removable DrawObject %016I64X not exising",guid));
         }
     }
 

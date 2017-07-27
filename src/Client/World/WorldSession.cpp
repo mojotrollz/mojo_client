@@ -504,7 +504,7 @@ std::string WorldSession::GetOrRequestPlayerName(uint64 guid)
 {
     if(!guid || GUID_HIPART(guid) != HIGHGUID_PLAYER)
     {
-        logerror("WorldSession::GetOrRequestObjectName: "I64FMT" is not player",guid);
+        logerror("WorldSession::GetOrRequestObjectName: %016I64X is not player",guid);
         return "<ERR: OBJECT>"; // TODO: temporary, to find bugs with this, if there are any
     }
     std::string name = plrNameCache.GetName(guid);
@@ -881,7 +881,7 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket) //TODO: REW
             {
                 recvPacket >> listener_name_len; // always 1 (\0)
                 recvPacket >> listener_name; // always \0
-                logdebug("CHAT: Listener: '%s' (guid="I64FMT" len=%u type=%u)", listener_name.c_str(), listener_guid, listener_name_len, type);
+                logdebug("CHAT: Listener: '%s' (guid=%016I64X len=%u type=%u)", listener_name.c_str(), listener_guid, listener_name_len, type);
             }
             break;
 
@@ -916,7 +916,7 @@ void WorldSession::_HandleMessageChatOpcode(WorldPacket& recvPacket) //TODO: REW
     GetInstance()->GetScripts()->variables.Set("@thismsg",DefScriptTools::toString(source_guid));
 
 
-    DEBUG(logdebug("Chat packet recieved, type=%u lang=%u src="I64FMT" dst="I64FMT" chn='%s' len=%u",
+    DEBUG(logdebug("Chat packet recieved, type=%u lang=%u src=%016I64X dst=%016I64X chn='%s' len=%u",
         type,lang,source_guid,source_guid,channel.c_str(),msglen));
 
     if (type == CHAT_MSG_SYSTEM)
@@ -1261,7 +1261,7 @@ void WorldSession::_HandleTelePortAckOpcode(WorldPacket& recvPacket)
     guid = recvPacket.readPackGUID();
     recvPacket >> unk32 >> mi;
 
-    logdetail("Got teleported, data: x: %f, y: %f, z: %f, o: %f, guid: "I64FMT, mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o, guid);
+    logdetail("Got teleported, data: x: %f, y: %f, z: %f, o: %f, guid: %016I64X", mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o, guid);
 
     _world->UpdatePos(mi.pos.x,mi.pos.y);
     _world->Update();
@@ -1384,7 +1384,7 @@ void WorldSession::_HandleCastSuccessOpcode(WorldPacket& recvPacket)
         if(caster)
             logdetail("%s casted spell %u", caster->GetName().c_str(), spellId);
         else
-            logerror("Caster of spell %u (GUID "I64FMT") is unknown object!",spellId,casterGuid);
+            logerror("Caster of spell %u (GUID %016I64X) is unknown object!",spellId,casterGuid);
     }
 }
 

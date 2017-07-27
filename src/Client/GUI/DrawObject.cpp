@@ -186,7 +186,7 @@ void DrawObject::_Init(void)
         }
 
     }
-    logdebug("initialize DrawObject 0x%X obj: 0x%X "I64FMT,this,_obj,_obj->GetGUID());
+    logdebug("initialize DrawObject 0x%X obj: 0x%X %016I64X",this,_obj,_obj->GetGUID());
 
     _initialized = true;
 }

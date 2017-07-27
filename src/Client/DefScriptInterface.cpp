@@ -522,7 +522,7 @@ DefReturnResult DefScriptPackage::SCGetEntry(CmdSet& Set)
     }
     else
     {
-        logerror("SCGetEntry: Object "I64FMT" not known",guid);
+        logerror("SCGetEntry: Object %016I64X not known",guid);
     }
     return r;
 }
@@ -544,7 +544,7 @@ DefReturnResult DefScriptPackage::SCGetObjectType(CmdSet& Set)
     }
     else
     {
-        logerror("SCGetObjectType: Object "I64FMT" not known",guid);
+        logerror("SCGetObjectType: Object %016I64X not known",guid);
     }
     return r;
 }
@@ -855,7 +855,7 @@ DefReturnResult DefScriptPackage::SCGetObjectValue(CmdSet &Set)
         uint32 v = (uint32)DefScriptTools::toUint64(Set.arg[0]);
         if(v > o->GetValuesCount())
         {
-            logerror("SCGetObjectValue ["I64FMTD", type %u]: invalid value index: %u",guid,o->GetTypeId(),v);
+            logerror("SCGetObjectValue [%llu, type %u]: invalid value index: %u",guid,o->GetTypeId(),v);
             return "";
         }
         else

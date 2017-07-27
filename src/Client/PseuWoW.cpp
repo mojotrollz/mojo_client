@@ -119,7 +119,7 @@ bool PseuInstance::Init(void)
         _scpdir="./scripts/";
 
     srand((unsigned)time(NULL));
-    RAND_set_rand_method(RAND_SSLeay()); // init openssl randomizer
+    RAND_set_rand_method(RAND_OpenSSL()); // init openssl randomizer
 
     _scp=new DefScriptPackage();
     _scp->SetParentMethod((void*)this);

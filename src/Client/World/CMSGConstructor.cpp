@@ -85,7 +85,7 @@ void WorldSession::SendSetSelection(uint64 guid)
     if(guid==GetMyChar()->GetTarget())
         return; // no need to select already selected target
     GetMyChar()->SetTarget(guid);
-    logdebug("SetSelection GUID="I64FMT,guid);
+    logdebug("SetSelection GUID=%016I64X",guid);
     WorldPacket packet;
     packet << guid;
     packet.SetOpcode(CMSG_SET_SELECTION);
@@ -145,7 +145,7 @@ void WorldSession::SendCastSpell(uint32 spellid, bool nocheck)
     // cast it
     packet.SetOpcode(CMSG_CAST_SPELL);
     SendWorldPacket(packet);
-    logdetail("Casting spell %u on target "I64FMT,spellid,my->GetTarget());
+    logdetail("Casting spell %u on target %016I64X",spellid,my->GetTarget());
     if(!known)
         logcustom(1,LRED," - WARNING: spell is NOT known!");
 }

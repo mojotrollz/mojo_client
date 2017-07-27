@@ -15,7 +15,7 @@ Object::Object()
 Object::~Object()
 {
     ASSERT(_valuescount > 0);
-    DEBUG(logdebug("~Object() GUID="I64FMT,GetGUID()));
+    DEBUG(logdebug("~Object() GUID=%016I64X",GetGUID()));
     if(_uint32values)
         delete [] _uint32values;
 }
@@ -113,7 +113,7 @@ void WorldSession::_HandleDestroyObjectOpcode(WorldPacket& recvPacket)
     recvPacket >> guid;
     if(GetInstance()->GetConf()->client > CLIENT_TBC)
       recvPacket >> dummy;
-    logdebug("Destroy Object "I64FMT,guid);
+    logdebug("Destroy Object %016I64X",guid);
 
     // call script just before object removal
     if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))

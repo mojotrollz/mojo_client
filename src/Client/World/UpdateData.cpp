@@ -67,7 +67,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                 else // sometimes objects get deleted BEFORE a last update packet arrives, this must be handled also
                 {
                     tyid = GetTypeIdByGuid(uguid);
-                    logerror("Got UpdateObject_Movement for unknown object "I64FMT". Using typeid %u",uguid,(uint32)tyid);
+                    logerror("Got UpdateObject_Movement for unknown object %016I64X. Using typeid %u",uguid,(uint32)tyid);
                 }
 
                 if(obj)
@@ -81,7 +81,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                 uguid = recvPacket.readPackGUID();
                 uint8 objtypeid;
                 recvPacket >> objtypeid;
-                logdebug("Create Object type %u with guid "I64FMT,objtypeid,uguid);
+                logdebug("Create Object type %u with guid %016I64X",objtypeid,uguid);
                 // dont create objects if already present in memory.
                 // recreate every object except ourself!
                 if(objmgr.GetObj(uguid))
@@ -113,7 +113,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                             Item *item = new Item();
                             item->Create(uguid);
                             objmgr.Add(item);
-                            logdebug("Created Item with guid "I64FMT,uguid);
+                            logdebug("Created Item with guid %016I64X",uguid);
                             break;
                         }
                     case TYPEID_CONTAINER:
@@ -121,7 +121,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                             Bag *bag = new Bag();
                             bag->Create(uguid);
                             objmgr.Add(bag);
-                            logdebug("Created Bag with guid "I64FMT,uguid);
+                            logdebug("Created Bag with guid %016I64X",uguid);
                             break;
                         }
                     case TYPEID_UNIT:
@@ -129,7 +129,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                             Unit *unit = new Unit();
                             unit->Create(uguid);
                             objmgr.Add(unit);
-                            logdebug("Created Unit with guid "I64FMT,uguid);
+                            logdebug("Created Unit with guid %016I64X",uguid);
                             break;
                         }
                     case TYPEID_PLAYER:
@@ -139,7 +139,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                             Player *player = new Player();
                             player->Create(uguid);
                             objmgr.Add(player);
-                            logdebug("Created Player with guid "I64FMT,uguid);
+                            logdebug("Created Player with guid %016I64X",uguid);
                             break;
                         }
                     case TYPEID_GAMEOBJECT:
@@ -147,7 +147,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                             GameObject *go = new GameObject();
                             go->Create(uguid);
                             objmgr.Add(go);
-                            logdebug("Created GO with guid "I64FMT,uguid);
+                            logdebug("Created GO with guid %016I64X",uguid);
                             break;
                         }
                     case TYPEID_CORPSE:
@@ -155,7 +155,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                             Corpse *corpse = new Corpse();
                             corpse->Create(uguid);
                             objmgr.Add(corpse);
-                            logdebug("Created Corpse with guid "I64FMT,uguid);
+                            logdebug("Created Corpse with guid %016I64X",uguid);
                             break;
                         }
                     case TYPEID_DYNAMICOBJECT:
@@ -163,14 +163,14 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                             DynamicObject *dobj = new DynamicObject();
                             dobj->Create(uguid);
                             objmgr.Add(dobj);
-                            logdebug("Created DynObj with guid "I64FMT,uguid);
+                            logdebug("Created DynObj with guid %016I64X",uguid);
                             break;
                         }
                     }
                 }
                 else
                 {
-                    logdebug("Obj "I64FMT" not created, already exists",uguid);
+                    logdebug("Obj %016I64X not created, already exists",uguid);
                 }
                 // ...regardless if it was freshly created or already present, update its values and stuff now...
                 this->_MovementUpdate(objtypeid, uguid, recvPacket);
@@ -201,7 +201,7 @@ void WorldSession::_HandleUpdateObjectOpcode(WorldPacket& recvPacket)
                 for(uint32 i=0;i<usize;i++)
                 {
                     uguid = recvPacket.readPackGUID(); // not 100% sure if this is correct
-                    logdebug("GUID "I64FMT" out of range",uguid);
+                    logdebug("GUID %016I64X out of range",uguid);
 
 //                     // call script just before object removal
 //                     if(GetInstance()->GetScripts()->ScriptExists("_onobjectdelete"))
@@ -260,11 +260,11 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
         if(obj->IsUnit())
             u = (Unit*)obj; // only use for Unit:: functions!!
         else
-            logdev("MovementUpdate: object "I64FMT" is not Unit (typeId=%u)",obj->GetGUID(),obj->GetTypeId());
+            logdev("MovementUpdate: object %016I64X is not Unit (typeId=%u)",obj->GetGUID(),obj->GetTypeId());
     }
     else
     {
-        logerror("MovementUpdate for unknown object "I64FMT" typeid=%u",uguid,objtypeid);
+        logerror("MovementUpdate for unknown object %016I64X typeid=%u",uguid,objtypeid);
     }
 
     if(client > CLIENT_TBC)
@@ -279,14 +279,14 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     {
         recvPacket >> mi;
 
-        logdev("MovementUpdate: TypeID=%u GUID="I64FMT" pObj=%X flags=%x mi.flags=%x",objtypeid,uguid,obj,flags,mi.flags);
+        logdev("MovementUpdate: TypeID=%u GUID=%016I64X pObj=%X flags=%x mi.flags=%x",objtypeid,uguid,obj,flags,mi.flags);
         logdev("FLOATS: x=%f y=%f z=%f o=%f",mi.pos.x, mi.pos.y, mi.pos.z ,mi.pos.o);
         if(obj && obj->IsWorldObject())
             ((WorldObject*)obj)->SetPosition(mi.pos.x, mi.pos.y, mi.pos.z, mi.pos.o);
 
         if(mi.flags & MOVEMENTFLAG_ONTRANSPORT)
         {
-            logdev("TRANSPORT @ mi.flags: guid="I64FMT" x=%f y=%f z=%f o=%f", mi.t_guid, mi.t_pos.x, mi.t_pos.y, mi.t_pos.z, mi.t_pos.o);
+            logdev("TRANSPORT @ mi.flags: guid=%016I64X x=%f y=%f z=%f o=%f", mi.t_guid, mi.t_pos.x, mi.t_pos.y, mi.t_pos.z, mi.t_pos.o);
         }
 
         if((mi.flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (mi.flags2 & MOVEMENTFLAG2_ALLOW_PITCHING))
@@ -410,7 +410,7 @@ void WorldSession::_MovementUpdate(uint8 objtypeid, uint64 uguid, WorldPacket& r
     if(flags & UPDATEFLAG_HAS_TARGET)
     {
         uint64 unkguid = recvPacket.readPackGUID(); // MaNGOS sends uint8(0) always, but its probably be a packed guid
-        logdev("MovementUpdate: UPDATEFLAG_FULLGUID is set, got "I64FMT, unkguid);
+        logdev("MovementUpdate: UPDATEFLAG_FULLGUID is set, got %016I64X", unkguid);
     }
 
     if(flags & UPDATEFLAG_TRANSPORT)
@@ -449,7 +449,7 @@ void WorldSession::_ValuesUpdate(uint64 uguid, WorldPacket& recvPacket)
     }
     else
     {
-        logcustom(1,LRED,"Got UpdateObject_Values for unknown object "I64FMT,uguid);
+        logcustom(1,LRED, "Got UpdateObject_Values for unknown object %016I64X",uguid);
         tyid = GetTypeIdByGuid(uguid); // can cause problems with TYPEID_CONTAINER!!
         valuesCount = GetValuesCountByTypeId(tyid);
     }
@@ -463,7 +463,7 @@ void WorldSession::_ValuesUpdate(uint64 uguid, WorldPacket& recvPacket)
     recvPacket.read((uint8*)updateMask, masksize);
     umask.SetMask(updateMask);
     //delete [] updateMask; // will be deleted at ~UpdateMask() !!!!
-    logdev("ValuesUpdate TypeId=%u GUID="I64FMT" pObj=%X Blocks=%u Masksize=%u",tyid,uguid,obj,blockcount,masksize);
+    logdev("ValuesUpdate TypeId=%u GUID=%016I64X pObj=%X Blocks=%u Masksize=%u",tyid,uguid,obj,blockcount,masksize);
     // just in case the object does not exist, and we have really a container instead of an item, and a value in
     // the container fields is set, THEN we have a problem. this should never be the case; it can be fixed in a
     // more correct way if there is the need.
@@ -503,7 +503,7 @@ void WorldSession::_QueryObjectInfo(uint64 guid)
                 }
                 else
                 {
-                    logdebug("Found unknown item: GUID="I64FMT" entry=%u",obj->GetGUID(),obj->GetEntry());
+                    logdebug("Found unknown item: GUID=%016I64X entry=%u",obj->GetGUID(),obj->GetEntry());
                     SendQueryItem(obj->GetEntry(),guid); // not sure if sending GUID is correct
                 }
                 break;

@@ -53,7 +53,7 @@ void ObjMgr::Remove(uint64 guid, bool del)
     {
         o->_SetDepleted();
         if(!del)
-            logdebug("ObjMgr: "I64FMT" '%s' -> depleted.",guid,o->GetName().c_str());
+            logdebug("ObjMgr: %016I64X '%s' -> depleted.",guid,o->GetName().c_str());
         PseuGUI *gui = _instance->GetGUI();
         if(gui)
             gui->NotifyObjectDeletion(guid); // we have a gui, which must delete linked DrawObject
@@ -67,7 +67,7 @@ void ObjMgr::Remove(uint64 guid, bool del)
     {
         _obj.erase(guid); // we can safely erase an object that does not exist
                           // - if we reach this point there was a bug anyway
-        logcustom(2,LRED,"ObjMgr::Remove("I64FMT") - not existing",guid);
+        logcustom(2,LRED,"ObjMgr::Remove(%016I64X) - not existing",guid);
     }
 }
 

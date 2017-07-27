@@ -265,7 +265,7 @@ void Channel::HandleListRequest(WorldPacket& recvPacket)
 		while(pname.length() < MAX_PLAYERNAME_LENGTH)
 			pname += " "; // for better formatting
 
-		logcustom(0,WHITE,"%s ["I64FMT"] %s %s",pname.c_str(),i->first,muted?"(muted)":"",mod?"(moderator)":"");
+		logcustom(0,WHITE,"%s [%016I64X] %s %s",pname.c_str(),i->first,muted?"(muted)":"",mod?"(moderator)":"");
 
         // DefScript binding
         l->push_back(DefScriptTools::toString(guid));

@@ -8,6 +8,7 @@
 #include <memory.h>
 #include <stdlib.h> // free, malloc and realloc
 #include <string.h>
+#include <algorithm>
 
 namespace irrklang
 {
