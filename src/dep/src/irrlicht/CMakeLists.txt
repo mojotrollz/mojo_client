@@ -327,7 +327,10 @@ additions/CImageLoaderBLP.cpp
 ${PROJECT_SOURCE_DIR}/src/Client/GUI/CM2Mesh.cpp
 )
 if(WIN32)
-  SET_TARGET_PROPERTIES (irrlicht PROPERTIES DEFINE_SYMBOL  "IRRLICHT_EXPORTS" )
+  SET_TARGET_PROPERTIES (irrlicht PROPERTIES DEFINE_SYMBOL 
+  "IRRLICHT_EXPORTS"
+  RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_INSTALL_PREFIX}/bin"
+  RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_INSTALL_PREFIX}/bin")
   target_link_libraries (irrlicht ${DirectX_D3D9_LIBRARY} ${DirectX_D3DX9_LIBRARY} Winmm)
   install(TARGETS irrlicht DESTINATION ${CMAKE_INSTALL_PREFIX}) # irrlicht needs to go to the install dir on windows as it's a dll
 endif()

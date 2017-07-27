@@ -1,6 +1,4 @@
 add_subdirectory (dep)
 add_subdirectory (shared)
 add_subdirectory (Client)
-if(BUILD_TOOLS)
-  add_subdirectory (tools)
-endif()
+add_subdirectory (tools)
