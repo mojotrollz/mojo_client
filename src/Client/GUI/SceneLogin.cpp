@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Realm/RealmSession.h"
 #include "GUIEventReceiver.h"
+#include "MemoryInterface.h"
 
 enum GuiElementID
 {
@@ -30,6 +31,9 @@ SceneLogin::SceneLogin(PseuGUI *gui) : Scene(gui)
     dimension2d<u32> scrn = driver->getScreenSize();
 
     irrlogo = guienv->addImage(driver->getTexture("data/misc/irrlichtlogo.png"), core::position2d<s32>(5,5),true,rootgui);
+	//Todo display
+	io::IReadFile* modelfile = io::IrrCreateIReadFileBasic(device, "Interface\\Glues\\MODELS\\UI_MAINMENU\\UI_MainMenu.m2");
+
     background = guienv->addImage(driver->getTexture("data/misc/sky.jpg"), core::position2d<s32>(5,5),true,rootgui);
     background->setRelativePosition(rect<s32>(0,0,scrn.Width,scrn.Height));
     irrlogo->setScaleImage(true);

@@ -703,7 +703,7 @@ int main(int argc, char* argv[])
   //config hacks
   log_setloglevel(3);
   log_prepare("viewerlog.txt","w");
-  MemoryDataHolder::SetUseMPQ("enUS");
+  MemoryDataHolder::SetUseMPQ("deDE");
 
   FILE* f;
   f = fopen("viewer_last.txt","r");
@@ -890,13 +890,13 @@ int main(int argc, char* argv[])
 
 	// add skybox
 
-	SkyBox = smgr->addSkyBoxSceneNode(
+	/*SkyBox = smgr->addSkyBoxSceneNode(
 		driver->getTexture("./data/misc/sky.jpg"),
 		driver->getTexture("./data/misc/sky.jpg"),
 		driver->getTexture("./data/misc/sky.jpg"),
 		driver->getTexture("./data/misc/sky.jpg"),
 		driver->getTexture("./data/misc/sky.jpg"),
-		driver->getTexture("./data/misc/sky.jpg"));
+		driver->getTexture("./data/misc/sky.jpg"));*/
 
 	// add a camera scene node
 	Camera[0] = smgr->addCameraSceneNodeMaya();
